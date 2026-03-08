@@ -1,0 +1,4 @@
+vendor/
+.env
+docker/dbdata
+node_modules/
