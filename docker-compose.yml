@@ -20,6 +20,8 @@ services:
     container_name: marketniro-php
     volumes:
       - ./:/var/www
+    environment:
+      - OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}
 
   marketniro-mariadb:
     image: mariadb:10.11
