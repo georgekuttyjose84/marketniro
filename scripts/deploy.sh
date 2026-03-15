@@ -6,7 +6,7 @@ echo "Pulling latest code..."
 git pull origin main
 
 echo "Building containers..."
-docker compose build
+docker compose build --pull
 
 echo "Starting containers..."
 docker compose up -d
@@ -16,5 +16,8 @@ docker compose exec -T marketniro-php composer install --no-interaction --prefer
 
 echo "Running migrations..."
 docker compose exec -T marketniro-php bin/phinx migrate
+
+echo "Reloading nginx..."
+docker compose exec marketniro-nginx nginx -s reload
 
 echo "Deployment finished"
