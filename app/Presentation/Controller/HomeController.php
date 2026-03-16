@@ -2,10 +2,15 @@
 
 namespace App\Presentation\Controller;
 
+use App\Infrastructure\Repository\CurrencyRateRepository;
+
 class HomeController
 {
-    public function index(): void
+    public function index()
     {
-        echo "Welcome to MarketNiro Production Created by admin  🚀";
+        $repo = new CurrencyRateRepository();
+        $rates = $repo->latest(50);
+
+        include __DIR__ . '/../../../templates/home.php';
     }
 }
