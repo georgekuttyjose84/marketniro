@@ -28,5 +28,24 @@
 
 </table>
 
+<h2>Gold & Silver Prices</h2>
+
+<table border="1">
+<tr>
+<th>Metal</th>
+<th>Price</th>
+<th>Time</th>
+</tr>
+
+<?php foreach ($metals as $metal): ?>
+<tr>
+<td><?= $metal['name'] ?></td>
+<td><?= $metal['price'] ?></td>
+<td><?= $metal['created_at'] ?></td>
+</tr>
+<?php endforeach; ?>
+
+</table>
+
 </body>
 </html>
