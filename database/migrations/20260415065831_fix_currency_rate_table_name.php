@@ -17,13 +17,22 @@ final class FixCurrencyRateTableName extends AbstractMigration
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    	public function up(): void
-	{
-    		$this->execute("RENAME TABLE currency_rates TO currency_rate");
-	}
+    public function up(): void
+{
+    $tables = $this->fetchAll("SHOW TABLES LIKE 'currency_rate'");
 
-	public function down(): void
-	{
-    		$this->execute("RENAME TABLE currency_rate TO currency_rates");
+    if (empty($tables)) {
+        // only rename if target doesn't exist
+        $this->execute("RENAME TABLE currency_rates TO currency_rate");
+    }
+}
+
+public function down(): void
+{
+    $tables = $this->fetchAll("SHOW TABLES LIKE 'currency_rates'");
+
+    if (empty($tables)) {
+        	$this->execute("RENAME TABLE currency_rate TO currency_rates");
+    	}
 	}
 }
