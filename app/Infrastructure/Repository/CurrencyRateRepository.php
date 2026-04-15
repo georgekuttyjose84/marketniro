@@ -12,7 +12,7 @@ class CurrencyRateRepository
 
         $stmt = $pdo->prepare("
             SELECT base_currency, target_currency, rate, created_at
-            FROM currency_rates
+            FROM currency_rate
             ORDER BY id DESC
             LIMIT :limit
         ");

@@ -34,7 +34,7 @@ services:
       - "3307:3306"
     volumes:
       - dbdata:/var/lib/mysql
-      - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   dbdata:
