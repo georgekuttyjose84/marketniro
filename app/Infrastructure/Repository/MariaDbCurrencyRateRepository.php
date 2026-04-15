@@ -19,7 +19,7 @@ class MariaDbCurrencyRateRepository implements CurrencyRateRepository
     public function save(CurrencyRate $rate): void
     {
         $stmt = $this->pdo->prepare(
-            "INSERT INTO currency_rates (base_currency, target_currency, rate)
+            "INSERT INTO currency_rate (base_currency, target_currency, rate)
              VALUES (:base, :target, :rate)"
         );
 
@@ -33,7 +33,7 @@ class MariaDbCurrencyRateRepository implements CurrencyRateRepository
     public function find(string $base, string $target): ?CurrencyRate
     {
         $stmt = $this->pdo->prepare(
-            "SELECT * FROM currency_rates
+            "SELECT * FROM currency_rate
              WHERE base_currency = :base AND target_currency = :target
              ORDER BY created_at DESC
              LIMIT 1"
