@@ -2,3 +2,4 @@ vendor/
 .env
 docker/dbdata
 node_modules/
+docker-compose.override.yml
