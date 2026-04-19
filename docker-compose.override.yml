@@ -1,0 +1,4 @@
+services:
+  marketniro-nginx:
+    ports:
+      - "8080:80"
