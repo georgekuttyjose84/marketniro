@@ -30,7 +30,7 @@ jobs:
             sleep 10
 
             echo "🧱 Running migrations..."
-            docker exec marketniro-php vendor/bin/phinx migrate -e docker || true
+            docker exec marketniro-php vendor/bin/phinx migrate -e docker
 
             echo "📊 Migration status:"
             docker exec marketniro-php vendor/bin/phinx status -e docker
