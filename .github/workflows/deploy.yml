@@ -17,24 +17,22 @@ jobs:
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            set -e
-
-            echo "📂 Go to project"
             cd /opt/marketniro
 
-            echo "📥 Pull latest code"
-            git pull origin main
+            echo "📥 Resetting code..."
+            git fetch origin
+            git reset --hard origin/main
 
-            echo "🐳 Rebuild containers"
+            echo "🐳 Rebuilding containers..."
             docker compose up -d --build
 
-            echo "⏳ Wait for DB to be ready"
-            sleep 5
+            echo "⏳ Waiting for PHP container..."
+            sleep 10
 
-            echo "🧱 Run migrations"
+            echo "🧱 Running migrations..."
             docker exec marketniro-php vendor/bin/phinx migrate -e docker || true
 
-            echo "🧹 Cleanup unused images"
-            docker image prune -f
+            echo "📊 Migration status:"
+            docker exec marketniro-php vendor/bin/phinx status -e docker
 
-            echo "✅ Deploy complete"
+            echo "✅ Deployment complete"
