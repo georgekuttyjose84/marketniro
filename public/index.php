@@ -21,7 +21,7 @@ $router->dispatch($uri);
 $pdo = Connection::make();
 
 echo "Database Connected";
-
+echo "<h1>FINAL CI/CD SUCCESS ✅</h1>";
 
 $repo = new MariaDbCurrencyRateRepository();
 $service = new CurrencyRateService($repo);
