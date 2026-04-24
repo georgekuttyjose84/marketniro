@@ -33,4 +33,4 @@ $rate = $service->getRate("USD", "EUR");
 echo "USD/EUR = " . $rate->rate;
 
 
-echo "GEORGEKUTTY JOSE"
+echo "GEORGEKUTTY JOSE";
