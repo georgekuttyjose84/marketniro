@@ -34,3 +34,29 @@ echo "USD/EUR = " . $rate->rate;
 
 
 echo "GEORGEKUTTY JOSE";
+
+
+echo "<h2>Items List</h2>";
+
+try {
+    $pdo = \App\Infrastructure\Database\Connection::make();
+
+    $stmt = $pdo->query("SELECT * FROM items");
+    $items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo "<table border='1'>";
+    echo "<tr><th>Name</th><th>Price</th><th>Created At</th></tr>";
+
+    foreach ($items as $item) {
+        echo "<tr>";
+        echo "<td>{$item['name']}</td>";
+        echo "<td>{$item['price']}</td>";
+        echo "<td>{$item['created_at']}</td>";
+        echo "</tr>";
+    }
+
+    echo "</table>";
+
+} catch (Exception $e) {
+    echo "<p>Items not available yet</p>";
+}
