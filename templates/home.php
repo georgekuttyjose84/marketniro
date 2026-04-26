@@ -7,6 +7,8 @@
 
 <h1>MarketNiro</h1>
 
+<h2>TEST FOR GIT HUB LOADING</h2>
+
 <h2>Latest Currency Rates</h2>
 
 <table border="1">
@@ -50,6 +52,8 @@
 <h1> CREATED FOR TESTING </h1>
 
 <h1> IMA GERGEKUTTY JOSE</h1>
+
+
 
 </body>
 </html>

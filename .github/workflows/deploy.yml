@@ -23,8 +23,9 @@ jobs:
             git fetch origin
             git reset --hard origin/main
 
-            echo "🐳 Rebuilding containers..."
-            docker compose up -d --build
+            echo "🐳 Updating containers (zero downtime)..."
+            docker compose pull
+            docker compose up -d --build --remove-orphans
 
             echo "⏳ Waiting for PHP container..."
             sleep 10

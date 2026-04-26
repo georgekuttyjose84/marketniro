@@ -31,7 +31,7 @@ $service->storeRate("USD", "EUR", 0.91);
 $rate = $service->getRate("USD", "EUR");
 
 echo "USD/EUR = " . $rate->rate;
-
+echo "<h1>ZERO TEST 2ffb</h1>";
 
 echo "GEORGEKUTTY JOSE";
 
