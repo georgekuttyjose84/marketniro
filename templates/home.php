@@ -6,13 +6,7 @@
 <body>
 
 
-<h2>Latest Currency Rates</h2>
-<h2>Latest Currency Rates</h2>
-<h2>Latest Currency Rates</h2>
 <h1>MarketNiro</h1>
-<h2>Latest Currency Rates</h2>
-<h2>Latest Currency Rates</h2>
-<h2>Latest Currency Rates</h2>
 
 <h2>TEST FOR GIT HUB LOADING</h2>
 
