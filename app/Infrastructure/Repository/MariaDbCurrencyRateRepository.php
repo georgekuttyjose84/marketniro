@@ -14,7 +14,7 @@ class MariaDbCurrencyRateRepository implements CurrencyRateRepository
     public function all(): array
     {
     	return $this->pdo
-        	->query("SELECT * FROM currency_rate")
+        	->query("SELECT * FROM currency_rate  ORDER BY created_at DESC LIMIT 300")
         	->fetchAll(PDO::FETCH_ASSOC);
     }
 
