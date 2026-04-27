@@ -4,18 +4,15 @@ namespace App\Presentation\Controller;
 
 use App\Infrastructure\Repository\CurrencyRateRepository;
 use App\Infrastructure\Repository\MetalRepository;
-
+use App\Infrastructure\View\PhpTemplate;
 
 class HomeController
 {
     public function index()
     {
-        $currencyRepo = new CurrencyRateRepository();
-        $metalRepo = new MetalRepository();
 
-        $rates = $currencyRepo->latest(50);
-        $metals = $metalRepo->latest();
+        $engine = new PhpTemplate(__DIR__ . '/../../../templates');
 
-        include __DIR__ . '/../../../templates/home.php';
+        echo $engine->render('home', []);
     }
 }
