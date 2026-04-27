@@ -31,7 +31,7 @@ class FetchExchangeRates
         $pdo = Connection::make();
 
         $stmt = $pdo->prepare("
-            INSERT INTO currency_rates
+            INSERT INTO currency_rate
             (base_currency, target_currency, rate)
             VALUES (:base, :target, :rate)
         ");
