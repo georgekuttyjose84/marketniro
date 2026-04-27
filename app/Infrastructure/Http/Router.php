@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\Http;
 
+use App\Presentation\Controller\CurrencyRateConvertorController;
+
 class Router
 {
     private array $routes;
