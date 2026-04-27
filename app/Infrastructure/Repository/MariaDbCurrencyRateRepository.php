@@ -9,11 +9,13 @@ use PDO;
 
 class MariaDbCurrencyRateRepository implements CurrencyRateRepository
 {
-    private PDO $pdo;
+    public function __construct(private PDO $pdo) {}
 
-    public function __construct()
+    public function all(): array
     {
-        $this->pdo = Connection::make();
+    	return $this->pdo
+        	->query("SELECT * FROM currency_rate")
+        	->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function save(CurrencyRate $rate): void

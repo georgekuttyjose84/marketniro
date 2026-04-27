@@ -2,17 +2,29 @@
 
 namespace App\Presentation\Controller;
 
-use App\Infrastructure\Repository\CurrencyRateRepository;
-use App\Infrastructure\Repository\MetalRepository;
-use App\Infrastructure\View\PhpTemplate;
+use App\Http\Request;
+use App\Http\Response\HtmlResponse;
+use App\Domain\Repository\CurrencyRateRepository;
 
 class CurrencyRateConvertorController
 {
-    public function index()
+    public function __construct(
+        private CurrencyRateRepository $repo
+    ) {}
+
+    public function index(Request $request): HtmlResponse
     {
+        $rates = $this->repo->all();
 
-        $engine = new PhpTemplate(__DIR__ . '/../../../templates');
 
-        echo $engine->render('finance/home', []);
+        // echo "<pre>";
+        // print_r($rates);
+        // echo "</pre>";
+        // exit();
+
+
+        return view('finance/home', [
+            'rates' => $rates
+        ]);
     }
 }

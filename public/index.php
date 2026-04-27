@@ -1,18 +1,24 @@
 <?php
 
-declare(strict_types=1);
+require_once __DIR__ . '/../bootstrap/prepend.inc.php'; // ✅ ADD THIS
+require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/../bootstrap/prepend.inc.php';
+use App\Routing\Router;
+use App\Http\Error\ExceptionHandler;
 
-use App\Infrastructure\Http\Router;
-use App\Infrastructure\Database\Connection;
-use App\Application\Service\CurrencyRateService;
-use App\Infrastructure\Repository\MariaDbCurrencyRateRepository;
+ini_set('display_errors', 0);
+error_reporting(E_ALL);
+ob_start();
 
-$routes = require __DIR__ . '/../app/Presentation/routes.php';
+try {
 
-$router = new Router($routes);
+    $container = require __DIR__ . '/../bootstrap/container.php';
+    $routes = require __DIR__ . '/../app/Presentation/routes.php';
 
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+    $router = new Router($routes, $container);
 
-$router->dispatch($uri);
+    $router->dispatch(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH));
+
+} catch (\Throwable $e) {
+    ExceptionHandler::handle($e);
+}
