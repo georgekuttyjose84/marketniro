@@ -13,9 +13,17 @@ class MariaDbCurrencyRateRepository implements CurrencyRateRepository
 
     public function all(): array
     {
-    	return $this->pdo
+    	$results = $this->pdo
         	->query("SELECT * FROM currency_rate  ORDER BY created_at DESC LIMIT 300")
         	->fetchAll(PDO::FETCH_ASSOC);
+
+        $objectsList = [];
+
+        foreach($results as $result){
+            $objectsList[] = $this->map($result);
+        }
+
+        return $objectsList;
     }
 
     public function save(CurrencyRate $rate): void
@@ -57,5 +65,15 @@ class MariaDbCurrencyRateRepository implements CurrencyRateRepository
             $row['target_currency'],
             (float)$row['rate']
         );
+    }
+
+    private function map(array $row): CurrencyRate
+    {
+        return new CurrencyRate(
+            (int) $row['id'],
+            $row['base_currency'],
+            $row['target_currency'],
+            (float) $row['rate'],
+            (new \DateTimeImmutable('@' . $row['created_at']))->setTimezone(new \DateTimeZone('Asia/Kolkata')));
     }
 }

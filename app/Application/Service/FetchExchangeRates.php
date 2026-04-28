@@ -30,21 +30,26 @@ class FetchExchangeRates
 
         $pdo = Connection::make();
 
-        $stmt = $pdo->prepare("
-            INSERT INTO currency_rate
-            (base_currency, target_currency, rate)
-            VALUES (:base, :target, :rate)
-        ");
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $timestamp = $now->getTimestamp();
+
+        $values = [];
+        $params = [];
 
         foreach ($rates as $currency => $rate) {
-
-            $stmt->execute([
-                'base' => $base,
-                'target' => $currency,
-                'rate' => $rate
-            ]);
-
+            $values[] = "(?, ?, ?, ?)";
+            $params[] = $base;
+            $params[] = $currency;
+            $params[] = $rate;
+            $params[] = $timestamp;
         }
 
+        $sql = "
+            INSERT INTO currency_rate 
+            (base_currency, target_currency, rate, created_at)
+            VALUES " . implode(',', $values);
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
     }
 }
