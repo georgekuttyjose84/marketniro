@@ -42,6 +42,7 @@
         .navbar-custom {
             min-height: 100px;
             padding: 10px 0;
+            max-height: 90px;
         }
 
         /* ===================== */
