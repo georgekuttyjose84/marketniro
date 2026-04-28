@@ -137,10 +137,51 @@
                 padding: 5px 10px;
             }
         }
+
+        .nav-secondary {
+            background: #020617;
+            border-top: 1px solid #1e293b;
+        }
+
+        .nav-link {
+            color: #e2e8f0 !important;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #22c55e !important;
+        }
+
+        .nav-scroll {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            scroll-behavior: smooth;
+
+            /* Hide scrollbar */
+            -ms-overflow-style: none;  /* IE/Edge */
+            scrollbar-width: none;     /* Firefox */
+        }
+
+        .nav-scroll::-webkit-scrollbar {
+            display: none; /* Chrome/Safari */
+        }
+
+        .active-link {
+    color: #22c55e !important;
+    font-weight: 600;
+}
+
+
     </style>
 </head>
 
 <body>
+
+<?php
+    $current = $_SERVER['REQUEST_URI'];
+?>
 
 <!-- HEADER -->
 <nav class="navbar navbar-expand-lg px-3 navbar-custom">
@@ -158,6 +199,44 @@
     </div>
 
 </nav>
+
+<!-- SECOND NAVBAR -->
+<!-- SIMPLE NAVBAR -->
+<div class="nav-secondary px-4 py-2">
+    <ul class="nav gap-4 d-flex justify-content-center align-item-center nav-scroll">
+
+        <!-- Finance -->
+        <li class="nav-item">
+            <a class="nav-link <?= $current === '/finance/currency' ? 'active-link' : '' ?>" href="/finance/currency">
+                Currency
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link <?= $current === '/finance/gold' ? 'active-link' : '' ?>" href="/finance/gold">
+                Gold
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link <?= $current === '/finance/silver' ? 'active-link' : '' ?>" href="/finance/silver">
+                Silver
+            </a>
+        </li>
+
+        <!-- Agriculture -->
+        <li class="nav-item">
+            <a class="nav-link" href="/agriculture/rubber">Rubber</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/agriculture/pineapple">Pineapple</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/agriculture/rice">Rice</a>
+        </li>
+
+    </ul>
+</div>
 
 <!-- CONTENT -->
 <div class="container mt-4">
