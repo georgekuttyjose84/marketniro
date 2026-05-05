@@ -36,5 +36,12 @@ services:
       - dbdata:/var/lib/mysql
       - ./docker/mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
 
+    command: >
+      --innodb-flush-log-at-trx-commit=1
+      --sync-binlog=1
+      --innodb-buffer-pool-size=256M
+
+    stop_grace_period: 30s
+
 volumes:
   dbdata:
