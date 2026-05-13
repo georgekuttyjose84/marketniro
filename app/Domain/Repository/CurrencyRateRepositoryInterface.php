@@ -4,7 +4,7 @@ namespace App\Domain\Repository;
 
 use App\Domain\Entity\CurrencyRate;
 
-interface CurrencyRateRepository
+interface CurrencyRateRepositoryInterface
 {
     public function save(CurrencyRate $rate): void;
 

@@ -2,23 +2,18 @@
 
 use App\Container\Container;
 use App\Infrastructure\Database\Connection;
-use App\Infrastructure\Repository\MariaDbCurrencyRateRepository;
-use App\Domain\Repository\CurrencyRateRepository;
+use App\Infrastructure\Repository\CurrencyRateRepository;
+use App\Domain\Repository\CurrencyRateRepositoryInterface;
+use PDO;
 
 $container = new Container();
 
-/**
- * DB Binding
- */
 $container->bind(PDO::class, function () {
     return Connection::make();
 });
 
-/**
- * Repository Binding (Interface → Implementation)
- */
-$container->bind(CurrencyRateRepository::class, function ($c) {
-    return new MariaDbCurrencyRateRepository(
+$container->bind(CurrencyRateRepositoryInterface::class, function ($c) {
+    return new CurrencyRateRepository(
         $c->get(PDO::class)
     );
 });
