@@ -129,3 +129,65 @@ body.dark-mode .status-live {
     .rates-table td:nth-child(3)::before { content: "Status"; }
     .rates-table td:nth-child(4)::before { content: "Updated"; }
 }
+.period-switcher {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.period-switcher a {
+    padding: 8px 14px;
+    border-radius: 999px;
+    text-decoration: none;
+    background: #eef2ff;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.period-switcher a.active {
+    background: #16a34a;
+    color: #fff;
+}
+
+.indicator-card,
+.chart-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    padding: 18px;
+}
+
+.indicator-title {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.indicator-value {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+.indicator-change.up {
+    color: #16a34a;
+}
+
+.indicator-change.down {
+    color: #dc2626;
+}
+
+.indicator-change.flat {
+    color: #64748b;
+}
+
+.chart-card {
+    margin-top: 12px;
+}
+
+.chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
