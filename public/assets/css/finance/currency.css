@@ -1,0 +1,131 @@
+.rates-card {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+}
+
+body.dark-mode .rates-card {
+    background: #0b1220;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+.rates-header {
+    padding: 20px 22px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+body.dark-mode .rates-header {
+    border-bottom: 1px solid #1e293b;
+}
+
+.rates-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.rates-subtitle {
+    margin-top: 4px;
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+body.dark-mode .rates-subtitle { color: #94a3b8; }
+
+.rates-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rates-table th,
+.rates-table td {
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef2f7;
+    text-align: left;
+}
+
+body.dark-mode .rates-table th,
+body.dark-mode .rates-table td {
+    border-bottom: 1px solid #1e293b;
+}
+
+.rates-table thead { background: #f8fafc; }
+body.dark-mode .rates-table thead { background: #111827; }
+
+.pair {
+    font-weight: 700;
+    color: #2563eb;
+}
+
+.rate {
+    font-weight: 800;
+    color: #111827;
+}
+
+body.dark-mode .rate { color: #f8fafc; }
+
+.time {
+    color: #6b7280;
+    font-size: 0.92rem;
+}
+
+body.dark-mode .time { color: #94a3b8; }
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.status-live {
+    background: #dcfce7;
+    color: #166534;
+}
+
+body.dark-mode .status-live {
+    background: #14532d;
+    color: #bbf7d0;
+}
+
+@media (max-width: 700px) {
+    .rates-table,
+    .rates-table thead,
+    .rates-table tbody,
+    .rates-table th,
+    .rates-table td,
+    .rates-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .rates-table thead { display: none; }
+
+    .rates-table tr {
+        padding: 14px 18px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    body.dark-mode .rates-table tr {
+        border-bottom: 1px solid #1e293b;
+    }
+
+    .rates-table td {
+        border: none;
+        padding: 7px 0;
+    }
+
+    .rates-table td::before {
+        display: block;
+        margin-bottom: 4px;
+        color: #6b7280;
+        font-weight: 700;
+    }
+
+    .rates-table td:nth-child(1)::before { content: "Currency Pair"; }
+    .rates-table td:nth-child(2)::before { content: "Exchange Rate"; }
+    .rates-table td:nth-child(3)::before { content: "Status"; }
+    .rates-table td:nth-child(4)::before { content: "Updated"; }
+}
