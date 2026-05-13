@@ -2,55 +2,37 @@
 
 namespace App\Infrastructure\View;
 
-class PhpTemplate
+final class PhpTemplate
 {
-    private string $path;
-    private array $parameters = [];
+    public function __construct(
+        private string $basePath = __DIR__ . '/../../../templates'
+    ) {}
 
-    public function __construct(string $path, array $parameters = [])
+    public function render(string $template, array $data = [], ?string $layout = 'layouts/main'): string
     {
-        $this->path = rtrim($path, '/') . '/';
-        $this->parameters = $parameters;
-    }
+        $content = $this->renderFile($template, $data);
 
-    /**
-     * MAIN RENDER FUNCTION
-     */
-    public function render(string $view, array $context = []): string
-    {
-        // 1. Render page content
-        $content = $this->load('pages/' . $view, $context);
-
-        // 2. Inject into layout
-        return $this->load('layouts/main', array_merge($context, [
-            'content' => $content
-        ]));
-    }
-
-    /**
-     * INTERNAL LOADER
-     */
-    private function load(string $view, array $context): string
-    {
-        $file = $this->path . $view . '.tpl.php';
-
-        if (!file_exists($file)) {
-            throw new \RuntimeException(sprintf('Template not found: %s', $file));
+        if ($layout === null) {
+            return $content;
         }
 
-        extract($context);
+        $data['content'] = $content;
 
-        ob_start();
-        include $file;
-
-        return ob_get_clean();
+        return $this->renderFile($layout, $data);
     }
 
-    /**
-     * GLOBAL PARAMETERS (optional use)
-     */
-    public function get(string $key): mixed
+    private function renderFile(string $relativePath, array $data): string
     {
-        return $this->parameters[$key] ?? null;
+        $file = rtrim($this->basePath, '/') . '/' . ltrim($relativePath, '/') . '.tpl.php';
+
+        if (!is_file($file)) {
+            throw new \RuntimeException("Template not found: {$file}");
+        }
+
+        extract($data, EXTR_SKIP);
+
+        ob_start();
+        require $file;
+        return (string) ob_get_clean();
     }
 }

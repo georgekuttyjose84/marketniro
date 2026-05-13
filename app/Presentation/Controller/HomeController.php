@@ -2,17 +2,17 @@
 
 namespace App\Presentation\Controller;
 
-use App\Infrastructure\Repository\CurrencyRateRepository;
-use App\Infrastructure\Repository\MetalRepository;
+use App\Http\Response\HtmlResponse;
 use App\Infrastructure\View\PhpTemplate;
 
 class HomeController
 {
-    public function index()
+    public function index(): HtmlResponse
     {
-
         $engine = new PhpTemplate(__DIR__ . '/../../../templates');
 
-        echo $engine->render('home', []);
+        return new HtmlResponse(
+            $engine->render('pages/home', [])
+        );
     }
 }
