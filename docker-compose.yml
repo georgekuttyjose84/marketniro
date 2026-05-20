@@ -22,6 +22,11 @@ services:
       - ./:/var/www
     environment:
       - OPENEXCHANGE_APP_ID=${OPENEXCHANGE_APP_ID}
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - APP_ENV=${APP_ENV}
 
   marketniro-mariadb:
     image: mariadb:10.11

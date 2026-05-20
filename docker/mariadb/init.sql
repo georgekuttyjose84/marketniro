@@ -1,8 +1,13 @@
-CREATE DATABASE IF NOT EXISTS marketniro;
+CREATE DATABASE IF NOT EXISTS marketniro
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+CREATE USER IF NOT EXISTS 'marketniro_app'@'%' IDENTIFIED BY 'secret';
+GRANT ALL PRIVILEGES ON marketniro.* TO 'marketniro_app'@'%';
+FLUSH PRIVILEGES;
 
 USE marketniro;
 
--- Example table (replace with your real schema)
 CREATE TABLE IF NOT EXISTS currency_rate (
     id INT AUTO_INCREMENT PRIMARY KEY,
     base_currency VARCHAR(10),

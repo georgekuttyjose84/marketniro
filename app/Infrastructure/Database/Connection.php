@@ -4,46 +4,32 @@ namespace App\Infrastructure\Database;
 
 use PDO;
 use PDOException;
+use RuntimeException;
 
 class Connection
 {
     public static function make(): PDO
     {
-        $host = 'marketniro-mariadb';
-        $user = 'root';
-        $pass = 'root';
-        $db   = 'marketniro';
+        $host = getenv('DB_HOST') ?: 'marketniro-mariadb';
+        $db   = getenv('DB_NAME') ?: 'marketniro';
+        $user = getenv('DB_USER') ?: 'marketniro_app';
+        $pass = getenv('DB_PASS') ?: 'secret';
 
         try {
             return new PDO(
-                "mysql:host=$host;dbname=$db",
+                "mysql:host=$host;dbname=$db;charset=utf8mb4",
                 $user,
                 $pass,
-                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                ]
             );
         } catch (PDOException $e) {
-
-            // 🔥 AUTO-FIX: recreate DB if missing
-            if (str_contains($e->getMessage(), 'Unknown database')) {
-
-                $pdo = new PDO(
-                    "mysql:host=$host",
-                    $user,
-                    $pass,
-                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-                );
-
-                $pdo->exec("CREATE DATABASE IF NOT EXISTS $db");
-
-                return new PDO(
-                    "mysql:host=$host;dbname=$db",
-                    $user,
-                    $pass,
-                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-                );
-            }
-
-            throw $e;
+            throw new RuntimeException(
+                "Database connection failed. Check DB host, name, username, password, and grants.",
+                0,
+                $e
+            );
         }
     }
 }
