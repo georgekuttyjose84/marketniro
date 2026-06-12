@@ -6,11 +6,18 @@ final class PhpTemplate
 {
     public function __construct(
         private string $basePath = __DIR__ . '/../../../templates'
-    ) {}
+    ) {
+    }
+    public function render(
+        string $template,
+        array $data = [],
+        ?string $layout = 'layouts/main'
+    ): string {
 
-    public function render(string $template, array $data = [], ?string $layout = 'layouts/main'): string
-    {
-        $content = $this->renderFile($template, $data);
+        $content = $this->renderFile(
+            $template,
+            $data
+        );
 
         if ($layout === null) {
             return $content;
@@ -18,21 +25,44 @@ final class PhpTemplate
 
         $data['content'] = $content;
 
-        return $this->renderFile($layout, $data);
+        return $this->renderFile(
+            $layout,
+            $data
+        );
     }
 
-    private function renderFile(string $relativePath, array $data): string
-    {
-        $file = rtrim($this->basePath, '/') . '/' . ltrim($relativePath, '/') . '.tpl.php';
+    private function renderFile(
+        string $relativePath,
+        array $data
+    ): string {
+
+        $file =
+            rtrim($this->basePath, '/')
+            . '/'
+            . ltrim($relativePath, '/')
+            . '.tpl.php';
 
         if (!is_file($file)) {
-            throw new \RuntimeException("Template not found: {$file}");
+            throw new \RuntimeException(
+                "Template not found: {$file}"
+            );
         }
 
-        extract($data, EXTR_SKIP);
+        /*
+         * Make the template engine available
+         * inside every template.
+         */
+        $view = $this;
+
+        extract(
+            $data,
+            EXTR_SKIP
+        );
 
         ob_start();
+
         require $file;
+
         return (string) ob_get_clean();
     }
 }
