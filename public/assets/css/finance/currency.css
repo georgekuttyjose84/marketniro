@@ -1,193 +1,116 @@
-.rates-card {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
+.currency-page-header{
+    margin-bottom:40px;
 }
 
-body.dark-mode .rates-card {
-    background: #0b1220;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+.breadcrumb-nav{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.85rem;
+    color:#64748b;
+    margin-bottom:12px;
 }
 
-.rates-header {
-    padding: 20px 22px;
-    border-bottom: 1px solid #e5e7eb;
+.breadcrumb-nav a{
+    text-decoration:none;
+    color:#2563eb;
 }
 
-body.dark-mode .rates-header {
-    border-bottom: 1px solid #1e293b;
+.breadcrumb-nav a:hover{
+    text-decoration:underline;
 }
 
-.rates-title {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: 800;
+.currency-header-content{
+    max-width:900px;
 }
 
-.rates-subtitle {
-    margin-top: 4px;
-    color: #6b7280;
-    font-size: 0.95rem;
+.currency-header-content h1{
+    margin:0;
+    font-size:2.4rem;
+    font-weight:800;
+    line-height:1.2;
+    color:#0f172a;
 }
 
-body.dark-mode .rates-subtitle { color: #94a3b8; }
-
-.rates-table {
-    width: 100%;
-    border-collapse: collapse;
+.currency-description{
+    margin-top:14px;
+    color:#64748b;
+    line-height:1.8;
+    font-size:1rem;
+    max-width:720px;
 }
 
-.rates-table th,
-.rates-table td {
-    padding: 16px 18px;
-    border-bottom: 1px solid #eef2f7;
-    text-align: left;
+.currency-share{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:20px;
 }
 
-body.dark-mode .rates-table th,
-body.dark-mode .rates-table td {
-    border-bottom: 1px solid #1e293b;
+.share-label{
+    font-weight:600;
+    color:#475569;
 }
 
-.rates-table thead { background: #f8fafc; }
-body.dark-mode .rates-table thead { background: #111827; }
-
-.pair {
-    font-weight: 700;
-    color: #2563eb;
+.share-icon{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    text-decoration:none;
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    transition:.25s;
+    color:#0f172a;
 }
 
-.rate {
-    font-weight: 800;
-    color: #111827;
+.share-icon:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,.08);
 }
 
-body.dark-mode .rate { color: #f8fafc; }
-
-.time {
-    color: #6b7280;
-    font-size: 0.92rem;
+.facebook{
+    color:#1877F2;
 }
 
-body.dark-mode .time { color: #94a3b8; }
-
-.status-badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 700;
+.twitter{
+    color:#111827;
 }
 
-.status-live {
-    background: #dcfce7;
-    color: #166534;
+.linkedin{
+    color:#0A66C2;
 }
 
-body.dark-mode .status-live {
-    background: #14532d;
-    color: #bbf7d0;
+.whatsapp{
+    color:#25D366;
 }
 
-@media (max-width: 700px) {
-    .rates-table,
-    .rates-table thead,
-    .rates-table tbody,
-    .rates-table th,
-    .rates-table td,
-    .rates-table tr {
-        display: block;
-        width: 100%;
+.copy-link{
+    cursor:pointer;
+}
+
+.converter-section,
+.history-section,
+.faq-section{
+    margin-top:50px;
+}
+
+.converter-section h2,
+.history-section h2,
+.faq-section h2{
+    font-size:1.8rem;
+    font-weight:700;
+}
+
+@media(max-width:768px){
+    .currency-header-content h1{
+        font-size:2rem;
     }
 
-    .rates-table thead { display: none; }
-
-    .rates-table tr {
-        padding: 14px 18px;
-        border-bottom: 1px solid #e5e7eb;
+    .currency-share{
+        flex-wrap:wrap;
     }
 
-    body.dark-mode .rates-table tr {
-        border-bottom: 1px solid #1e293b;
-    }
-
-    .rates-table td {
-        border: none;
-        padding: 7px 0;
-    }
-
-    .rates-table td::before {
-        display: block;
-        margin-bottom: 4px;
-        color: #6b7280;
-        font-weight: 700;
-    }
-
-    .rates-table td:nth-child(1)::before { content: "Currency Pair"; }
-    .rates-table td:nth-child(2)::before { content: "Exchange Rate"; }
-    .rates-table td:nth-child(3)::before { content: "Status"; }
-    .rates-table td:nth-child(4)::before { content: "Updated"; }
-}
-.period-switcher {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.period-switcher a {
-    padding: 8px 14px;
-    border-radius: 999px;
-    text-decoration: none;
-    background: #eef2ff;
-    color: #1e293b;
-    font-weight: 600;
-}
-
-.period-switcher a.active {
-    background: #16a34a;
-    color: #fff;
-}
-
-.indicator-card,
-.chart-card {
-    background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
-    padding: 18px;
-}
-
-.indicator-title {
-    font-size: 0.95rem;
-    color: #64748b;
-    font-weight: 700;
-}
-
-.indicator-value {
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin-top: 6px;
-}
-
-.indicator-change.up {
-    color: #16a34a;
-}
-
-.indicator-change.down {
-    color: #dc2626;
-}
-
-.indicator-change.flat {
-    color: #64748b;
-}
-
-.chart-card {
-    margin-top: 12px;
-}
-
-.chart-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
 }

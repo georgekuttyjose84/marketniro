@@ -32,40 +32,14 @@
 
 </div>
 
-<!-- PRICE TABLE -->
-<h5 class="mb-3">📊 Latest Prices</h5>
 
-<div class="card p-3">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle">
-            <thead>
-                <tr>
-                    <th>Commodity</th>
-                    <th>Market</th>
-                    <th>Price</th>
-                    <th>Change</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Coconut</td>
-                    <td>Kochi</td>
-                    <td>₹32</td>
-                    <td class="text-success">+2%</td>
-                    <td>10:30 AM</td>
-                </tr>
-                <tr>
-                    <td>Rubber</td>
-                    <td>Kottayam</td>
-                    <td>₹180</td>
-                    <td class="text-danger">-1%</td>
-                    <td>10:25 AM</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<?= $view->render(
+        'pages/trending-currency',
+        [
+                'main_currency_list' => $main_currency_list
+        ],
+        null
+) ?>
 
 <!-- CTA -->
 <div class="text-center mt-4">

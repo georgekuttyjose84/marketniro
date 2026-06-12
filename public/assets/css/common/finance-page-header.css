@@ -1,0 +1,133 @@
+.finance-page-header{
+    margin-bottom:42px;
+}
+
+.finance-breadcrumb{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:.85rem;
+    color:#64748b;
+    margin-bottom:18px;
+    flex-wrap:wrap;
+}
+
+.finance-breadcrumb a{
+    color:#2563eb;
+    text-decoration:none;
+}
+
+.finance-breadcrumb a:hover{
+    text-decoration:underline;
+}
+
+.finance-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:30px;
+    flex-wrap:wrap;
+}
+
+.finance-header-content{
+    max-width:820px;
+}
+
+.finance-header-content h1{
+    margin:0;
+    font-size:2.6rem;
+    font-weight:800;
+    line-height:1.2;
+    color:#0f172a;
+}
+
+.finance-header-content p{
+    margin-top:14px;
+    color:#64748b;
+    line-height:1.8;
+    font-size:1rem;
+}
+
+.finance-share{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.share-title{
+    font-weight:600;
+    color:#475569;
+}
+
+.share-icon{
+    width:42px;
+    height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    background:#ffffff;
+    border:1px solid #e5e7eb;
+    text-decoration:none;
+    font-weight:700;
+    color:#0f172a;
+    transition:.25s;
+    cursor:pointer;
+}
+
+.share-icon:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px rgba(0,0,0,.08);
+}
+
+.facebook{
+    color:#1877F2;
+}
+
+.twitter{
+    color:#111827;
+}
+
+.linkedin{
+    color:#0A66C2;
+}
+
+.whatsapp{
+    color:#25D366;
+}
+
+.copy-link{
+    background:#f8fafc;
+}
+
+body.dark-mode .finance-header-content h1{
+    color:#f8fafc;
+}
+
+body.dark-mode .finance-header-content p{
+    color:#94a3b8;
+}
+
+body.dark-mode .finance-breadcrumb{
+    color:#94a3b8;
+}
+
+body.dark-mode .share-icon{
+    background:#1e293b;
+    border-color:#334155;
+    color:white;
+}
+
+@media(max-width:768px){
+    .finance-header{
+        flex-direction:column;
+    }
+    .finance-header-content h1{
+        font-size:2rem;
+    }
+    .finance-share{
+        width:100%;
+    }
+
+}
