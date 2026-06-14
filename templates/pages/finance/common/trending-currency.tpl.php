@@ -18,7 +18,10 @@ $flagMap=['USD'=>'us','EUR'=>'eu','INR'=>'in','AED'=>'ae','JPY'=>'jp','CNY'=>'cn
             <thead><tr><th>Currency Pair</th><th>Exchange Rate</th><th>Trend</th></tr></thead>
             <tbody>
             <?php foreach($main_currency_list as $currency): ?>
-                <tr>
+
+                <tr class="clickable-row"
+                    data-href="/finance/currency?from=<?= urlencode($currency->baseCurrency) ?>&to=<?= urlencode($currency->targetCurrency) ?>"
+                    style="cursor:pointer;">
                     <td>
                         <div class="pair-flags-wrapper">
                             <div class="flag-group">
@@ -38,7 +41,16 @@ $flagMap=['USD'=>'us','EUR'=>'eu','INR'=>'in','AED'=>'ae','JPY'=>'jp','CNY'=>'cn
                         <?php else:?><span class="trend-modern trend-same">● Stable</span><?php endif;?>
                     </td>
                 </tr>
+
             <?php endforeach;?>
             </tbody></table></div>
     <div class="footer-note">Exchange rates are indicative and update throughout market hours.</div>
 </section>
+
+<script>
+    document.querySelectorAll('.clickable-row').forEach(row => {
+        row.addEventListener('click', function () {
+            window.location.href = this.dataset.href;
+        });
+    });
+</script>

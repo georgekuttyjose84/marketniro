@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Controller;
 
+use App\Application\Service\HistoryRateService;
 use App\Application\Service\MainCurrencyRateService;
 use App\Http\Request;
 use App\Http\Response\HtmlResponse;
@@ -17,9 +18,24 @@ class CurrencyRateConvertorController
     public function index(Request $request): HtmlResponse
     {
         $engine = new PhpTemplate(__DIR__ . '/../../../templates');
-
+        $amount = $request->getInt('amount',1);
+        $from = $request->getString('from','USD');
+        $to = $request->getString('to','INR');
+        $currencyValue = $this->repo->find($from, $to);
         $mainCurrencyRateService = new MainCurrencyRateService($this->repo);
         $mainCurrencyList = $mainCurrencyRateService->getMainCurrencyRates();
+
+
+        $historyRateService = new HistoryRateService(
+            $this->repo
+        );
+
+        $graph = $historyRateService->getHistory(
+            base: $from,
+            target: $to,
+        );
+
+
 
         return new HtmlResponse(
             $engine->render(
@@ -39,9 +55,15 @@ class CurrencyRateConvertorController
                         ],
                         'scripts' => [
                             '/assets/js/finance/currency.js',
+                            'https://cdn.jsdelivr.net/npm/apexcharts'
+
                         ],
                     ],
                     'main_currency_list' => $mainCurrencyList,
+                    'amount' => $amount,
+                    'currency_value' => $currencyValue,
+                    'graph' => $graph,
+                    'period' => '24H',
                 ]
             )
         );

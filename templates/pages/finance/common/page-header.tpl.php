@@ -13,45 +13,32 @@ $breadcrumb = $page['breadcrumb'] ?? $h1;
 <section class="finance-page-header">
 
     <nav class="finance-breadcrumb" aria-label="Breadcrumb">
-
         <a href="/">Home</a>
-
         <span>/</span>
-
         <a href="/finance">Finance</a>
-
         <span>/</span>
-
         <span><?= htmlspecialchars($breadcrumb) ?></span>
 
     </nav>
 
     <div class="finance-header">
-
         <div class="finance-header-content">
-
             <h1>
                 <?= htmlspecialchars($h1) ?>
             </h1>
-
             <p>
                 <?= htmlspecialchars($description) ?>
             </p>
-
         </div>
-
         <div class="finance-share">
-
             <span class="share-title">
                 Share
             </span>
-
             <a
                 href="#"
                 class="share-icon facebook"
                 aria-label="Share on Facebook"
-            >
-                f
+            >f
             </a>
 
             <a

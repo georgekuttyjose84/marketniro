@@ -7,7 +7,7 @@ $flagMap=['USD'=>'us','EUR'=>'eu','INR'=>'in','AED'=>'ae','JPY'=>'jp','CNY'=>'cn
 <section class="currency-section">
     <div class="currency-grid">
         <?php foreach($main_currency_list as $currency): ?>
-            <a href="/finance/currency" class="text-decoration-none text-reset">
+            <a href="/finance/currency?from=<?=$currency->baseCurrency?>&to=<?=$currency->targetCurrency?>" class="text-decoration-none text-reset">
                 <div class="currency-card">
 
                     <div class="flag-stack">

@@ -3,10 +3,11 @@
 namespace App\Domain\Repository;
 
 use App\Domain\Entity\CurrencyRate;
+use App\Domain\Entity\CurrencyValue;
 
 interface CurrencyRateRepositoryInterface
 {
-    public function find(string $base, string $target): ?CurrencyRate;
+    public function find(string $base, string $target): ?CurrencyValue;
     
     public function all(): array;
 
