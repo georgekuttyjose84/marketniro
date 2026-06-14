@@ -77,6 +77,7 @@ $scripts = $page['scripts'] ?? [];
 </main>
 
 <script src="/assets/js/app.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>-->
 
 <?php foreach ($scripts as $script): ?>
     <script src="<?= htmlspecialchars($script) ?>"></script>

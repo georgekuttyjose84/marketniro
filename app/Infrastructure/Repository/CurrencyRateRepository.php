@@ -2,10 +2,8 @@
 
 namespace App\Infrastructure\Repository;
 
-use App\Domain\Entity\CurrencyRate;
+use App\Domain\Entity\CurrencyValue;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
-use DateTimeImmutable;
-use DateTimeZone;
 use PDO;
 
 class CurrencyRateRepository implements CurrencyRateRepositoryInterface
@@ -27,31 +25,62 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         return $objectsList;
     }
 
-    public function find(string $base, string $target): ?CurrencyRate
+    public function find(string $base, string $target): ?CurrencyValue
     {
-        $stmt = $this->pdo->prepare(
-            "SELECT * FROM currency_rate
-             WHERE base_currency = :base AND target_currency = :target
-             ORDER BY created_at DESC
-             LIMIT 1"
-        );
+        // Same currency
+        if ($base === $target) {
+            return new CurrencyValue(
+                $base,
+                $target,
+                1.0
+            );
+        }
 
-        $stmt->execute([
-            'base' => $base,
-            'target' => $target
-        ]);
+        // USD is always 1
+        $baseRate = ($base === 'USD')
+            ? 1.0
+            : $this->findUsdRate($base);
 
-        $row = $stmt->fetch();
+        $targetRate = ($target === 'USD')
+            ? 1.0
+            : $this->findUsdRate($target);
 
-        if (!$row) {
+        if ($baseRate === null || $targetRate === null) {
             return null;
         }
 
-        return new CurrencyRate(
-            $row['base_currency'],
-            $row['target_currency'],
-            (float)$row['rate']
+        $rate = $targetRate / $baseRate;
+
+        return new CurrencyValue(
+            $base,
+            $target,
+            $rate
         );
+    }
+
+    private function findUsdRate(string $currency): ?float
+    {
+        $stmt = $this->pdo->prepare(
+            "
+        SELECT rate
+        FROM currency_rate
+        WHERE target_currency = :currency
+        ORDER BY created_at DESC, id DESC
+        LIMIT 1
+        "
+        );
+
+        $stmt->execute([
+            'currency' => $currency
+        ]);
+
+        $rate = $stmt->fetchColumn();
+
+        if ($rate === false) {
+            return null;
+        }
+
+        return (float) $rate;
     }
 
 
@@ -92,5 +121,25 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
             '1m' => time() - 30 * 24 * 3600,
             default => time() - 24 * 3600,
         };
+    }
+
+    public function getHistory(
+        string $target,
+        int $limit
+    ): array
+    {
+        $stmt = $this->pdo->prepare(
+            "SELECT created_at, rate 
+                   FROM currency_rate 
+                   WHERE target_currency = :target 
+                   ORDER BY created_at DESC LIMIT {$limit}");
+
+        $stmt->execute([
+            'target' => $target,
+        ]);
+
+        return array_reverse(
+            $stmt->fetchAll(\PDO::FETCH_ASSOC)
+        );
     }
 }

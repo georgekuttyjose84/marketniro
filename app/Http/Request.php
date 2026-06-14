@@ -32,7 +32,17 @@ class Request
 
     private function input(string $key, mixed $default = null): mixed
     {
-        return $this->body[$key] ?? $this->query[$key] ?? $default;
+        $value = $this->body[$key] ?? $this->query[$key] ?? null;
+
+        if ($value === null) {
+            return $default;
+        }
+
+        if (is_string($value) && trim($value) === '') {
+            return $default;
+        }
+
+        return $value;
     }
 
     public function getString(string $key, string $default = ''): string
