@@ -146,69 +146,107 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
     public function getHourlyComparison(
         string $base,
         string $target
-    ): array
-    {
-        $stmt = $this->pdo->prepare(
-            "
-        SELECT
+    ): array {
 
-            created_at,
+        // Existing behaviour for USD base
+        if ($base === 'USD') {
 
-            HOUR(
-                FROM_UNIXTIME(created_at + 19800)
-            ) AS hour,
+            $stmt = $this->pdo->prepare("
+            SELECT
+                created_at,
+                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                rate
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+            AND target_currency = :target
+            ORDER BY created_at DESC
+        ");
 
-            DATE(
-                FROM_UNIXTIME(created_at + 19800)
-            ) AS day,
+            $stmt->execute([
+                'target' => $target
+            ]);
 
-            rate
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        FROM
-            currency_rate
+        } else {
 
-        WHERE
-            base_currency = :base
+            // Get USD -> Base
+            $stmtBase = $this->pdo->prepare("
+            SELECT
+                created_at,
+                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                rate
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+            AND target_currency = :base
+            ORDER BY created_at DESC
+        ");
 
-        AND
-            target_currency = :target
+            $stmtBase->execute([
+                'base' => $base
+            ]);
 
-        ORDER BY
-            created_at DESC
-        "
-        );
+            $baseRows = $stmtBase->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt->execute([
+            // Get USD -> Target
+            $stmtTarget = $this->pdo->prepare("
+            SELECT
+                created_at,
+                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                rate
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+            AND target_currency = :target
+            ORDER BY created_at DESC
+        ");
 
-            'base' => $base,
+            $stmtTarget->execute([
+                'target' => $target
+            ]);
 
-            'target' => $target
+            $targetRows = $stmtTarget->fetchAll(PDO::FETCH_ASSOC);
 
-        ]);
+            $baseLookup = [];
 
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($baseRows as $row) {
+                $baseLookup[$row['created_at']] = $row;
+            }
+
+            $rows = [];
+
+            foreach ($targetRows as $row) {
+
+                if (!isset($baseLookup[$row['created_at']])) {
+                    continue;
+                }
+
+                $usdBase = (float)$baseLookup[$row['created_at']]['rate'];
+
+                if ($usdBase == 0) {
+                    continue;
+                }
+
+                $rows[] = [
+                    'created_at' => $row['created_at'],
+                    'hour'       => $row['hour'],
+                    'day'        => $row['day'],
+                    'rate'       => (float)$row['rate'] / $usdBase
+                ];
+            }
+        }
 
         if (empty($rows)) {
             return [];
         }
 
-        /*
-         * Get available local dates
-         */
-
-        $dates = array_unique(
-            array_column($rows, 'day')
-        );
-
+        $dates = array_unique(array_column($rows, 'day'));
         rsort($dates);
 
         $today = $dates[0] ?? null;
-
         $yesterday = $dates[1] ?? null;
-
-        /*
-         * Get latest available local hour for TODAY
-         */
 
         $currentHour = -1;
 
@@ -222,71 +260,40 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
                 );
 
             }
-
         }
 
-        /*
-         * Build lookup arrays
-         */
-
         $todayRates = [];
-
         $yesterdayRates = [];
 
         foreach ($rows as $row) {
 
-            $hour = sprintf(
-                "%02d:00",
-                $row['hour']
-            );
+            $hour = sprintf("%02d:00", $row['hour']);
 
-            if ($row['day'] === $today) {
-
-                if (!isset($todayRates[$hour])) {
-
-                    $todayRates[$hour] = (float)$row['rate'];
-
-                }
-
+            if ($row['day'] === $today && !isset($todayRates[$hour])) {
+                $todayRates[$hour] = (float)$row['rate'];
             }
 
-            if ($row['day'] === $yesterday) {
-
-                if (!isset($yesterdayRates[$hour])) {
-
-                    $yesterdayRates[$hour] = (float)$row['rate'];
-
-                }
-
+            if ($row['day'] === $yesterday && !isset($yesterdayRates[$hour])) {
+                $yesterdayRates[$hour] = (float)$row['rate'];
             }
-
         }
-
-        /*
-         * Build comparison table
-         */
 
         $result = [];
 
         for ($i = 0; $i < 24; $i++) {
 
-            $hour = sprintf(
-                "%02d:00",
-                $i
-            );
+            $hour = sprintf("%02d:00", $i);
 
             $result[] = [
-
                 'time' => $hour,
-
                 'yesterday' => $yesterdayRates[$hour] ?? null,
-
                 'today' => $i <= $currentHour
                     ? ($todayRates[$hour] ?? null)
                     : null
-
             ];
         }
+
         return $result;
     }
+
 }
