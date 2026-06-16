@@ -2,7 +2,9 @@
 
 namespace App\Domain\Entity;
 
-class HistoryPoint
+use JsonSerializable;
+
+class HistoryPoint implements JsonSerializable
 {
     public function __construct(
 
@@ -13,5 +15,18 @@ class HistoryPoint
         public int $createdAt
 
     ) {}
+
+    public function jsonSerialize(): array
+    {
+        return [
+
+            'label' => $this->label,
+
+            'rate' => $this->rate,
+
+            'createdAt' => $this->createdAt
+
+        ];
+    }
 
 }

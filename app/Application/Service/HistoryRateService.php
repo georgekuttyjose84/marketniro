@@ -140,7 +140,7 @@ class HistoryRateService
 
                 '7D' => date('d M H:i', $createdAt),
 
-                '30D' => date('d M', $createdAt),
+                '1M' => date('d M', $createdAt),
 
                 '90D' => date('d M', $createdAt),
 

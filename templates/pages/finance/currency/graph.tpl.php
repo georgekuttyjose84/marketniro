@@ -1,9 +1,6 @@
 <?php
 /** @var \App\Domain\Entity\GraphData $graph */
 ?>
-
-
-
 <style>
     :root{
         --card-bg:#ffffff;
@@ -18,225 +15,431 @@
         --shadow:0 4px 18px rgba(15,23,42,0.06);
         --shadow-sm:0 4px 10px rgba(147,51,234,0.28);
         --radius:14px;
-        --font:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+        --font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
         --tooltip-bg:#2b2740;
         --tooltip-date:#fbbf24;
     }
 
-
-
-    .card{
+    /* ── Base card ─────────────────────────────────────────── */
+    .exrate-card{
         background:var(--card-bg);
         border:1px solid var(--card-border);
         border-radius:var(--radius);
         box-shadow:var(--shadow);
-        padding:30px;
+        padding:28px;
         color:var(--text);
         width:100%;
+        box-sizing:border-box;
+        font-family:var(--font);
     }
 
-    /* Section header */
-    .section-top{
+    /* ── Section header ────────────────────────────────────── */
+    .exrate-section-top{
         display:flex;justify-content:space-between;align-items:flex-start;
-        gap:24px;flex-wrap:wrap;margin-bottom:26px;
+        gap:16px;flex-wrap:wrap;margin-bottom:22px;
     }
-    .section-heading h2{
-        font-size:32px;font-weight:700;letter-spacing:-0.02em;margin-bottom:8px;
+    .exrate-section-heading h2{
+        font-size:clamp(18px,5vw,32px);
+        font-weight:700;letter-spacing:-0.02em;margin:0 0 6px;
     }
-    .section-subtitle{font-size:15px;font-weight:500;color:var(--muted);max-width:580px;}
+    .exrate-section-subtitle{
+        font-size:clamp(12px,3.5vw,15px);
+        font-weight:500;color:var(--muted);max-width:580px;margin:0;
+    }
 
-    /* Time range buttons */
-    .time-range-selector{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+    /* ── Time-range buttons ────────────────────────────────── */
+    .exrate-time-range{
+        display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-start;
+        width:100%;
+    }
     .range-btn{
-        padding:8px 18px;border-radius:999px;font-size:14px;font-weight:600;
-        font-family:var(--font);cursor:pointer;background:#fff;border:1px solid #e2e8f0;
-        color:var(--text);
-        transition:border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease, background .2s ease;
+        padding:7px 14px;border-radius:999px;
+        font-size:clamp(11px,3.2vw,14px);font-weight:600;
+        font-family:var(--font);cursor:pointer;
+        background:#fff;border:1px solid #e2e8f0;color:var(--text);
+        transition:border-color .2s,color .2s,transform .2s,box-shadow .2s,background .2s;
+        white-space:nowrap;
     }
     .range-btn:hover{border-color:var(--btn-active);color:var(--btn-active);transform:translateY(-2px);}
     .range-btn.active{background:var(--btn-active);color:#fff;border-color:var(--btn-active);box-shadow:var(--shadow-sm);}
     .range-btn.active:hover{transform:none;color:#fff;}
     .range-btn:focus-visible{outline:2px solid var(--btn-active);outline-offset:2px;}
 
-    /* Summary cards */
-    .summary-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
-    .summary-card{background:var(--summary-bg);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;}
-    .summary-label{font-size:13px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;}
-    .summary-value{font-size:24px;font-weight:700;color:var(--text);}
-
-    /* Chart */
-    .chart-container{max-width:900px;}
-    .chart-wrapper{position:relative;overflow-x:auto;border-radius:10px;}
-    .chart-wrapper svg{display:block;width:100%;min-width:640px;aspect-ratio:900/350;cursor:crosshair;}
-
-    .grid-line{stroke:var(--grid);stroke-width:1;}
-    .grid-line-v{stroke:var(--grid);stroke-width:1;stroke-dasharray:4 4;}
-    .axis-line{stroke:var(--axis);stroke-width:1.25;}
-    .y-label,.x-label{font-size:14px;fill:var(--axis);font-family:var(--font);}
-    .trend-line{fill:none;stroke:var(--purple-line);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;}
-
-    /* Hover crosshair + point */
-    .hover-line{stroke:var(--axis);stroke-width:1;stroke-dasharray:4 4;opacity:0;transition:opacity .1s ease;}
-    .hover-dot{fill:var(--purple-line);stroke:#ffffff;stroke-width:2;opacity:0;transition:opacity .1s ease;}
-
-    /* Tooltip */
-    .chart-tooltip{
-        position:absolute;
-        top:0;left:0;
-        background:var(--tooltip-bg);
-        color:#fff;
-        border-radius:10px;
-        padding:10px 16px;
-        font-family:var(--font);
-        line-height:1.6;
-        pointer-events:none;
-        box-shadow:0 10px 28px rgba(15,23,42,0.28);
-        opacity:0;
-        transform:translate(-9999px,-9999px);
-        transition:opacity .1s ease;
-        white-space:nowrap;
-        z-index:5;
+    /* ── Summary cards ─────────────────────────────────────── */
+    .exrate-summary-cards{
+        display:grid;
+        grid-template-columns:repeat(3,1fr);
+        gap:12px;margin-bottom:24px;
     }
-    .chart-tooltip.visible{opacity:1;}
-    .chart-tooltip .tooltip-date{
-        display:block;
-        color:var(--tooltip-date);
-        font-weight:700;
-        font-size:13px;
-        margin-bottom:2px;
+    .exrate-summary-card{
+        background:var(--summary-bg);border-radius:12px;
+        padding:14px 16px;display:flex;flex-direction:column;gap:6px;
     }
-    .chart-tooltip .tooltip-value{
-        display:block;
-        color:#ffffff;
-        font-weight:700;
-        font-size:16px;
+    .summary-label{
+        font-size:clamp(10px,2.8vw,13px);
+        color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;
+    }
+    .summary-value{
+        font-size:clamp(14px,4.5vw,24px);
+        font-weight:700;color:var(--text);word-break:break-all;
+    }
+
+    /* ── Chart wrapper ─────────────────────────────────────── */
+    #history-chart{
+        width:100%;
+        min-height:260px;
+    }
+
+    /* ── Chart figure ──────────────────────────────────────── */
+    #history-chart-figure{
+        position:relative;
     }
 
     /* Loading overlay */
-    .loading-overlay{
-        position:absolute;inset:0;background:rgba(255,255,255,.85);
-        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
-        border-radius:10px;opacity:0;pointer-events:none;transition:opacity .25s ease;
+    .exrate-loading{
+        position:absolute;
+        inset:0;
+        background:rgba(255,255,255,.85);
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        gap:12px;
+        border-radius:10px;
+        opacity:0;
+        pointer-events:none;
+        transition:opacity .25s;
+        z-index:10;
     }
-    .loading-overlay.visible{opacity:1;pointer-events:all;}
-    .spinner{width:36px;height:36px;border:3px solid var(--grid);border-top-color:var(--btn-active);border-radius:50%;animation:spin .8s linear infinite;}
-    .loading-overlay p{font-size:14px;color:var(--muted);font-weight:500;}
-    @keyframes spin{to{transform:rotate(360deg);}}
+    .exrate-loading.visible{opacity:1;pointer-events:all;}
+    .exrate-spinner{
+        width:36px;height:36px;border:3px solid var(--grid);
+        border-top-color:var(--btn-active);border-radius:50%;
+        animation:exrate-spin .8s linear infinite;
+    }
+    .exrate-loading p{font-size:14px;color:var(--muted);font-weight:500;margin:0;}
+    @keyframes exrate-spin{to{transform:rotate(360deg);}}
 
-    /* Chart footer */
-    .chart-footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:18px;font-size:13px;color:var(--muted);}
+    /* ── Responsive tweaks ─────────────────────────────────── */
+    @media(max-width:480px){
+        .exrate-card{padding:16px 14px;}
+        .exrate-section-top{gap:10px;margin-bottom:16px;}
+        .exrate-summary-cards{
+            grid-template-columns:1fr 1fr;
+            gap:8px;margin-bottom:16px;
+        }
+        .exrate-summary-card:first-child{grid-column:1/-1;}
+        .exrate-time-range{gap:5px;}
+    }
 
-    /* Responsive */
-    @media (max-width:1024px){
-        .chart-container{max-width:100%;}
+    @media(max-width:360px){
+        .exrate-card{padding:12px 10px;}
+        .exrate-summary-cards{grid-template-columns:1fr;}
+        .exrate-summary-card:first-child{grid-column:auto;}
+        .range-btn{padding:6px 10px;}
     }
-    @media (max-width:768px){
-        .card{padding:22px;}
-        .section-heading h2{font-size:24px;}
-        .time-range-selector{justify-content:flex-start;width:100%;}
-        .summary-cards{grid-template-columns:1fr;}
+
+    /* ── 320px support ─────────────────────────────────────── */
+    @media(max-width:320px){
+        .exrate-card{padding:10px 8px;}
+        .exrate-section-heading h2{font-size:16px;}
+        .exrate-section-subtitle{font-size:11px;}
+        .exrate-summary-cards{grid-template-columns:1fr;gap:6px;margin-bottom:12px;}
+        .exrate-summary-card:first-child{grid-column:auto;}
+        .exrate-summary-card{padding:10px 12px;}
+        .summary-value{font-size:14px;}
+        .range-btn{padding:5px 8px;font-size:11px;}
+        .exrate-time-range{gap:4px;}
+        #history-chart{min-height:200px;}
     }
-    @media (prefers-reduced-motion:reduce){
+
+    @media(prefers-reduced-motion:reduce){
         *{animation:none !important;transition:none !important;}
     }
 </style>
 
+<section class="exrate-card" aria-labelledby="historical-rates-heading" itemscope itemtype="https://schema.org/Dataset">
 
+    <meta itemprop="url" content="<?= htmlspecialchars($_SERVER['REQUEST_URI'] ?? '') ?>">
+    <meta itemprop="license" content="https://creativecommons.org/licenses/by/4.0/">
 
-<section class="card" aria-labelledby="historical-rates-heading">
-
-    <div class="section-top">
-        <div class="section-heading">
-            <h2 id="historical-rates-heading">Historical Exchange Rates</h2>
-            <p class="section-subtitle">
-                Explore historical exchange rates and exchange rate trends.
+    <div class="exrate-section-top">
+        <div class="exrate-section-heading">
+            <h2 id="historical-rates-heading" itemprop="name">
+                <?= htmlspecialchars($graph->base ?? '') ?> to <?= htmlspecialchars($graph->target) ?> Historical Exchange Rates
+            </h2>
+            <p class="exrate-section-subtitle" itemprop="description">
+                Explore historical exchange rates and exchange rate trends for
+                <?= htmlspecialchars($graph->base ?? '') ?> to <?= htmlspecialchars($graph->target) ?>.
+                View 24-hour, 7-day, 1-month, and 6-month rate history.
             </p>
         </div>
 
-        <div class="time-range-selector">
-            <button class="range-btn active">Current Range</button>
+        <nav class="exrate-time-range" aria-label="Select time range for exchange rate chart">
+            <button class="range-btn active" data-period="24H" aria-pressed="true">24 Hours</button>
+            <button class="range-btn" data-period="7D" aria-pressed="false">7 Days</button>
+            <button class="range-btn" data-period="1M" aria-pressed="false">1 Month</button>
+            <button class="range-btn" data-period="6M" aria-pressed="false">6 Months</button>
+        </nav>
+    </div>
+
+    <div class="exrate-summary-cards" role="list" aria-label="Exchange rate summary statistics">
+        <div class="exrate-summary-card" role="listitem" itemprop="variableMeasured" itemscope itemtype="https://schema.org/PropertyValue">
+            <span class="summary-label" itemprop="name">Current Rate</span>
+            <span class="summary-value" itemprop="value">
+                <?= number_format($graph->current, 4) ?>&nbsp;<?= htmlspecialchars($graph->target) ?>
+            </span>
+        </div>
+        <div class="exrate-summary-card" role="listitem" itemprop="variableMeasured" itemscope itemtype="https://schema.org/PropertyValue">
+            <span class="summary-label" itemprop="name">High</span>
+            <span class="summary-value" itemprop="value"><?= number_format($graph->high, 4) ?></span>
+        </div>
+        <div class="exrate-summary-card" role="listitem" itemprop="variableMeasured" itemscope itemtype="https://schema.org/PropertyValue">
+            <span class="summary-label" itemprop="name">Low</span>
+            <span class="summary-value" itemprop="value"><?= number_format($graph->low, 4) ?></span>
         </div>
     </div>
 
-    <div class="summary-cards">
-        <div class="summary-card">
-            <span class="summary-label">Current Rate</span>
-            <span class="summary-value"><?= number_format($graph->current,4) ?> <?= htmlspecialchars($graph->target) ?></span>
-        </div>
-
-        <div class="summary-card">
-            <span class="summary-label">High</span>
-            <span class="summary-value"><?= number_format($graph->high,4) ?></span>
-        </div>
-
-        <div class="summary-card">
-            <span class="summary-label">Low</span>
-            <span class="summary-value"><?= number_format($graph->low,4) ?></span>
-        </div>
-    </div>
-
+    <!-- Hidden data island – used by JS only, never rendered -->
     <div id="graph-data"
-         data-graph='<?= json_encode($graph, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>'>
+         data-graph='<?= json_encode($graph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) ?>'
+         hidden
+         aria-hidden="true">
     </div>
 
-
-    <div id="history-chart"></div>
+    <figure id="history-chart-figure" style="margin:0;" aria-label="Historical exchange rate chart for <?= htmlspecialchars($graph->base ?? '') ?> to <?= htmlspecialchars($graph->target) ?>">
+        <div id="history-chart" role="img" aria-label="Exchange rate area chart"></div>
+        <div id="graph-loading" class="exrate-loading" aria-live="polite" aria-label="Loading chart data">
+            <div class="exrate-spinner"></div>
+            <p>Loading graph...</p>
+        </div>
+    </figure>
 
 </section>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const graphData = <?= json_encode($graph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-        const categories = graphData.points.map(point => point.label);
-        const values = graphData.points.map(point => point.rate);
-        const options = {
-            chart: {
-                type: 'area',
-                height: 420,
-                toolbar: {
-                    show: false
-                },
-                zoom: {
-                    enabled: false
-                }
-            },
-            series: [
-                {
-                    name: graphData.target,
-                    data: values
-                }
-            ],
-            xaxis: {
-                categories: categories
-            },
-            yaxis: {
-                decimalsInFloat: 4
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 3
-            },
-            dataLabels: {
-                enabled: false
-            },
-            grid: {
-                borderColor: '#e5e7eb'
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 0.4,
-                    opacityFrom: 0.4,
-                    opacityTo: 0.05
-                }
-            },
-            tooltip: {
-                enabled: true
-            }
-        };
-        const chart = new ApexCharts(document.querySelector("#history-chart"), options);
-        chart.render();
-    });
+        let graph = <?= json_encode(
+                $graph,
+                JSON_UNESCAPED_UNICODE |
+                JSON_UNESCAPED_SLASHES
+        ) ?>;
 
+        let chart = null;
+        const loading = document.getElementById("graph-loading");
+
+        /**
+         * Returns responsive ApexCharts xaxis config.
+         *
+         * Key insight:
+         *  - For FEW points (≤14, e.g. 7D = 7 pts, 1M = ~30 but daily so few):
+         *    NEVER set tickAmount — let ApexCharts show every label naturally.
+         *    Setting tickAmount on small datasets causes ApexCharts to silently
+         *    drop all labels when it can't divide evenly.
+         *  - For MANY points (24H hourly = 24+, 6M daily = 180+):
+         *    Constrain tickAmount to prevent congestion based on container width.
+         */
+        function getXAxisConfig(points, containerWidth) {
+            const count = points.length;
+
+            // More generous spacing: 80px per label minimum
+            const minLabelSpacing = 80;
+            const maxLabels = Math.max(4, Math.floor(containerWidth / minLabelSpacing));
+
+            // Only set tickAmount when we have more points than can fit.
+            // For small datasets we let ApexCharts show all labels.
+            const needsReduction = count > maxLabels;
+            const tickAmount = needsReduction ? maxLabels : undefined;
+
+            // Rotate labels on narrow screens OR when we have many points (>12)
+            // This ensures readability even on large screens for dense data.
+            const rotate = (containerWidth < 600 && count > 6) || count > 12 ? -45 : 0;
+
+            // Increased maxHeight for rotated labels to avoid clipping
+            const maxHeight = rotate !== 0 ? 80 : 40;
+
+            // Font size by breakpoint
+            const fontSize = containerWidth < 360 ? '9px' : (containerWidth < 480 ? '10px' : '12px');
+
+            const config = {
+                categories: points.map(p => p.label),
+                labels: {
+                    rotate: rotate,
+                    rotateAlways: rotate !== 0,
+                    maxHeight: maxHeight,
+                    trim: false,
+                    hideOverlappingLabels: true,
+                    style: {
+                        fontSize: fontSize,
+                        colors: '#64748b',
+                        fontFamily: 'Inter, sans-serif'
+                    }
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: true, color: '#e5e7eb' },
+                crosshairs: { show: true },
+                tooltip: { enabled: false }
+            };
+
+            // Only attach tickAmount when we actually need to reduce
+            if (tickAmount !== undefined) {
+                config.tickAmount = tickAmount;
+            }
+
+            return config;
+        }
+
+        function getYAxisConfig(containerWidth) {
+            // 4 ticks is readable on any screen; only go to 5 on desktop
+            const tickAmount = containerWidth < 480 ? 4 : 5;
+            const fontSize = containerWidth < 360 ? '9px' : (containerWidth < 480 ? '10px' : '12px');
+
+            return {
+                decimalsInFloat: 4,
+                tickAmount: tickAmount,
+                labels: {
+                    style: {
+                        fontSize: fontSize,
+                        colors: '#64748b',
+                        fontFamily: 'Inter, sans-serif'
+                    },
+                    formatter: function(val) {
+                        // Always show 4 decimal places for exchange rates
+                        return typeof val === 'number' ? val.toFixed(4) : val;
+                    },
+                    // Give Y labels enough left room on tiny screens
+                    offsetX: containerWidth < 360 ? 0 : 4
+                }
+            };
+        }
+
+        function getChartHeight(containerWidth) {
+            if (containerWidth < 320) return 200;
+            if (containerWidth < 480) return 260;
+            return 420;
+        }
+
+        function renderChart(data) {
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+
+            const container = document.querySelector("#history-chart");
+            const containerWidth = container.offsetWidth || window.innerWidth;
+
+            const options = {
+                chart: {
+                    type: "area",
+                    height: getChartHeight(containerWidth),
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
+                    parentHeightOffset: 0,
+                    redrawOnWindowResize: true,
+                    offsetX: 0,
+                    offsetY: 0
+                },
+                series: [
+                    {
+                        name: data.target,
+                        data: data.points.map(point => point.rate)
+                    }
+                ],
+                xaxis: getXAxisConfig(data.points, containerWidth),
+                yaxis: getYAxisConfig(containerWidth),
+                stroke: {
+                    curve: "smooth",
+                    width: 3
+                },
+                dataLabels: { enabled: false },
+                grid: {
+                    borderColor: "#e5e7eb",
+                    padding: {
+                        top: 0,
+                        right: containerWidth < 360 ? 4 : 14,
+                        bottom: 0,
+                        left: containerWidth < 360 ? 0 : 6
+                    }
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 0.4,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05
+                    }
+                },
+                colors: ['#9333ea'],
+                tooltip: {
+                    enabled: true,
+                    theme: 'dark',
+                    x: { show: true },
+                    y: {
+                        formatter: function(val) {
+                            return typeof val === 'number' ? val.toFixed(4) : val;
+                        }
+                    }
+                }
+            };
+
+            chart = new ApexCharts(container, options);
+            chart.render();
+        }
+
+        // Re-render on window resize so axis configs update
+        let resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                if (graph) renderChart(graph);
+            }, 250);
+        });
+
+        renderChart(graph);
+
+        async function loadGraph(period) {
+            loading.classList.add("visible");
+
+            try {
+                const response = await fetch(
+                    "/finance/currency/history"
+                    + "?from=" + encodeURIComponent(graph.base)
+                    + "&to=" + encodeURIComponent(graph.target)
+                    + "&period=" + encodeURIComponent(period)
+                );
+
+                const json = await response.json();
+                graph = json;
+
+                renderChart(graph);
+
+                // Update aria-pressed on buttons
+                document.querySelectorAll(".range-btn").forEach(btn => {
+                    btn.classList.remove("active");
+                    btn.setAttribute("aria-pressed", "false");
+                });
+                const activeBtn = document.querySelector('[data-period="' + period + '"]');
+                if (activeBtn) {
+                    activeBtn.classList.add("active");
+                    activeBtn.setAttribute("aria-pressed", "true");
+                }
+
+                const summaryValues = document.querySelectorAll(".summary-value");
+                summaryValues[0].textContent = Number(graph.current).toFixed(4) + "\u00a0" + graph.target;
+                summaryValues[1].textContent = Number(graph.high).toFixed(4);
+                summaryValues[2].textContent = Number(graph.low).toFixed(4);
+
+            } catch (error) {
+                console.error(error);
+            } finally {
+                loading.classList.remove("visible");
+            }
+        }
+
+        document.querySelectorAll(".range-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                loadGraph(this.dataset.period);
+            });
+        });
+    });
 </script>

@@ -3,6 +3,7 @@
 namespace App\Presentation\Controller;
 
 use App\Application\Service\HistoryRateService;
+use App\Application\Service\HourlyComparisonService;
 use App\Application\Service\MainCurrencyRateService;
 use App\Http\Request;
 use App\Http\Response\HtmlResponse;
@@ -35,7 +36,14 @@ class CurrencyRateConvertorController
             target: $to,
         );
 
+        $comparisonService = new HourlyComparisonService(
+            $this->repo
+        );
 
+        $rows = $comparisonService->getComparison(
+            base: $from,
+            target: $to
+        );
 
         return new HtmlResponse(
             $engine->render(
@@ -64,6 +72,7 @@ class CurrencyRateConvertorController
                     'currency_value' => $currencyValue,
                     'graph' => $graph,
                     'period' => '24H',
+                    'rows' => $rows,
                 ]
             )
         );

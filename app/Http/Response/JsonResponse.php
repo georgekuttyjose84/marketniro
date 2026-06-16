@@ -4,12 +4,18 @@ namespace App\Http\Response;
 
 class JsonResponse extends Response
 {
-    public function __construct(array $data, int $status = 200)
+    public function __construct(mixed $data, int $status = 200)
     {
         parent::__construct(
-            json_encode($data),
+            json_encode(
+                $data,
+                JSON_UNESCAPED_UNICODE |
+                JSON_UNESCAPED_SLASHES
+            ),
             $status,
-            ['Content-Type' => 'application/json']
+            [
+                'Content-Type' => 'application/json'
+            ]
         );
     }
 }

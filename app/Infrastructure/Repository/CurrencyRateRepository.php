@@ -142,4 +142,151 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
             $stmt->fetchAll(\PDO::FETCH_ASSOC)
         );
     }
+
+    public function getHourlyComparison(
+        string $base,
+        string $target
+    ): array
+    {
+        $stmt = $this->pdo->prepare(
+            "
+        SELECT
+
+            created_at,
+
+            HOUR(
+                FROM_UNIXTIME(created_at + 19800)
+            ) AS hour,
+
+            DATE(
+                FROM_UNIXTIME(created_at + 19800)
+            ) AS day,
+
+            rate
+
+        FROM
+            currency_rate
+
+        WHERE
+            base_currency = :base
+
+        AND
+            target_currency = :target
+
+        ORDER BY
+            created_at DESC
+        "
+        );
+
+        $stmt->execute([
+
+            'base' => $base,
+
+            'target' => $target
+
+        ]);
+
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (empty($rows)) {
+            return [];
+        }
+
+        /*
+         * Get available local dates
+         */
+
+        $dates = array_unique(
+            array_column($rows, 'day')
+        );
+
+        rsort($dates);
+
+        $today = $dates[0] ?? null;
+
+        $yesterday = $dates[1] ?? null;
+
+        /*
+         * Get latest available local hour for TODAY
+         */
+
+        $currentHour = -1;
+
+        foreach ($rows as $row) {
+
+            if ($row['day'] === $today) {
+
+                $currentHour = max(
+                    $currentHour,
+                    (int)$row['hour']
+                );
+
+            }
+
+        }
+
+        /*
+         * Build lookup arrays
+         */
+
+        $todayRates = [];
+
+        $yesterdayRates = [];
+
+        foreach ($rows as $row) {
+
+            $hour = sprintf(
+                "%02d:00",
+                $row['hour']
+            );
+
+            if ($row['day'] === $today) {
+
+                if (!isset($todayRates[$hour])) {
+
+                    $todayRates[$hour] = (float)$row['rate'];
+
+                }
+
+            }
+
+            if ($row['day'] === $yesterday) {
+
+                if (!isset($yesterdayRates[$hour])) {
+
+                    $yesterdayRates[$hour] = (float)$row['rate'];
+
+                }
+
+            }
+
+        }
+
+        /*
+         * Build comparison table
+         */
+
+        $result = [];
+
+        for ($i = 0; $i < 24; $i++) {
+
+            $hour = sprintf(
+                "%02d:00",
+                $i
+            );
+
+            $result[] = [
+
+                'time' => $hour,
+
+                'yesterday' => $yesterdayRates[$hour] ?? null,
+
+                'today' => $i <= $currentHour
+                    ? ($todayRates[$hour] ?? null)
+                    : null
+
+            ];
+        }
+        return $result;
+    }
 }
