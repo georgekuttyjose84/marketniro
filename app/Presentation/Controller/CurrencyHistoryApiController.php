@@ -32,6 +32,16 @@ class CurrencyHistoryApiController
             period: $period
         );
 
+        if($from === 'XAU' or $from === 'XAG'){
+            $troyOunceInGrams = 31.1034768;
+            $graph->current = $graph->current/$troyOunceInGrams;
+            $graph->high = $graph->high/$troyOunceInGrams;
+            $graph->low = $graph->low/$troyOunceInGrams;
+            foreach ($graph->points as $index => $row) {
+                $graph->points[$index]->rate = $graph->points[$index]->rate / $troyOunceInGrams;
+            }
+        }
+
         return new JsonResponse(
             $graph
         );
