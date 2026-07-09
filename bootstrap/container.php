@@ -2,10 +2,12 @@
 
 use App\Container\Container;
 use App\Domain\Repository\PineAppleRepositoryInterface;
+use App\Domain\Repository\RubberPriceRepositoryInterface;
 use App\Infrastructure\Database\Connection;
 use App\Infrastructure\Repository\CurrencyRateRepository;
 use App\Domain\Repository\CurrencyRateRepositoryInterface;
 use App\Infrastructure\Repository\PineAppleRepository;
+use App\Infrastructure\Repository\RubberPriceRepository;
 use PDO;
 
 $container = new Container();
@@ -22,6 +24,12 @@ $container->bind(CurrencyRateRepositoryInterface::class, function ($c) {
 
 $container->bind(PineAppleRepositoryInterface::class, function ($c) {
     return new PineAppleRepository(
+        $c->get(PDO::class)
+    );
+});
+
+$container->bind(RubberPriceRepositoryInterface::class, function ($c) {
+    return new RubberPriceRepository(
         $c->get(PDO::class)
     );
 });
