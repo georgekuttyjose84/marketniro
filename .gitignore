@@ -3,3 +3,4 @@ vendor/
 docker/dbdata
 node_modules/
 docker-compose.override.yml
+/storage/logs/*.log
