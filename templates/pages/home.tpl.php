@@ -1,13 +1,4 @@
-<!-- HERO -->
-<div class="text-center mb-5">
-    <h2 class="fw-bold">Live Commodity Prices in Kerala</h2>
-    <p class="text-secondary">Track real-time market rates easily</p>
 
-    <div class="d-flex flex-column flex-md-row justify-content-center mt-3 gap-2">
-        <input type="text" class="form-control w-100 w-md-50" placeholder="Search commodity...">
-        <button class="btn btn-green">Search</button>
-    </div>
-</div>
 
 <!-- TRENDING -->
 <h5 class="mb-3">🔥 Trending Commodities</h5>
