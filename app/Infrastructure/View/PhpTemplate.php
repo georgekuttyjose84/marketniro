@@ -31,11 +31,32 @@ final class PhpTemplate
         );
     }
 
+    /**
+     * Render a reusable partial/component.
+     *
+     * Partials are rendered WITHOUT a layout.
+     *
+     * Example:
+     *
+     * <?= $view->partial('components/header') ?>
+     */
+    public function partial(
+        string $template,
+        array $data = []
+    ): string {
+        return $this->renderFile(
+            $template,
+            $data
+        );
+    }
+
+    /**
+     * Render the actual .tpl.php file.
+     */
     private function renderFile(
         string $relativePath,
-        array $data
+        array $data = []
     ): string {
-
         $file =
             rtrim($this->basePath, '/')
             . '/'
@@ -49,8 +70,8 @@ final class PhpTemplate
         }
 
         /*
-         * Make the template engine available
-         * inside every template.
+         * Make this template engine available
+         * inside every template as $view.
          */
         $view = $this;
 
@@ -61,8 +82,18 @@ final class PhpTemplate
 
         ob_start();
 
-        require $file;
+        try {
+            require $file;
 
-        return (string) ob_get_clean();
+            return (string) ob_get_clean();
+        } catch (\Throwable $exception) {
+            /*
+             * Clean the output buffer if
+             * rendering the template fails.
+             */
+            ob_end_clean();
+
+            throw $exception;
+        }
     }
 }

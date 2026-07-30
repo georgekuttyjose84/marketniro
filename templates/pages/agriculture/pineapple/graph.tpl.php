@@ -1,157 +1,89 @@
 <?php
 /**
- * Pineapple Price History Graph
+ * Pineapple Historical Price Index — graph partial
+ *
+ * Drop-in replacement for the old pineapple graph partial.
+ * Markup/classes follow the new static design (section-card, timeframe-toggle,
+ * chart-wrap, chart-xaxis, --on-surface-variant, etc.) which are assumed to
+ * already exist in the project's global stylesheet. Only chart-specific
+ * styles (legend, loading state, error box, chart series colors) are added
+ * here, scoped with a "phi-" (Price History Index) prefix so nothing clashes
+ * with the global design system.
+ *
+ * Called exactly the same way as before, e.g.:
+ *
+ *   <section>
+ *       <?= $view->render('/pages/agriculture/pineapple/graph', [
+ *           'lastSevenDaysPrice' => $lastSevenDaysPrice,
+ *       ], null) ?>
+ *   </section>
  *
  * Required variable:
- *
  * @var array $lastSevenDaysPrice
  */
 ?>
 
 <style>
     :root {
-        --pineapple-card-bg: #ffffff;
-        --pineapple-card-border: #e5e7eb;
-        --pineapple-grid: #e5e7eb;
-        --pineapple-text: #0f172a;
-        --pineapple-muted: #64748b;
-
-        --pineapple-green: #198754;
-        --pineapple-green-dark: #157347;
-
-        --pineapple-ripe: #e09f00;
-
-        --pineapple-shadow:
-                0 5px 20px rgba(15, 23, 42, 0.06);
-
-        --pineapple-radius: 14px;
+        --phi-green: #198754;
+        --phi-yellow: #eab308;
     }
 
-    .pineapple-graph-card {
-        width: 100%;
-        padding: 28px;
-        background: var(--pineapple-card-bg);
-        border: 1px solid var(--pineapple-card-border);
-        border-radius: var(--pineapple-radius);
-        box-shadow: var(--pineapple-shadow);
-        box-sizing: border-box;
-    }
-
-    .pineapple-graph-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 18px;
-        margin-bottom: 24px;
-    }
-
-    .pineapple-graph-heading h2 {
-        margin: 0 0 7px;
-        color: var(--pineapple-text);
-        font-size: clamp(20px, 4vw, 30px);
-        font-weight: 700;
-        letter-spacing: -0.02em;
-    }
-
-    .pineapple-graph-subtitle {
-        max-width: 650px;
-        margin: 0;
-        color: var(--pineapple-muted);
-        font-size: 15px;
-        line-height: 1.6;
-    }
-
-    .pineapple-range-buttons {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-        width: 100%;
-    }
-
-    .pineapple-range-btn {
-        padding: 8px 15px;
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 999px;
-        color: var(--pineapple-text);
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition:
-                background 0.2s,
-                border-color 0.2s,
-                color 0.2s,
-                transform 0.2s,
-                box-shadow 0.2s;
-    }
-
-    .pineapple-range-btn:hover {
-        color: var(--pineapple-green);
-        border-color: var(--pineapple-green);
-        transform: translateY(-2px);
-    }
-
-    .pineapple-range-btn.active {
-        background: var(--pineapple-green);
-        border-color: var(--pineapple-green);
-        color: #ffffff;
-        box-shadow:
-                0 4px 10px rgba(25, 135, 84, 0.25);
-    }
-
-    .pineapple-range-btn.active:hover {
-        color: #ffffff;
-        transform: none;
-    }
-
-    .pineapple-range-btn:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none;
-    }
-
-    .pineapple-chart-legend {
+    .phi-legend {
         display: flex;
         align-items: center;
         gap: 20px;
-        margin-bottom: 18px;
+        margin-bottom: 14px;
     }
 
-    .pineapple-legend-item {
-        display: flex;
+    .phi-legend-item {
+        display: inline-flex;
         align-items: center;
         gap: 8px;
-        color: var(--pineapple-text);
-        font-size: 14px;
+        font-size: 12px;
         font-weight: 600;
+        color: var(--on-surface, #0f172a);
     }
 
-    .pineapple-legend-dot {
-        width: 10px;
-        height: 10px;
+    .phi-dot {
+        width: 9px;
+        height: 9px;
         border-radius: 50%;
+        display: inline-block;
     }
 
-    .pineapple-legend-dot.green {
-        background: var(--pineapple-green);
+    .phi-dot-green {
+        background: var(--phi-green);
     }
 
-    .pineapple-legend-dot.ripe {
-        background: var(--pineapple-ripe);
+    .phi-dot-yellow {
+        background: var(--phi-yellow);
     }
 
-    .pineapple-chart-figure {
-        position: relative;
-        margin: 0;
+    /*
+     * The old static design used a fixed-height, overflow-hidden chart-wrap
+     * to clip the fake bars at exactly 100%. That clips a real line chart's
+     * peaks, so it's overridden here for this line-graph version.
+     */
+    .chart-wrap {
+        position: relative !important;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+        padding-top: 12px;
     }
 
     #pineapple-history-chart {
         width: 100%;
         min-height: 280px;
+        overflow: visible;
     }
 
-    .pineapple-graph-loading {
+    #pineapple-history-chart .apexcharts-svg {
+        overflow: visible !important;
+    }
+
+    .phi-loading {
         position: absolute;
         inset: 0;
         z-index: 10;
@@ -160,786 +92,385 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 12px;
+        gap: 10px;
 
         background: rgba(255, 255, 255, 0.88);
         border-radius: 10px;
 
         opacity: 0;
         pointer-events: none;
-
         transition: opacity 0.2s;
     }
 
-    .pineapple-graph-loading.visible {
+    .phi-loading.visible {
         opacity: 1;
         pointer-events: all;
     }
 
-    .pineapple-spinner {
-        width: 36px;
-        height: 36px;
-
-        border: 3px solid #e5e7eb;
-        border-top-color: var(--pineapple-green);
+    .phi-spinner {
+        width: 32px;
+        height: 32px;
+        border: 3px solid var(--outline, #e5e7eb);
+        border-top-color: var(--phi-green);
         border-radius: 50%;
-
-        animation: pineapple-spin 0.8s linear infinite;
+        animation: phi-spin 0.8s linear infinite;
     }
 
-    .pineapple-graph-loading p {
+    .phi-loading p {
         margin: 0;
-        color: var(--pineapple-muted);
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 500;
+        color: var(--on-surface-variant, #64748b);
     }
 
-    .pineapple-graph-error {
+    .phi-error {
         display: none;
-        margin-top: 15px;
+        margin-top: 14px;
         padding: 12px 15px;
         background: #fef2f2;
         border: 1px solid #fecaca;
         border-radius: 8px;
         color: #b91c1c;
-        font-size: 14px;
+        font-size: 13px;
     }
 
-    .pineapple-graph-error.visible {
+    .phi-error.visible {
         display: block;
     }
 
-    @keyframes pineapple-spin {
+    .timeframe-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    @keyframes phi-spin {
         to {
             transform: rotate(360deg);
         }
     }
 
-    @media (max-width: 576px) {
-        .pineapple-graph-card {
-            padding: 18px 14px;
-        }
-
-        .pineapple-graph-top {
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-
-        .pineapple-graph-heading h2 {
-            font-size: 22px;
-        }
-
-        .pineapple-graph-subtitle {
-            font-size: 13px;
-        }
-
-        .pineapple-range-buttons {
-            gap: 5px;
-        }
-
-        .pineapple-range-btn {
-            padding: 7px 11px;
-            font-size: 12px;
-        }
-
-        .pineapple-chart-legend {
-            gap: 15px;
-        }
-
-        #pineapple-history-chart {
-            min-height: 250px;
-        }
-    }
-
-    @media (max-width: 360px) {
-        .pineapple-graph-card {
-            padding: 14px 10px;
-        }
-
-        .pineapple-range-btn {
-            padding: 6px 9px;
-            font-size: 11px;
-        }
-
-        .pineapple-chart-legend {
-            gap: 12px;
-        }
-
-        .pineapple-legend-item {
-            font-size: 12px;
-        }
-
-        #pineapple-history-chart {
-            min-height: 220px;
-        }
-    }
-
     @media (prefers-reduced-motion: reduce) {
-        .pineapple-range-btn,
-        .pineapple-graph-loading,
-        .pineapple-spinner {
+        .phi-loading,
+        .phi-spinner {
             animation: none !important;
             transition: none !important;
         }
     }
 </style>
 
+<div class="section-card p-4 mb-4">
 
-<section
-    class="pineapple-graph-card"
-    aria-labelledby="pineapple-history-heading"
->
-
-    <div class="pineapple-graph-top">
-
-        <div class="pineapple-graph-heading">
-
-            <h2 id="pineapple-history-heading">
-                Pineapple Price History
-            </h2>
-
-            <p class="pineapple-graph-subtitle">
-                Compare historical green and ripe pineapple prices
-                based on daily average prices.
-            </p>
-
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-0" style="font-size:20px;">Historical Price Index</h2>
+            <p class="mb-0" style="font-size:11px; color:var(--on-surface-variant);">Market movement over selected timeframe</p>
         </div>
 
-
-        <nav
-            class="pineapple-range-buttons"
-            aria-label="Select pineapple price history range"
-        >
-
-            <button
-                type="button"
-                class="pineapple-range-btn active"
-                data-period="7D"
-                aria-pressed="true"
-            >
-                7 Days
-            </button>
-
-            <button
-                type="button"
-                class="pineapple-range-btn"
-                data-period="1M"
-                aria-pressed="false"
-            >
-                1 Month
-            </button>
-
-            <button
-                type="button"
-                class="pineapple-range-btn"
-                data-period="3M"
-                aria-pressed="false"
-            >
-                3 Months
-            </button>
-
-            <button
-                type="button"
-                class="pineapple-range-btn"
-                data-period="6M"
-                aria-pressed="false"
-            >
-                6 Months
-            </button>
-
-            <button
-                type="button"
-                class="pineapple-range-btn"
-                data-period="1Y"
-                aria-pressed="false"
-            >
-                1 Year
-            </button>
-
-        </nav>
-
+        <div class="timeframe-toggle" role="group" aria-label="Select pineapple price history range">
+            <button type="button" class="timeframe-btn active" data-range="7D" aria-pressed="true">7D</button>
+            <button type="button" class="timeframe-btn" data-range="1M" aria-pressed="false">1M</button>
+            <button type="button" class="timeframe-btn" data-range="3M" aria-pressed="false">3M</button>
+            <button type="button" class="timeframe-btn" data-range="1Y" aria-pressed="false">1Y</button>
+        </div>
     </div>
 
-
-    <div class="pineapple-chart-legend">
-
-        <div class="pineapple-legend-item">
-            <span class="pineapple-legend-dot green"></span>
-            <span>Green</span>
-        </div>
-
-        <div class="pineapple-legend-item">
-            <span class="pineapple-legend-dot ripe"></span>
-            <span>Ripe</span>
-        </div>
-
+    <div class="phi-legend">
+        <span class="phi-legend-item"><span class="phi-dot phi-dot-green"></span>Green</span>
+        <span class="phi-legend-item"><span class="phi-dot phi-dot-yellow"></span>Yellow</span>
     </div>
 
-
-    <figure
-        class="pineapple-chart-figure"
-        aria-label="Green and ripe pineapple historical price chart"
-    >
-
+    <div class="chart-wrap">
         <div
-            id="pineapple-history-chart"
-            role="img"
-            aria-label="Pineapple price history line chart"
+                id="pineapple-history-chart"
+                role="img"
+                aria-label="Green and yellow pineapple historical price chart"
         ></div>
 
-
-        <div
-            id="pineapple-graph-loading"
-            class="pineapple-graph-loading"
-            aria-live="polite"
-        >
-
-            <div class="pineapple-spinner"></div>
-
+        <div id="phi-loading" class="phi-loading" aria-live="polite">
+            <div class="phi-spinner"></div>
             <p>Loading price history...</p>
-
         </div>
+    </div>
 
-    </figure>
+    <div id="phi-error" class="phi-error" role="alert"></div>
 
-
-    <div
-        id="pineapple-graph-error"
-        class="pineapple-graph-error"
-        role="alert"
-    ></div>
-
-</section>
-
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
 
         /*
-         * 7-day data comes directly from the controller.
-         *
-         * No fetch request is made on initial page load.
+         * 7-day data comes directly from the controller — this is the
+         * default active range, so no fetch is needed on initial load.
          */
         const sevenDaysData = <?= json_encode(
-            $lastSevenDaysPrice,
-            JSON_UNESCAPED_UNICODE |
-            JSON_UNESCAPED_SLASHES |
-            JSON_HEX_TAG |
-            JSON_HEX_AMP
+                $lastSevenDaysPrice,
+                JSON_UNESCAPED_UNICODE |
+                JSON_UNESCAPED_SLASHES |
+                JSON_HEX_TAG |
+                JSON_HEX_AMP
         ) ?>;
 
-
         let currentData = sevenDaysData;
-
         let chart = null;
 
-        const chartContainer = document.getElementById(
-            "pineapple-history-chart"
-        );
-
-        const loading = document.getElementById(
-            "pineapple-graph-loading"
-        );
-
-        const errorBox = document.getElementById(
-            "pineapple-graph-error"
-        );
-
-        const rangeButtons = document.querySelectorAll(
-            ".pineapple-range-btn"
-        );
-
+        const chartContainer = document.getElementById("pineapple-history-chart");
+        const loading = document.getElementById("phi-loading");
+        const errorBox = document.getElementById("phi-error");
+        const rangeButtons = document.querySelectorAll(".timeframe-btn");
 
         function getChartHeight(containerWidth) {
-
-            if (containerWidth <= 320) {
-                return 220;
-            }
-
-            if (containerWidth < 576) {
-                return 280;
-            }
-
-            return 420;
+            if (containerWidth <= 320) return 240;
+            if (containerWidth < 576) return 300;
+            return 400;
         }
 
-
         function getXAxisConfig(data, containerWidth) {
-
             const count = data.length;
-
             const minLabelSpacing = 85;
-
-            const maxLabels = Math.max(
-                4,
-                Math.floor(containerWidth / minLabelSpacing)
-            );
+            const maxLabels = Math.max(4, Math.floor(containerWidth / minLabelSpacing));
 
             const config = {
-
                 categories: data.map(function (item) {
                     return item.label;
                 }),
-
                 labels: {
-
-                    rotate:
-                        containerWidth < 600 && count > 6
-                            ? -45
-                            : 0,
-
-                    rotateAlways:
-                        containerWidth < 600 && count > 6,
-
+                    rotate: containerWidth < 600 && count > 6 ? -45 : 0,
+                    rotateAlways: containerWidth < 600 && count > 6,
                     trim: false,
-
                     hideOverlappingLabels: true,
-
                     style: {
-                        fontSize:
-                            containerWidth < 480
-                                ? "10px"
-                                : "12px",
-
+                        fontSize: containerWidth < 480 ? "10px" : "12px",
                         colors: "#64748b"
                     }
                 },
-
-                axisBorder: {
-                    show: false
-                },
-
-                axisTicks: {
-                    show: true,
-                    color: "#e5e7eb"
-                },
-
-                tooltip: {
-                    enabled: false
-                }
+                axisBorder: { show: false },
+                axisTicks: { show: true, color: "#e5e7eb" },
+                tooltip: { enabled: false }
             };
-
 
             if (count > maxLabels) {
                 config.tickAmount = maxLabels;
             }
 
-
             return config;
         }
 
-
         function normalizeData(data) {
-
             return data.map(function (item) {
-
                 return {
-
-                    label:
-                        item.label
-                        ?? item.price_date
-                        ?? item.date,
-
-                    green:
-                        item.green !== null
-                        && item.green !== undefined
-                            ? Number(item.green)
-                            : null,
-
-                    ripe:
-                        item.ripe !== null
-                        && item.ripe !== undefined
-                            ? Number(item.ripe)
-                            : null
+                    label: item.label ?? item.price_date ?? item.date,
+                    green: item.green !== null && item.green !== undefined ? Number(item.green) : null,
+                    yellow: (
+                        item.yellow !== null && item.yellow !== undefined
+                            ? Number(item.yellow)
+                            : (item.ripe !== null && item.ripe !== undefined ? Number(item.ripe) : null)
+                    )
                 };
-
             });
         }
 
+        function getYAxisBounds(data) {
+            const values = [];
+
+            data.forEach(function (item) {
+                if (item.green !== null && item.green !== undefined) values.push(item.green);
+                if (item.yellow !== null && item.yellow !== undefined) values.push(item.yellow);
+            });
+
+            if (!values.length) {
+                return { min: undefined, max: undefined };
+            }
+
+            const min = Math.min.apply(null, values);
+            const max = Math.max.apply(null, values);
+            const range = max - min;
+
+            // Flat line (range === 0) still needs headroom, so fall back
+            // to a percentage of the value itself in that case.
+            const buffer = range > 0 ? range * 0.15 : Math.max(max * 0.1, 1);
+
+            return {
+                min: Math.max(0, min - buffer),
+                max: max + buffer
+            };
+        }
 
         function renderChart(rawData) {
-
             const data = normalizeData(rawData);
-
             currentData = rawData;
 
-
             if (chart) {
-
                 chart.destroy();
-
                 chart = null;
             }
 
-
-            const containerWidth =
-                chartContainer.offsetWidth
-                || window.innerWidth;
-
+            const containerWidth = chartContainer.offsetWidth || window.innerWidth;
+            const yBounds = getYAxisBounds(data);
 
             const options = {
-
                 chart: {
-
                     type: "line",
-
                     height: getChartHeight(containerWidth),
-
-                    toolbar: {
-                        show: false
-                    },
-
-                    zoom: {
-                        enabled: false
-                    },
-
+                    toolbar: { show: false },
+                    zoom: { enabled: false },
                     parentHeightOffset: 0,
-
                     redrawOnWindowResize: true
                 },
 
-
                 series: [
-
-                    {
-                        name: "Green",
-                        data: data.map(function (item) {
-                            return item.green;
-                        })
-                    },
-
-                    {
-                        name: "Ripe",
-                        data: data.map(function (item) {
-                            return item.ripe;
-                        })
-                    }
-
+                    { name: "Green", data: data.map(function (item) { return item.green; }) },
+                    { name: "Yellow", data: data.map(function (item) { return item.yellow; }) }
                 ],
 
+                colors: ["#198754", "#eab308"],
 
-                colors: [
-                    "#198754",
-                    "#e09f00"
-                ],
-
-
-                xaxis: getXAxisConfig(
-                    data,
-                    containerWidth
-                ),
-
+                xaxis: getXAxisConfig(data, containerWidth),
 
                 yaxis: {
-
-                    tickAmount:
-                        containerWidth < 480
-                            ? 4
-                            : 5,
-
+                    min: yBounds.min,
+                    max: yBounds.max,
+                    forceNiceScale: true,
+                    tickAmount: containerWidth < 480 ? 4 : 5,
                     labels: {
-
                         style: {
-                            fontSize:
-                                containerWidth < 480
-                                    ? "10px"
-                                    : "12px",
-
+                            fontSize: containerWidth < 480 ? "10px" : "12px",
                             colors: "#64748b"
                         },
-
                         formatter: function (value) {
-
-                            if (
-                                value === null
-                                || value === undefined
-                            ) {
-                                return "";
-                            }
-
+                            if (value === null || value === undefined) return "";
                             return "₹" + Number(value).toFixed(2);
                         }
                     }
                 },
 
-
-                stroke: {
-
-                    curve: "smooth",
-
-                    width: 3
-                },
-
+                stroke: { curve: "smooth", width: 3 },
 
                 markers: {
-
-                    size:
-                        data.length <= 31
-                            ? 4
-                            : 0,
-
-                    hover: {
-                        size: 6
-                    }
+                    size: data.length <= 31 ? 4 : 0,
+                    hover: { size: 6 }
                 },
 
-
-                dataLabels: {
-                    enabled: false
-                },
-
+                dataLabels: { enabled: false },
 
                 grid: {
-
                     borderColor: "#e5e7eb",
-
                     padding: {
-
-                        top: 5,
-
-                        right:
-                            containerWidth < 360
-                                ? 5
-                                : 15,
-
+                        top: 25,
+                        right: containerWidth < 360 ? 5 : 15,
                         bottom: 0,
-
-                        left:
-                            containerWidth < 360
-                                ? 0
-                                : 5
+                        left: containerWidth < 360 ? 0 : 5
                     }
                 },
 
-
-                legend: {
-                    show: false
-                },
-
+                legend: { show: false },
 
                 tooltip: {
-
                     shared: true,
-
                     intersect: false,
-
                     theme: "dark",
-
                     y: {
-
                         formatter: function (value) {
-
-                            if (
-                                value === null
-                                || value === undefined
-                            ) {
-                                return "No data";
-                            }
-
+                            if (value === null || value === undefined) return "No data";
                             return "₹" + Number(value).toFixed(2);
                         }
                     }
                 },
 
-
                 noData: {
-
                     text: "No pineapple price data available",
-
                     align: "center",
-
                     verticalAlign: "middle",
-
-                    style: {
-
-                        color: "#64748b",
-
-                        fontSize: "14px"
-                    }
+                    style: { color: "#64748b", fontSize: "14px" }
                 }
             };
 
-
-            chart = new ApexCharts(
-                chartContainer,
-                options
-            );
-
-
+            chart = new ApexCharts(chartContainer, options);
             chart.render();
         }
 
-
-        function setActiveButton(period) {
-
+        function setActiveButton(range) {
             rangeButtons.forEach(function (button) {
-
-                const isActive =
-                    button.dataset.period === period;
-
-
-                button.classList.toggle(
-                    "active",
-                    isActive
-                );
-
-
-                button.setAttribute(
-                    "aria-pressed",
-                    isActive ? "true" : "false"
-                );
-
+                const isActive = button.dataset.range === range;
+                button.classList.toggle("active", isActive);
+                button.setAttribute("aria-pressed", isActive ? "true" : "false");
             });
         }
-
 
         function setButtonsDisabled(disabled) {
-
             rangeButtons.forEach(function (button) {
-
                 button.disabled = disabled;
-
             });
         }
 
-
-        async function loadGraph(period) {
-
+        async function loadGraph(range) {
             errorBox.classList.remove("visible");
-
             errorBox.textContent = "";
 
-
             /*
-             * 7 Days already exists in the page.
-             *
-             * Do not send a fetch request.
+             * 7D already exists in the page — skip the network request.
              */
-            if (period === "7D") {
-
+            if (range === "7D") {
                 renderChart(sevenDaysData);
-
                 setActiveButton("7D");
-
                 return;
             }
 
-
             loading.classList.add("visible");
-
             setButtonsDisabled(true);
 
-
             try {
-
                 const response = await fetch(
-
-                    "/agriculture/pineapple/history"
-                    + "?period="
-                    + encodeURIComponent(period),
-
-                    {
-                        headers: {
-                            "Accept": "application/json"
-                        }
-                    }
-
+                    "/agriculture/pineapple/history?period=" + encodeURIComponent(range),
+                    { headers: { "Accept": "application/json" } }
                 );
 
-
                 if (!response.ok) {
-
-                    throw new Error(
-                        "Unable to load pineapple price history."
-                    );
+                    throw new Error("Unable to load pineapple price history.");
                 }
-
 
                 const data = await response.json();
 
-
                 if (!Array.isArray(data)) {
-
-                    throw new Error(
-                        "Invalid pineapple graph response."
-                    );
+                    throw new Error("Invalid pineapple graph response.");
                 }
 
-
                 renderChart(data);
-
-                setActiveButton(period);
-
+                setActiveButton(range);
 
             } catch (error) {
-
                 console.error(error);
-
-
-                errorBox.textContent =
-                    "Unable to load pineapple price history. Please try again.";
-
-
+                errorBox.textContent = "Unable to load pineapple price history. Please try again.";
                 errorBox.classList.add("visible");
 
-
             } finally {
-
                 loading.classList.remove("visible");
-
                 setButtonsDisabled(false);
             }
         }
 
-
         rangeButtons.forEach(function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    loadGraph(
-                        this.dataset.period
-                    );
-
-                }
-            );
-
+            button.addEventListener("click", function () {
+                loadGraph(this.dataset.range);
+            });
         });
 
-
         /*
-         * Initial graph:
-         *
-         * Uses controller-passed 7-day array.
+         * Initial graph: 7D, using controller-passed data (matches the
+         * "active" button set in the markup above).
          */
         renderChart(sevenDaysData);
-
 
         /*
          * Re-render only after resizing has stopped.
          */
         let resizeTimer;
-
-
-        window.addEventListener(
-            "resize",
-            function () {
-
-                clearTimeout(resizeTimer);
-
-
-                resizeTimer = setTimeout(
-                    function () {
-
-                        renderChart(currentData);
-
-                    },
-                    250
-                );
-
-            }
-        );
+        window.addEventListener("resize", function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                renderChart(currentData);
+            }, 250);
+        });
 
     });
 </script>
