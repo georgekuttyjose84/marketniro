@@ -401,182 +401,224 @@ $currencies = [
 
 </style>
 
+<div class="container-max mx-auto px-3 px-md-4 py-4 py-md-5" style="margin:0 auto;">
+    <div class="d-flex flex-column flex-lg-row gap-4">
+        <main class="flex-grow-1" style="min-width:0;">
+            <section class="mb-4">
+                <form action="/finance/silver" method="get" role="search" aria-label="Convert silver">
+                    <div class="gold-converter-card">
+                        <div class="mb-4">
+                            <h2 class="fw-bold d-flex align-items-center gap-2 m-0" style="font-size:24px; color:var(--on-surface);">
+                                <span class="material-symbols-outlined" style="color:var(--primary);">currency_exchange</span>Silver converter
+                            </h2>
+                            <p class="mt-1 mb-0" style="font-size:14px; color:var(--text-secondary);">
+                                Live exchange rates for major world Silver Rate
+                            </p>
+                        </div>
 
+                        <div class="alert-info-custom d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                            <div>
+                                <span class="form-label-custom mb-1 text-muted" style="text-transform:none;">Today's Silver Price in <strong><?= htmlspecialchars($currencies[$currency][1]) ?></strong></span>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <span class="fw-bold" style="font-size:32px; color:var(--primary);">
+                                        <?= number_format($silverPricePerGram, 2) ?>
+                                    </span>
+                                    <span style="font-size:16px; color:var(--on-surface);"><?= htmlspecialchars($currency) ?>/ 1 Gram<sup>*</sup>
+                                    </span>
+                                </div>
+                            </div>
 
-
-<section class="cc-wrap" aria-label="silver converter tool">
-    <form action="/finance/silver" method="get" role="search" aria-label="Convert silver">
-        <div style="padding: 20px 12px;">
-            <div class="cc-card">
-                <div class="cc-header">
-                    <i class="ti ti-silver-exchange" style="font-size:22px; color:#2563eb;" aria-hidden="true"></i>
-                    <h2>Silver converter</h2>
-                </div>
-                <p class="cc-subtitle">Live exchange rates for major world Silver Rate</p>
-
-                <div class="d-flex justify-content-center metal-today alert alert-info tc item-block">
-                    <h2 class="no-margin"> Today's Silver Price in <strong><?= $currencies[$currency][1] ?></strong> = <?= number_format($silverPricePerGram, 2) ?><?= htmlspecialchars($currency) ?>/ 1 Gram<sup>*</sup></h2>
-                </div>
-
-                <div class="cc-silver-row">
-                    <div class="cc-select-group">
-                        <label for="from-sel" class="cc-label">Choose Country</label>
-                        <select id="from-sel" name="currency" aria-label="Convert from silver">
-                            <?php foreach ($currencies as $code => [$flag, $name]): ?>
-                                <option value="<?= htmlspecialchars($code) ?>"<?= $code === $currency ? ' selected' : '' ?>>
-                                    <?= htmlspecialchars($flag) ?> <?= htmlspecialchars($code) ?> — <?= htmlspecialchars($name) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="cc-swap-wrap">
-                        <button class="swap-btn" id="swap" type="button" aria-label="Swap currencies">⇄</button>
-                    </div>
-
-                    <div class="cc-select-group">
-                        <label for="to-sel" class="cc-label">Enter Amount (gm)</label>
-                        <input type="number" name="amount" value="<?= htmlspecialchars($amount) ?>"
-                               id="amount" min="0" step="0.01" inputmode="decimal"
-                               aria-label="Amount to convert in <?= htmlspecialchars($currency) ?>">
-                    </div>
-                </div>
-
-                <button class="cc-btn" id="convert-btn" type="submit">
-                    ↻ Calculate exchange rate
-                </button>
-
-                <hr class="cc-divider">
-
-                <?php if ($silverPrices !== null): ?>
-                    <div class="d-flex justify-content-center align-item-center">
-                        <div class="alert alert-info tc item-block">
-                            <div class="metal-title">925 Silver</div>
-                            <span class="metal-rate" id="rate925">
-                                <?= number_format($silverPrices['925']['total'], 2) ?>
-                                <?= htmlspecialchars($currency) ?>
-                            </span>
-
-                            <div class="per-gram-rate" id="perGram925">
-                                <?= number_format($silverPrices['925']['perGram'], 2) ?>
-                                per gram
+                            <div class="d-flex align-items-center gap-2" style="font-size:14px; color:var(--text-secondary);">
+                                <span class="material-symbols-outlined" style="color:var(--success); font-size:18px;">
+                                    trending_up
+                                </span>
+                                <span style="color:var(--success);">
+                                    +1.24%
+                                </span>
+                                (24h)
                             </div>
                         </div>
-                        <div class="alert alert-info tc item-block">
-                            <div class="metal-title">999 Silver</div>
-                            <span class="metal-rate" id="rate999">
-                                <?= number_format($silverPrices['999']['total'], 2) ?>
-                                <?= htmlspecialchars($currency) ?>
+
+                        <div class="row g-3 align-items-end mb-4">
+                            <div class="col-md-4">
+                                <label for="metal" class="form-label-custom">
+                                    Metal
+                                </label>
+                                <select id="metal" class="form-select-custom" aria-label="Choose metal">
+                                    <option value="silver">Silver</option>
+                                    <option value="gold">Gold</option>
+                                </select>
+                            </div>
+
+                            <!-- Swap -->
+                            <div class="col-md-1 d-flex justify-content-center pb-1">
+                                <button
+                                        type="button"
+                                        id="swap"
+                                        class="swap-btn"
+                                        aria-label="Swap currencies"
+                                >
+                        <span class="material-symbols-outlined"
+                              style="color:var(--primary);">
+                            swap_horiz
+                        </span>
+                                </button>
+                            </div>
+
+                            <!-- Currency -->
+                            <div class="col-md-4">
+                                <label for="from-sel" class="form-label-custom">
+                                    Currency
+                                </label>
+
+                                <select
+                                        id="from-sel"
+                                        name="currency"
+                                        class="form-select-custom"
+                                        aria-label="Choose country"
+                                >
+                                    <?php foreach ($currencies as $code => [$flag, $name]): ?>
+                                        <option
+                                                value="<?= htmlspecialchars($code) ?>"
+                                                <?= $code === $currency ? 'selected' : '' ?>
+                                        >
+                                            <?= htmlspecialchars($flag) ?>
+                                            <?= htmlspecialchars($code) ?>
+                                            — <?= htmlspecialchars($name) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-md-3">
+                                <label for="amount" class="form-label-custom">
+                                    Amount (gm)
+                                </label>
+
+                                <input
+                                        id="amount"
+                                        name="amount"
+                                        class="form-control-custom font-data-mono"
+                                        type="number"
+                                        value="<?= htmlspecialchars($amount) ?>"
+                                        min="0"
+                                        step="0.01"
+                                        inputmode="decimal"
+                                        aria-label="Amount to convert in <?= htmlspecialchars($currency) ?>"
+                                >
+                            </div>
+
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-flex justify-content-end mb-4">
+                            <button
+                                    id="convert-btn"
+                                    type="submit"
+                                    class="btn-primary-custom d-flex align-items-center gap-2 py-2 px-4"
+                                    style="font-size:14px;"
+                            >
+                                Calculate
+
+                                <span class="material-symbols-outlined"
+                                      style="font-size:18px;">
+                        calculate
+                    </span>
+                            </button>
+                        </div>
+
+                        <!-- Results -->
+                        <?php if ($silverPrices !== null): ?>
+                            <div class="row g-3 border-top pt-4" style="border-color:rgba(189,202,186,0.3)!important;">
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3" style="background:var(--surface); border-color:rgba(189,202,186,0.3)!important;"><div>
+                                            <span class="d-block fw-bold" style="font-size:14px; color:var(--on-surface);">
+                                                925 Silver
+                                            </span>
+
+                                            <span id="perGram22k" style="font-size:12px; color:var(--text-secondary);">
+                                                @ <?= number_format($silverPrices['925']['perGram'], 2) ?>per gram
+                                            </span>
+                                    </div>
+                                        <span id="rate22k" class="font-data-mono fw-bold" style="font-size:18px; color:var(--on-surface);">
+                                            <?= number_format($silverPrices['925']['total'], 2) ?> <?= htmlspecialchars($currency) ?>
+                                        </span>
+
+                                    </div>
+                                </div>
+
+                                <!-- 24K -->
+                                <div class="col-md-6">
+                                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3"
+                                         style="background:var(--surface); border-color:rgba(189,202,186,0.3)!important;">
+
+                                        <div>
+                                <span class="d-block fw-bold"
+                                      style="font-size:14px; color:var(--on-surface);">
+                                    999 Silver
+                                </span>
+
+                                            <span
+                                                    id="perGram24k"
+                                                    style="font-size:12px; color:var(--text-secondary);"
+                                            >
+                                    @ <?= number_format($silverPrices['999']['perGram'], 2) ?>
+                                    per gram
+                                </span>
+                                        </div>
+
+                                        <span
+                                                id="rate24k"
+                                                class="font-data-mono fw-bold"
+                                                style="font-size:18px; color:var(--primary);"
+                                        >
+                                <?= number_format($silverPrices['999']['total'], 2) ?> <?= htmlspecialchars($currency) ?>
                             </span>
 
-                            <div class="per-gram-rate" id="perGram999">
-                                <?= number_format($silverPrices['999']['perGram'], 2) ?>
-                                per gram
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <p class="cc-disclaimer">
-                    <i class="ti ti-info-circle" style="font-size:12px; vertical-align:-1px;" aria-hidden="true"></i>
-                    Indicative rates only. For accurate rates, check your bank or broker.
-                </p>
-            </div>
-        </div>
-    </form>
-</section>
-
-
-<?php if (!empty($silverTable)): ?>
-    <div class="highlight highlight-blue">
-        <table id="convratetab" class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <td colspan="3">
-                    <strong>
-                        Silver Price in <?= htmlspecialchars($currency) ?>
-                    </strong>
-                </td>
-            </tr>
-            <tr>
-                <th>Quantity</th>
-                <th>925 Silver</th>
-                <th>999 Silver</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach ($silverTable as $row): ?>
-                <tr>
-                    <td>
-                        <strong>
-                            <?= htmlspecialchars($row['label']) ?>
-                        </strong>
-                        <?php if ($row['description'] !== null): ?>
-                            <br>
-                            <span class="text-muted t-xsmall"><?= htmlspecialchars($row['description']) ?></span>
                         <?php endif; ?>
-                    </td>
-                    <td>
-                        <?= number_format($row['price925'], 0) ?>
-                        <?= htmlspecialchars($currency) ?>
-                    </td>
-                    <td>
-                        <?= number_format($row['price999'], 0) ?>
-                        <?= htmlspecialchars($currency) ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-        <p>
-            Compare 925 sterling silver and 999 fine silver prices
-            across different weights using the latest available
-            <?= htmlspecialchars($currency) ?> silver rate.
-        </p>
+
+                    </div>
+                </form>
+            </section>
+
+
+            <?= $view->render('/pages/finance/currency/standard-metal-table', [
+                    'table' => $silverTable,
+                    'metalType' => 'silver',
+                    'currency' => $currency,
+                    'footer' => "Compare 925 sterling silver and 999 fine silver prices across different weights using the latest available". htmlspecialchars($currency). ' silver rate.'
+            ], null) ?>
+
+
+            <?= $view->render('/pages/finance/currency/graph', [
+                'base' => 'XAG',
+                'target' => $currency,
+                'period' => '24H',
+                'graph' => $graph,
+            ], null) ?>
+
+            <?= $view->render('/pages/finance/currency/hourly-comparison', [
+                'rows' => $rows,
+            ], null) ?>
+
+        </main>
+
+        <aside class="sidebar d-flex flex-column gap-4" style="">
+            <div class="terminal-promo">
+                <div class="terminal-promo-bg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAm4xZkBvhH0DeUyyF6jYYMyFkG6sa2Z58GHgeay1JiJPPrISKhcVudbOfTvhRUwlT1nuWkC2URe8QVGXXIzb9v3YlygrHuHi-RIS9QlLmrzJEs0Sm3ZCOn7TcV8DHFAIidsnHJrLsBbHJTnO21k3cEx6ou0ml-6iQK-0sLXvwC3Ae3NeFiyxB-sKgzVaQId-I4itIY9E2zmnnRBWlsv4JmFyKWR3fxlQDv3wHvbwhV4bPb5hbq8qb1mQ');"></div>
+                <div class="terminal-promo-overlay"></div>
+                <div class="terminal-promo-content">
+                    <h4 class="fw-bold mb-1" style="font-size:20px;">MarketNiro Terminal</h4>
+                    <p class="mb-3" style="font-size:12px; opacity:.8; line-height:1.5;">Real-time futures &amp; millisecond-latency commodities data.</p>
+                    <a href="#" class="btn-upgrade">Upgrade Now <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
     </div>
-<?php endif; ?>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const fromSel  = document.getElementById('from-sel');
-        const toSel    = document.getElementById('to-sel');
-        const prefix   = document.getElementById('prefix');
-        const swapBtn  = document.getElementById('swap');
-
-
-        console.log(fromSel,toSel,prefix,swapBtn)
-        function updatePrefix() {
-            prefix.textContent = fromSel.value;
-        }
-        updatePrefix();
-        fromSel.addEventListener('change', updatePrefix);
-        swapBtn.addEventListener('click', () => {
-            const temp = fromSel.value;
-            fromSel.value = toSel.value;
-            toSel.value = temp;
-            updatePrefix();
-            swapBtn.classList.add('spin');
-            setTimeout(() => {
-
-                swapBtn.classList.remove('spin');
-
-            }, 300);
-        });
-    });
-</script>
-
-
-
-
-
-<?= $view->render('/pages/finance/currency/graph', [
-    'base' => 'XAG',
-    'target' => $currency,
-    'period' => '24H',
-    'graph' => $graph,
-], null) ?>
-
-<?= $view->render('/pages/finance/currency/hourly-comparison', [
-    'rows' => $rows,
-], null) ?>
+</div>

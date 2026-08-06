@@ -39,6 +39,9 @@ class RubberController
                             'https://code.jquery.com/jquery-3.7.1.min.js',
                             'https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js',
                         ],
+                        'styles' => [
+                            '/assets/css/agriculture/rubber.css',
+                        ],
                     ],
                     'domesticPrice' =>
                         $domesticPrice,

@@ -101,10 +101,6 @@
 
     /* Radii */
     --radius-default: 0.25rem;
-    --radius-lg: 0.5rem;
-    --radius-xl: 0.75rem;
-    --radius-2xl: 1rem;
-    --radius-full: 9999px;
 
     /* Spacing */
     --gap-xs: 0.5rem;
@@ -120,6 +116,10 @@
     --font-headline: "Hanken Grotesk", sans-serif;
     --font-body: "Inter", sans-serif;
     --font-mono: "JetBrains Mono", monospace;
+
+    --rubber-font-heading: "Hanken Grotesk", sans-serif;
+    --rubber-font-body: "Inter", sans-serif;
+    --rubber-font-mono: "JetBrains Mono", monospace;
 }
 
 * { box-sizing: border-box; }

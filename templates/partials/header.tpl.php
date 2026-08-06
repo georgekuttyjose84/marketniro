@@ -13,12 +13,11 @@ if (!isset($page_title)) {
     $page_title = 'MarketNiro | Pineapple Agricultural Insights';
 }
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?php echo htmlspecialchars($page_title); ?></title>
+
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--    <title>--><?php //echo htmlspecialchars($page_title); ?><!--</title>-->
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -29,11 +28,11 @@ if (!isset($page_title)) {
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
     <!-- Site CSS (shared vars first, then header/footer, then any page-specific CSS) -->
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/header.css">
-    <link rel="stylesheet" href="/css/footer.css">
-    <?php if (isset($extra_css)) { echo $extra_css; } // hook for page-specific <link>/<style> tags ?>
-</head>
+<!--    <link rel="stylesheet" href="/css/style.css">-->
+<!--    <link rel="stylesheet" href="/css/header.css">-->
+<!--    <link rel="stylesheet" href="/css/footer.css">-->
+<!--    --><?php //if (isset($extra_css)) { echo $extra_css; } // hook for page-specific <link>/<style> tags ?>
+<!--</head>-->
 <body>
 
 <!-- ============ TOP NAV BAR ============ -->

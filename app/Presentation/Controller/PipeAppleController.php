@@ -43,7 +43,12 @@ class PipeAppleController
                         'breadcrumb' => 'Pineapple',
                         'scripts' => [
                             'https://cdn.jsdelivr.net/npm/apexcharts',
+                            '/assets/js/agriculture/pineapple.js',
                         ],
+                        'styles' => [
+                            '/assets/css/agriculture/pineapple.css',
+                        ],
+
                     ],
                     'latestPrice' => $latestPrice,
                     'monthlyPriceSummary' => $lastThreeMonthsPriceSummary,

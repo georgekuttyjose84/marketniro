@@ -37,728 +37,475 @@ foreach ($internationalPrice as $prices) {
 ?>
 
 
-<style>
-
-    /*
-    |--------------------------------------------------------------------------
-    | Market section
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-market-section {
-        margin-bottom: 32px;
-        border: 1px solid #dfe5e1;
-        border-radius: 10px;
-        background: #ffffff;
-        overflow: hidden;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Market header
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-market-header {
-        padding: 20px 24px;
-        background: #f7faf8;
-        border-bottom: 1px solid #dfe5e1;
-    }
-
-    .rubber-market-header h2 {
-        margin: 0 0 6px;
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 1.3;
-    }
-
-    .rubber-price-date {
-        margin: 0;
-        color: #6c757d;
-        font-size: 14px;
-    }
-
-    .rubber-price-date strong {
-        color: #212529;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Tabs
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-tab-container {
-        padding: 18px 24px 0;
-        border-bottom: 1px solid #dee2e6;
-        background: #ffffff;
-    }
-
-    .rubber-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin: 0;
-        padding: 0;
-        border-bottom: 0;
-        list-style: none;
-    }
-
-    .rubber-tabs li {
-        margin: 0;
-    }
-
-    .rubber-tabs li a {
-        display: block;
-        padding: 10px 18px;
-        border: 1px solid #dee2e6;
-        border-bottom: 0;
-        border-radius: 6px 6px 0 0;
-        background: #f8f9fa;
-        color: #495057;
-        font-size: 15px;
-        font-weight: 600;
-        text-decoration: none;
-        white-space: nowrap;
-        cursor: pointer;
-
-        transition:
-                background 0.2s ease,
-                color 0.2s ease,
-                border-color 0.2s ease;
-    }
-
-    .rubber-tabs li a:hover {
-        background: #eef5f0;
-        color: #198754;
-        text-decoration: none;
-    }
-
-    .rubber-tabs li a.active {
-        border-color: #198754;
-        background: #198754;
-        color: #ffffff;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Tab content
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-tab-content {
-        padding: 24px;
-    }
-
-    .rubber-tab-content > .tab-pane {
-        display: none;
-    }
-
-    .rubber-tab-content > .tab-pane.active {
-        display: block;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Table
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-table {
-        width: 100%;
-        margin: 0;
-        border-collapse: collapse;
-    }
-
-    .rubber-table thead th {
-        padding: 13px 15px;
-        border-color: #dfe5e1;
-        background: #f4f7f5;
-        color: #343a40;
-        font-size: 14px;
-        font-weight: 700;
-        vertical-align: middle;
-    }
-
-    .rubber-table tbody td {
-        padding: 14px 15px;
-        border-color: #e5e9e6;
-        font-size: 15px;
-        vertical-align: middle;
-    }
-
-    .rubber-table tbody tr:hover {
-        background: #f8fbf9;
-    }
-
-    .rubber-grade {
-        color: #198754;
-        font-weight: 700;
-    }
-
-    .rubber-price-value {
-        text-align: right;
-        white-space: nowrap;
-        font-variant-numeric: tabular-nums;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Note
-    |--------------------------------------------------------------------------
-    */
-
-    .rubber-market-note {
-        margin: 0;
-        padding: 0 24px 22px;
-        color: #6c757d;
-        font-size: 14px;
-        line-height: 1.7;
-    }
-
-    .rubber-empty {
-        margin: 0;
-        padding: 24px;
-        color: #6c757d;
-        font-size: 15px;
-    }
-
-
-    /*
-    |--------------------------------------------------------------------------
-    | Mobile
-    |--------------------------------------------------------------------------
-    */
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet">
 
-    @media (max-width: 767px) {
 
-        .rubber-market-section {
-            margin-bottom: 24px;
-            border-radius: 8px;
-        }
+<div class="container-max mx-auto px-3 px-md-4 py-4 py-md-5" style="margin:0 auto;">
+    <div class="d-flex flex-column flex-lg-row gap-4">
+        <main class="flex-grow-1" style="min-width:0;">
+            <section class="rubber-market-section">
+                <div class="rubber-market-header">
 
-        .rubber-market-header {
-            padding: 16px;
-        }
+                    <h2>
+                        <span class="material-symbols-outlined rubber-header-icon">local_shipping</span>
+                        Domestic Rubber Market
+                    </h2>
 
-        .rubber-market-header h2 {
-            font-size: 20px;
-        }
 
-        .rubber-tab-container {
-            padding: 14px 14px 0;
-            overflow-x: auto;
-        }
+                    <?php if ($domesticDate !== null): ?>
+                        <p class="rubber-price-date">
+                            Price Date:<strong><?= htmlspecialchars(date('d M Y', strtotime($domesticDate))) ?></strong>
+                        </p>
 
-        .rubber-tabs {
-            flex-wrap: nowrap;
-            width: max-content;
-            min-width: 100%;
-        }
+                    <?php endif; ?>
 
-        .rubber-tabs li a {
-            padding: 9px 14px;
-            font-size: 14px;
-        }
+                </div>
 
-        .rubber-tab-content {
-            padding: 14px;
-        }
 
-        .rubber-table {
-            min-width: 520px;
-        }
+                <?php if (!empty($domesticPrice)): ?>
 
-        .rubber-table thead th,
-        .rubber-table tbody td {
-            padding: 11px 12px;
-            font-size: 14px;
-        }
 
-        .rubber-market-note {
-            padding: 0 16px 18px;
-            font-size: 13px;
-        }
+                    <!-- Domestic tabs -->
 
-        .rubber-empty {
-            padding: 18px 16px;
-        }
-    }
+                    <div class="rubber-tab-container">
 
-</style>
+                        <ul
+                                id="domestic-rubber-tab"
+                                class="nav rubber-tabs"
+                                role="tablist"
+                        >
 
+                            <?php $isFirst = true; ?>
 
-<section class="container">
 
+                            <?php foreach ($domesticPrice as $place => $prices): ?>
 
-    <!--
-    ========================================================================
-    DOMESTIC MARKET
-    ========================================================================
-    -->
+                                <?php
 
-    <section class="rubber-market-section">
+                                $placeEnum = RubberPlace::from(
+                                        $place
+                                );
 
+                                $tabId = 'domestic-' . $place;
 
-        <div class="rubber-market-header">
+                                ?>
 
-            <h2>
-                Domestic Rubber Market
-            </h2>
 
+                                <li role="presentation">
 
-            <?php if ($domesticDate !== null): ?>
+                                    <a
+                                            class="tab-control <?= $isFirst ? 'active' : '' ?>"
 
-                <p class="rubber-price-date">
+                                            data-toggle="tab"
 
-                    Price Date:
+                                            href="#<?= htmlspecialchars($tabId) ?>"
 
-                    <strong>
-                        <?= htmlspecialchars(
-                            date(
-                                'd M Y',
-                                strtotime($domesticDate)
-                            )
-                        ) ?>
-                    </strong>
+                                            role="tab"
 
-                </p>
+                                            aria-controls="<?= htmlspecialchars($tabId) ?>"
 
-            <?php endif; ?>
+                                            aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
+                                    >
 
-        </div>
+                                        <?= htmlspecialchars(
+                                                $placeEnum->label()
+                                        ) ?>
 
+                                    </a>
 
-        <?php if (!empty($domesticPrice)): ?>
+                                </li>
 
 
-            <!-- Domestic tabs -->
+                                <?php $isFirst = false; ?>
 
-            <div class="rubber-tab-container">
+                            <?php endforeach; ?>
 
-                <ul
-                    id="domestic-rubber-tab"
-                    class="nav nav-tabs rubber-tabs"
-                    role="tablist"
-                >
-
-                    <?php $isFirst = true; ?>
-
-
-                    <?php foreach ($domesticPrice as $place => $prices): ?>
-
-                        <?php
-
-                        $placeEnum = RubberPlace::from(
-                            $place
-                        );
-
-                        $tabId = 'domestic-' . $place;
-
-                        ?>
-
-
-                        <li role="presentation">
-
-                            <a
-                                class="tab-control <?= $isFirst ? 'active' : '' ?>"
-
-                                data-toggle="tab"
-
-                                href="#<?= htmlspecialchars($tabId) ?>"
-
-                                role="tab"
-
-                                aria-controls="<?= htmlspecialchars($tabId) ?>"
-
-                                aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
-                            >
-
-                                <?= htmlspecialchars(
-                                    $placeEnum->label()
-                                ) ?>
-
-                            </a>
-
-                        </li>
-
-
-                        <?php $isFirst = false; ?>
-
-                    <?php endforeach; ?>
-
-                </ul>
-
-            </div>
-
-
-            <!-- Domestic tab content -->
-
-            <div class="tab-content rubber-tab-content">
-
-                <?php $isFirst = true; ?>
-
-
-                <?php foreach ($domesticPrice as $place => $prices): ?>
-
-                    <?php
-
-                    $tabId = 'domestic-' . $place;
-
-                    ?>
-
-
-                    <div
-                        id="<?= htmlspecialchars($tabId) ?>"
-
-                        class="tab-pane fade <?= $isFirst ? 'show active' : '' ?>"
-
-                        role="tabpanel"
-                    >
-
-
-                        <div class="table-responsive">
-
-                            <table
-                                class="table table-bordered table-hover rubber-table"
-                            >
-
-                                <thead>
-
-                                <tr>
-
-                                    <th>
-                                        Grade
-                                    </th>
-
-                                    <th class="rubber-price-value">
-                                        INR ₹ / 100 Kg
-                                    </th>
-
-                                    <th class="rubber-price-value">
-                                        USD $ / 100 Kg
-                                    </th>
-
-                                </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-                                <?php foreach ($prices as $price): ?>
-
-                                    <tr>
-
-                                        <td>
-
-                                            <span class="rubber-grade">
-
-                                                <?= htmlspecialchars(
-                                                    $price->grade->label()
-                                                ) ?>
-
-                                            </span>
-
-                                        </td>
-
-
-                                        <td class="rubber-price-value">
-
-                                            ₹<?= number_format(
-                                                $price->amountInRupee,
-                                                2
-                                            ) ?>
-
-                                        </td>
-
-
-                                        <td class="rubber-price-value">
-
-                                            $<?= number_format(
-                                                $price->amountInDollar,
-                                                2
-                                            ) ?>
-
-                                        </td>
-
-                                    </tr>
-
-                                <?php endforeach; ?>
-
-                                </tbody>
-
-                            </table>
-
-                        </div>
+                        </ul>
 
                     </div>
 
 
-                    <?php $isFirst = false; ?>
+                    <!-- Domestic tab content -->
 
-                <?php endforeach; ?>
+                    <div class="tab-content rubber-tab-content">
 
-            </div>
-
-
-            <p class="rubber-market-note">
-
-                Domestic rubber prices are shown per 100 kg.
-                Prices may vary based on taxes, transportation,
-                warehousing and other market expenses.
-
-            </p>
+                        <?php $isFirst = true; ?>
 
 
-        <?php else: ?>
+                        <?php foreach ($domesticPrice as $place => $prices): ?>
 
-            <p class="rubber-empty">
-                No domestic rubber price data is currently available.
-            </p>
+                            <?php
 
-        <?php endif; ?>
+                            $tabId = 'domestic-' . $place;
 
-
-    </section>
+                            ?>
 
 
-    <!--
-    ========================================================================
-    INTERNATIONAL MARKET
-    ========================================================================
-    -->
+                            <div
+                                    id="<?= htmlspecialchars($tabId) ?>"
 
-    <section class="rubber-market-section">
+                                    class="tab-pane fade <?= $isFirst ? 'show active' : '' ?>"
 
-
-        <div class="rubber-market-header">
-
-            <h2>
-                International Rubber Market
-            </h2>
-
-
-            <?php if ($internationalDate !== null): ?>
-
-                <p class="rubber-price-date">
-
-                    Price Date:
-
-                    <strong>
-
-                        <?= htmlspecialchars(
-                            date(
-                                'd M Y',
-                                strtotime($internationalDate)
-                            )
-                        ) ?>
-
-                    </strong>
-
-                </p>
-
-            <?php endif; ?>
-
-        </div>
-
-
-        <?php if (!empty($internationalPrice)): ?>
-
-
-            <!-- International tabs -->
-
-            <div class="rubber-tab-container">
-
-                <ul
-                    id="international-rubber-tab"
-                    class="nav nav-tabs rubber-tabs"
-                    role="tablist"
-                >
-
-                    <?php $isFirst = true; ?>
-
-
-                    <?php foreach ($internationalPrice as $place => $prices): ?>
-
-                        <?php
-
-                        $placeEnum = RubberPlace::from(
-                            $place
-                        );
-
-                        $tabId = 'international-' . $place;
-
-                        ?>
-
-
-                        <li role="presentation">
-
-                            <a
-                                class="tab-control <?= $isFirst ? 'active' : '' ?>"
-
-                                data-toggle="tab"
-
-                                href="#<?= htmlspecialchars($tabId) ?>"
-
-                                role="tab"
-
-                                aria-controls="<?= htmlspecialchars($tabId) ?>"
-
-                                aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
+                                    role="tabpanel"
                             >
 
-                                <?= htmlspecialchars(
-                                    $placeEnum->label()
-                                ) ?>
 
-                            </a>
+                                <div class="table-responsive">
 
-                        </li>
+                                    <table
+                                            class="table table-bordered table-hover rubber-table"
+                                    >
 
+                                        <thead>
 
-                        <?php $isFirst = false; ?>
+                                        <tr>
 
-                    <?php endforeach; ?>
+                                            <th>
+                                                Grade
+                                            </th>
 
-                </ul>
+                                            <th class="rubber-price-value">
+                                                INR ₹ / 100 Kg
+                                            </th>
 
-            </div>
+                                            <th class="rubber-price-value">
+                                                USD $ / 100 Kg
+                                            </th>
 
+                                        </tr>
 
-            <!-- International tab content -->
-
-            <div class="tab-content rubber-tab-content">
-
-                <?php $isFirst = true; ?>
-
-
-                <?php foreach ($internationalPrice as $place => $prices): ?>
-
-                    <?php
-
-                    $tabId = 'international-' . $place;
-
-                    ?>
+                                        </thead>
 
 
-                    <div
-                        id="<?= htmlspecialchars($tabId) ?>"
+                                        <tbody>
 
-                        class="tab-pane fade <?= $isFirst ? 'show active' : '' ?>"
+                                        <?php foreach ($prices as $price): ?>
 
-                        role="tabpanel"
-                    >
+                                            <tr>
 
-
-                        <div class="table-responsive">
-
-                            <table
-                                class="table table-bordered table-hover rubber-table"
-                            >
-
-                                <thead>
-
-                                <tr>
-
-                                    <th>
-                                        Grade
-                                    </th>
-
-                                    <th class="rubber-price-value">
-                                        INR ₹ / 100 Kg
-                                    </th>
-
-                                    <th class="rubber-price-value">
-                                        USD $ / 100 Kg
-                                    </th>
-
-                                </tr>
-
-                                </thead>
-
-
-                                <tbody>
-
-                                <?php foreach ($prices as $price): ?>
-
-                                    <tr>
-
-                                        <td>
+                                                <td>
 
                                             <span class="rubber-grade">
 
                                                 <?= htmlspecialchars(
-                                                    $price->grade->label()
+                                                        $price->grade->label()
                                                 ) ?>
 
                                             </span>
 
-                                        </td>
+                                                </td>
 
 
-                                        <td class="rubber-price-value">
+                                                <td class="rubber-price-value">
 
-                                            ₹<?= number_format(
-                                                $price->amountInRupee,
-                                                2
-                                            ) ?>
+                                                    ₹<?= number_format(
+                                                            $price->amountInRupee,
+                                                            2
+                                                    ) ?>
 
-                                        </td>
+                                                </td>
 
 
-                                        <td class="rubber-price-value">
+                                                <td class="rubber-price-value">
 
-                                            $<?= number_format(
-                                                $price->amountInDollar,
-                                                2
-                                            ) ?>
+                                                    $<?= number_format(
+                                                            $price->amountInDollar,
+                                                            2
+                                                    ) ?>
 
-                                        </td>
+                                                </td>
 
-                                    </tr>
+                                            </tr>
 
-                                <?php endforeach; ?>
+                                        <?php endforeach; ?>
 
-                                </tbody>
+                                        </tbody>
 
-                            </table>
+                                    </table>
 
-                        </div>
+                                </div>
+
+                            </div>
+
+
+                            <?php $isFirst = false; ?>
+
+                        <?php endforeach; ?>
 
                     </div>
 
 
-                    <?php $isFirst = false; ?>
+                    <p class="rubber-market-note">
 
-                <?php endforeach; ?>
+                        Domestic rubber prices are shown per 100 kg.
+                        Prices may vary based on taxes, transportation,
+                        warehousing and other market expenses.
 
+                    </p>
+
+
+                <?php else: ?>
+
+                    <p class="rubber-empty">
+                        No domestic rubber price data is currently available.
+                    </p>
+
+                <?php endif; ?>
+
+
+            </section>
+
+
+            <!--
+            ========================================================================
+            INTERNATIONAL MARKET
+            ========================================================================
+            -->
+
+            <section class="rubber-market-section">
+
+
+                <div class="rubber-market-header">
+
+                    <h2>
+                        <span class="material-symbols-outlined rubber-header-icon">public</span>
+                        International Rubber Market
+                    </h2>
+
+
+                    <?php if ($internationalDate !== null): ?>
+
+                        <p class="rubber-price-date">
+
+                            Price Date:
+
+                            <strong>
+
+                                <?= htmlspecialchars(
+                                        date(
+                                                'd M Y',
+                                                strtotime($internationalDate)
+                                        )
+                                ) ?>
+
+                            </strong>
+
+                        </p>
+
+                    <?php endif; ?>
+
+                </div>
+
+
+                <?php if (!empty($internationalPrice)): ?>
+
+
+                    <!-- International tabs -->
+
+                    <div class="rubber-tab-container">
+
+                        <ul
+                                id="international-rubber-tab"
+                                class="nav  rubber-tabs"
+                                role="tablist"
+                        >
+
+                            <?php $isFirst = true; ?>
+
+
+                            <?php foreach ($internationalPrice as $place => $prices): ?>
+
+                                <?php
+
+                                $placeEnum = RubberPlace::from(
+                                        $place
+                                );
+
+                                $tabId = 'international-' . $place;
+
+                                ?>
+
+
+                                <li role="presentation">
+
+                                    <a
+                                            class="tab-control <?= $isFirst ? 'active' : '' ?>"
+
+                                            data-toggle="tab"
+
+                                            href="#<?= htmlspecialchars($tabId) ?>"
+
+                                            role="tab"
+
+                                            aria-controls="<?= htmlspecialchars($tabId) ?>"
+
+                                            aria-selected="<?= $isFirst ? 'true' : 'false' ?>"
+                                    >
+
+                                        <?= htmlspecialchars(
+                                                $placeEnum->label()
+                                        ) ?>
+
+                                    </a>
+
+                                </li>
+
+
+                                <?php $isFirst = false; ?>
+
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                    </div>
+
+
+                    <!-- International tab content -->
+
+                    <div class="tab-content rubber-tab-content">
+
+                        <?php $isFirst = true; ?>
+
+
+                        <?php foreach ($internationalPrice as $place => $prices): ?>
+
+                            <?php
+
+                            $tabId = 'international-' . $place;
+
+                            ?>
+
+
+                            <div
+                                    id="<?= htmlspecialchars($tabId) ?>"
+
+                                    class="tab-pane fade <?= $isFirst ? 'show active' : '' ?>"
+
+                                    role="tabpanel"
+                            >
+
+
+                                <div class="table-responsive">
+
+                                    <table
+                                            class="table table-bordered table-hover rubber-table"
+                                    >
+
+                                        <thead>
+
+                                        <tr>
+
+                                            <th>
+                                                Grade
+                                            </th>
+
+                                            <th class="rubber-price-value">
+                                                INR ₹ / 100 Kg
+                                            </th>
+
+                                            <th class="rubber-price-value">
+                                                USD $ / 100 Kg
+                                            </th>
+
+                                        </tr>
+
+                                        </thead>
+
+
+                                        <tbody>
+
+                                        <?php foreach ($prices as $price): ?>
+
+                                            <tr>
+
+                                                <td>
+
+                                            <span class="rubber-grade">
+
+                                                <?= htmlspecialchars(
+                                                        $price->grade->label()
+                                                ) ?>
+
+                                            </span>
+
+                                                </td>
+
+
+                                                <td class="rubber-price-value">
+
+                                                    ₹<?= number_format(
+                                                            $price->amountInRupee,
+                                                            2
+                                                    ) ?>
+
+                                                </td>
+
+
+                                                <td class="rubber-price-value">
+
+                                                    $<?= number_format(
+                                                            $price->amountInDollar,
+                                                            2
+                                                    ) ?>
+
+                                                </td>
+
+                                            </tr>
+
+                                        <?php endforeach; ?>
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+
+                            </div>
+
+
+                            <?php $isFirst = false; ?>
+
+                        <?php endforeach; ?>
+
+                    </div>
+
+
+                    <p class="rubber-market-note">
+
+                        International rubber prices are shown per 100 kg
+                        for comparison across major global rubber markets.
+
+                    </p>
+
+
+                <?php else: ?>
+
+                    <p class="rubber-empty">
+                        No international rubber price data is currently available.
+                    </p>
+
+                <?php endif; ?>
+            </section>
+        </main>
+
+
+
+        <aside class="sidebar d-flex flex-column gap-4" style="">
+            <div class="terminal-promo">
+                <div class="terminal-promo-bg" style="background-image:url('https://lh3.googleusercontent.com/aida-public/AB6AXuAm4xZkBvhH0DeUyyF6jYYMyFkG6sa2Z58GHgeay1JiJPPrISKhcVudbOfTvhRUwlT1nuWkC2URe8QVGXXIzb9v3YlygrHuHi-RIS9QlLmrzJEs0Sm3ZCOn7TcV8DHFAIidsnHJrLsBbHJTnO21k3cEx6ou0ml-6iQK-0sLXvwC3Ae3NeFiyxB-sKgzVaQId-I4itIY9E2zmnnRBWlsv4JmFyKWR3fxlQDv3wHvbwhV4bPb5hbq8qb1mQ');"></div>
+                <div class="terminal-promo-overlay"></div>
+                <div class="terminal-promo-content">
+                    <h4 class="fw-bold mb-1" style="font-size:20px;">MarketNiro Terminal</h4>
+                    <p class="mb-3" style="font-size:12px; opacity:.8; line-height:1.5;">Real-time futures &amp; millisecond-latency commodities data.</p>
+                    <a href="#" class="btn-upgrade">Upgrade Now <span class="material-symbols-outlined" style="font-size:14px;">arrow_forward</span>
+                    </a>
+                </div>
             </div>
-
-
-            <p class="rubber-market-note">
-
-                International rubber prices are shown per 100 kg
-                for comparison across major global rubber markets.
-
-            </p>
-
-
-        <?php else: ?>
-
-            <p class="rubber-empty">
-                No international rubber price data is currently available.
-            </p>
-
-        <?php endif; ?>
-
-
-    </section>
-
-
-</section>
+        </aside>
+    </div>
+</div>

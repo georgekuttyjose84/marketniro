@@ -37,8 +37,6 @@ $scripts = $page['scripts'] ?? [];
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="stylesheet" href="/assets/css/layout/footer.css">
     <link rel="stylesheet" href="/assets/css/layout/header.css">
-    <link rel="stylesheet" href="/assets/css/home.css">
-    <link rel="stylesheet" href="/assets/css/agriculture/pineapple.css">
 
     <?php foreach ($styles as $style): ?>
         <link rel="stylesheet" href="<?= htmlspecialchars($style) ?>">
@@ -70,7 +68,7 @@ $scripts = $page['scripts'] ?? [];
     <?= $content ?>
 <?= $view->partial('partials/footer') ?>
 
-<script src="/assets/js/agriculture/pineapple.js"></script>
+<!--<script src="/assets/js/agriculture/pineapple.js"></script>-->
 <script src="/assets/js/app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
