@@ -100,6 +100,64 @@ class RubberPriceRepository implements
         return $result;
     }
 
+    public function getLatestPricesByMarketTypeAndPlace(
+        RubberMarketType $marketType,
+        RubberPlace $place,
+        RubberGrade $grade
+    ): array {
+
+        $stmt = $this->pdo->prepare(
+            "
+            SELECT
+                id,
+                amount_in_rupee,
+                amount_in_dollar,
+                grade,
+                place,
+                market_type,
+                price_date,
+                method,
+                created_at
+            FROM rubber_price
+            WHERE market_type = :market_type and place = :place and grade = :grade
+            AND price_date = (
+                SELECT MAX(price_date)
+                FROM rubber_price
+                WHERE market_type = :latest_market_type
+            )
+            ORDER BY
+                place ASC,
+                id ASC
+            "
+        );
+
+        $stmt->execute([
+            'market_type' => $marketType->value,
+            'latest_market_type' => $marketType->value,
+            'place' => $place->value,
+            'grade' => $grade->value,
+        ]);
+
+        $rows = $stmt->fetchAll(
+            PDO::FETCH_ASSOC
+        );
+
+        $result = [];
+
+        foreach ($rows as $row) {
+
+            $rubberPrice = $this->map(
+                $row
+            );
+
+            $result[
+            $rubberPrice->place->value
+            ][] = $rubberPrice;
+        }
+
+        return $result;
+    }
+
 
     private function map(
         array $row
@@ -147,4 +205,34 @@ class RubberPriceRepository implements
 
         );
     }
+
+    public function getLatestPricesByMarketTypeAndPlaceIndicator(
+        RubberMarketType $marketType,
+        RubberPlace $place,
+        RubberGrade $grade
+    ): array
+    {
+        $stmt = $this->pdo->prepare("
+                SELECT
+                    amount_in_rupee as price_information,
+                    price_date
+                FROM rubber_price
+                WHERE market_type = :market_type
+                  AND place = :place
+                  AND grade = :grade
+                ORDER BY price_date DESC, id DESC
+                LIMIT 2
+            ");
+
+        $stmt->execute([
+            'market_type' => $marketType->value,
+            'place' => $place->value,
+            'grade' => $grade->value,
+        ]);
+
+        $prices = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $prices;
+    }
+
 }

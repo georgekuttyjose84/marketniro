@@ -286,4 +286,21 @@ class PineAppleRepository implements PineAppleRepositoryInterface
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     }
+    public function getLatestAveragePrices(string $type): array
+    {
+        $sql = "
+        SELECT avg_price as price_information
+        FROM pineapple_price
+        WHERE `type` = :type
+        ORDER BY price_date DESC
+        LIMIT 2
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'type' => $type
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

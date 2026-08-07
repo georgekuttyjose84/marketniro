@@ -1,5 +1,6 @@
 <?php
 
+use App\Presentation\Controller\AboutUs;
 use App\Presentation\Controller\CurrencyHistoryApiController;
 use App\Presentation\Controller\GoldController;
 use App\Presentation\Controller\HomeController;
@@ -9,6 +10,8 @@ use App\Presentation\Controller\PipeAppleController;
 use App\Presentation\Controller\PipeAppleHistoryApiController;
 use App\Presentation\Controller\RubberController;
 use App\Presentation\Controller\SilverController;
+
+
 
 return [
 
@@ -21,5 +24,6 @@ return [
     '/agriculture/pineapple' => [PipeAppleController::class, 'index'],
     '/agriculture/pineapple/history' => [PipeAppleHistoryApiController::class, 'index'],
     '/agriculture/rubber' => [RubberController::class, 'index'],
+    '/about-us' => [AboutUs::class, 'index']
 
 ];

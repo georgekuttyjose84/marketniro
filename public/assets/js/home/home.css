@@ -1,0 +1,1546 @@
+:root{
+    --primary:#006b2c;
+    --primary-container:#00873a;
+    --pineapple-accent:#E4D00A;
+    --surface:#ffffff;
+    --on-surface-variant:#3e4a3d;
+    --background:#f7f9fb;
+    --font-headline:"Hanken Grotesk", sans-serif;
+    --font-body:"Inter", sans-serif;
+    --font-mono:"JetBrains Mono", monospace;
+    --radius-lg:0.5rem;
+    --radius-full:9999px;
+}
+
+
+/* ==========================================================================
+     CAROUSEL STARTED ** marketniro
+   ========================================================================== */
+
+.hero-carousel{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.hero-carousel .carousel-item{
+    position: relative;
+    height: 640px; /* base / smallest screens */
+}
+
+.hero-slide-media{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+}
+.hero-slide-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:70% center;
+    transform:scale(1);
+    will-change: transform;
+}
+/* Ken Burns — only the active slide zooms, gives the "it's alive" feel */
+.hero-carousel .carousel-item.active .hero-slide-media img{
+    animation: heroZoom 6.5s cubic-bezier(.25,.46,.45,.94) forwards;
+}
+@keyframes heroZoom{
+    from{ transform: scale(1); }
+    to{ transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce){
+    .hero-carousel .carousel-item.active .hero-slide-media img{ animation:none; }
+}
+
+/* Layered overlay: dark gradient for legibility + a thin brand-green wash
+   so every slide still reads as "MarketNiro" regardless of the photo */
+.hero-slide-media::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+            linear-gradient(180deg, rgba(6,20,12,0.15) 0%, rgba(6,16,10,0.55) 55%, rgba(4,12,8,0.86) 100%),
+            linear-gradient(90deg, rgba(0,40,17,0.55) 0%, rgba(0,40,17,0.08) 45%, rgba(0,40,17,0) 70%);
+}
+
+.hero-content{
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.hero-box{
+    width:100%;
+    max-width:560px;
+
+    margin-left:clamp(2rem,6vw,7rem);
+
+    padding:0;
+
+    background:none;
+    border:none;
+    border-radius:0;
+    box-shadow:none;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+}
+
+/* Large desktop */
+@media (min-width:1200px){
+    .hero-box{
+        margin-left: 5rem;
+        max-width: 610px;
+    }
+}
+
+/* Laptop */
+@media (min-width:992px) and (max-width:1199px){
+    .hero-box{
+        margin-left: 3rem;
+        max-width: 600px;
+    }
+}
+
+/* Tablet */
+@media (max-width:991.98px){
+    .hero-box{
+        margin-left: 1.5rem;
+        margin-right: 1.5rem;
+        padding: 2rem;
+    }
+}
+
+/* Mobile */
+@media (max-width:575.98px){
+    .hero-box{
+        margin: 0 1rem;
+        padding: 1.6rem;
+        border-radius: 18px;
+    }
+}
+.hero-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    padding: 7px 16px 7px 12px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color:#fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    opacity:0;
+    animation: heroFadeUp .7s ease .15s forwards;
+}
+.hero-tag .material-symbols-outlined{ font-size:16px; color: var(--pineapple-accent); }
+.hero-tag-dot{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--pineapple-accent);
+    box-shadow: 0 0 0 0 rgba(228,208,10,0.6);
+    animation: heroPulse 1.8s infinite;
+}
+
+.hero-title{
+    font-family: var(--font-headline);
+    font-weight: 800;
+    color:#fff;
+    font-size: clamp(1.9rem, 5.5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    opacity:0;
+    animation: heroFadeUp .7s ease .3s forwards;
+}
+.hero-title-accent{ color: var(--pineapple-accent); }
+
+.hero-description{
+    color: rgba(255,255,255,0.82);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 34rem;
+    margin-bottom: 1.75rem;
+    opacity:0;
+    animation: heroFadeUp .7s ease .45s forwards;
+}
+
+.hero-buttons{
+    display:flex;
+    flex-wrap:wrap;
+    gap: .75rem;
+    opacity:0;
+    animation: heroFadeUp .7s ease .6s forwards;
+}
+.btn-hero-primary,
+.btn-hero-secondary{
+    display:inline-flex;
+    align-items:center;
+    gap:.4rem;
+    border-radius: var(--radius-lg);
+    padding: 12px 22px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border: none;
+    transition: all .2s ease;
+    white-space:nowrap;
+}
+.btn-hero-primary{
+    background: var(--primary);
+    color:#fff;
+}
+.btn-hero-primary:hover{ background: var(--primary-container); transform: translateY(-1px); }
+.btn-hero-primary .material-symbols-outlined{ font-size:18px; transition: transform .2s ease; }
+.btn-hero-primary:hover .material-symbols-outlined{ transform: translateX(3px); }
+
+.btn-hero-secondary{
+    background: rgba(255,255,255,0.08);
+    color:#fff;
+    border: 1px solid rgba(255,255,255,0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+.btn-hero-secondary:hover{ background: rgba(255,255,255,0.18); }
+
+@keyframes heroFadeUp{
+    from{ opacity:0; transform: translateY(14px); }
+    to{ opacity:1; transform: translateY(0); }
+}
+@keyframes heroPulse{
+    0%{ box-shadow: 0 0 0 0 rgba(228,208,10,0.55); }
+    70%{ box-shadow: 0 0 0 8px rgba(228,208,10,0); }
+    100%{ box-shadow: 0 0 0 0 rgba(228,208,10,0); }
+}
+
+/* ===== Arrows — glass-morph, matching the header/mobile-nav blur language ===== */
+.hero-arrow{
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    z-index:3;
+    width:44px; height:44px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color:#fff;
+    transition: all .2s ease;
+}
+.hero-arrow:hover{ background: var(--primary); border-color: var(--primary); }
+.hero-arrow-prev{ left: 1.25rem; }
+.hero-arrow-next{ right: 1.25rem; }
+@media (max-width: 575.98px){ .hero-arrow{ display:none; } }
+
+/* ===== Indicators — slim progress bars instead of dots =====
+   Signature element: reinforces "updated every morning / live" positioning */
+.hero-indicators{
+    position:absolute;
+    left:50%; bottom:0;
+    transform: translateX(-50%);
+    z-index:3;
+    display:flex;
+    gap:8px;
+    padding-bottom: 1.1rem;
+    width: 100%;
+    max-width: 260px;
+}
+.hero-indicator{
+    flex:1;
+    height:3px;
+    border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.28);
+    border:none;
+    padding:0;
+    position:relative;
+    overflow:hidden;
+    cursor:pointer;
+}
+.hero-indicator-progress{
+    position:absolute; top:0; left:0; height:100%;
+    width:0%;
+    background: var(--pineapple-accent);
+    border-radius: var(--radius-full);
+}
+.hero-indicator.done .hero-indicator-progress{ width:100%; background: rgba(255,255,255,0.65); }
+.hero-indicator.active .hero-indicator-progress{ animation: heroProgress 6.5s linear forwards; }
+@keyframes heroProgress{ from{ width:0%; } to{ width:100%; } }
+
+/* ===== Height by breakpoint — grows on small screens (more text wrap),
+   settles to 520px from 1200px up so the fold teases content below ===== */
+@media (min-width: 400px){ .hero-carousel .carousel-item{ height: 600px; } }
+@media (min-width: 576px){ .hero-carousel .carousel-item{ height: 580px; } .hero-box{ max-width:640px; } }
+@media (min-width: 768px){
+    .hero-carousel .carousel-item{ height: 560px; }
+    .hero-content{ padding-bottom: 3.5rem; }
+    .hero-indicators{ padding-bottom: 1.4rem; max-width: 300px; }
+}
+@media (min-width: 992px){ .hero-carousel .carousel-item{ height: 540px; } .hero-box{ max-width:660px; } }
+@media (min-width: 1200px){
+    .hero-carousel .carousel-item{ height: 520px; }
+}
+@media (max-width: 399.98px){
+    .hero-buttons{ flex-direction:column; align-items:stretch; }
+    .btn-hero-primary, .btn-hero-secondary{ justify-content:center; }
+}
+
+/* CAROUSEL ENDED ** marketniro */
+
+
+
+/* ==========================================================
+  MARKET CARD SECTION STARTS ** marketniro
+========================================================== */
+
+.market-section{
+
+    padding:5rem 0;
+
+    position:relative;
+
+    background:var(--background);
+
+}
+
+.market-section-heading{
+
+    max-width:760px;
+
+    margin:0 auto 4rem;
+
+    text-align:center;
+
+}
+
+.section-tag{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:8px 18px;
+
+    border-radius:999px;
+
+    background:rgba(0,107,44,.08);
+
+    color:var(--primary);
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:.18em;
+
+    margin-bottom:1.25rem;
+
+}
+
+.market-section-heading h2{
+
+    margin:0;
+
+    font-family:var(--font-headline);
+
+    font-size:clamp(2.2rem,4vw,3.5rem);
+
+    font-weight:800;
+
+    line-height:1.1;
+
+    letter-spacing:-.04em;
+
+    color:var(--on-background);
+
+}
+
+.market-section-heading h2 span{
+
+    color:var(--primary);
+
+}
+
+.market-section-heading p{
+
+    margin:1.5rem auto 0;
+
+    max-width:620px;
+
+    color:var(--text-secondary);
+
+    font-size:1.05rem;
+
+    line-height:1.8;
+
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.market-card{
+
+    position:relative;
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:100%;
+
+    padding:2rem;
+
+    border-radius:24px;
+
+    background:var(--surface);
+
+    border:1px solid rgba(0,0,0,.05);
+
+    overflow:hidden;
+
+    transition:.35s ease;
+
+    box-shadow:
+
+            0 8px 30px rgba(15,23,42,.05);
+
+}
+
+/* subtle top glow */
+
+.market-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:0;
+
+    right:0;
+
+    height:5px;
+
+    background:var(--accent);
+
+}
+
+/* soft background circle */
+
+.market-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+
+    height:180px;
+
+    right:-60px;
+
+    top:-60px;
+
+    border-radius:50%;
+
+    background:rgba(0,107,44,.04);
+
+}
+
+/* ==========================================================
+   TOP
+========================================================== */
+
+.market-card-top{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    margin-bottom:2rem;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.market-badge{
+
+    font-size:.72rem;
+
+    font-weight:700;
+
+    letter-spacing:.12em;
+
+    text-transform:uppercase;
+
+    color:var(--accent);
+
+}
+
+.market-card-top .material-symbols-outlined{
+
+    font-size:20px;
+
+    color:var(--accent);
+
+    transition:.30s;
+
+}
+
+/* ==========================================================
+   IMAGE
+========================================================== */
+
+.market-image{
+
+    position:relative;
+
+    z-index:2;
+
+    width:110px;
+
+    height:110px;
+
+    margin:0 auto 2rem;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:rgba(255,255,255,.95);
+
+    border:1px solid rgba(0,0,0,.05);
+
+    box-shadow:
+
+            0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.market-image img{
+
+    width:82px;
+
+    height:auto;
+
+    transition:.35s;
+
+}
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.market-content{
+
+    position:relative;
+
+    z-index:2;
+
+    text-align:center;
+
+}
+
+.market-content h3{
+
+    margin:0;
+
+    font-family:var(--font-headline);
+
+    font-size:1.45rem;
+
+    font-weight:700;
+
+    color:var(--on-background);
+
+}
+
+.market-price{
+
+    margin-top:1.2rem;
+
+    font-family:var(--font-headline);
+
+    font-size:2.5rem;
+
+    font-weight:800;
+
+    line-height:1;
+
+    color:var(--on-background);
+
+}
+
+.market-price span{
+
+    display:block;
+
+    margin-top:.45rem;
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:var(--text-secondary);
+
+}
+
+.market-change{
+
+    margin-top:1.25rem;
+
+    font-size:.95rem;
+
+    font-weight:700;
+
+}
+
+.market-change.positive{
+    color:#16A34A;
+}
+.market-change.negative{
+    color:#DC2626;
+}
+
+.market-change.neutral{
+    color:#6B7280;
+}
+
+
+
+.market-change small{
+
+    display:block;
+
+    margin-top:4px;
+
+    color:var(--text-secondary);
+
+    font-size:.78rem;
+
+    font-weight:500;
+
+}
+
+.market-update{
+
+    margin-top:1.6rem;
+
+    color:var(--text-secondary);
+
+    font-size:.82rem;
+
+}
+
+.market-update strong{
+
+    display:block;
+
+    margin-top:5px;
+
+    color:var(--on-background);
+
+    font-weight:700;
+
+}
+
+/* ==========================================================
+   LINK
+========================================================== */
+
+.market-link{
+
+    position:relative;
+
+    z-index:2;
+
+    margin-top:auto;
+
+    padding-top:2rem;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:.45rem;
+
+    text-decoration:none;
+
+    color:var(--accent);
+
+    font-weight:700;
+
+    transition:.30s;
+
+}
+
+.market-link .material-symbols-outlined{
+
+    transition:.30s;
+
+}
+
+/* ==========================================================
+MARKET CARD COLORS
+========================================================== */
+
+.market-card.gold{
+    --accent:#F59E0B;
+}
+
+.market-card.silver{
+    --accent:#94A3B8;
+}
+
+.market-card.rubber{
+    --accent:#94A3B8;
+}
+
+.market-card.currency{
+    --accent:#2563EB;
+}
+
+.market-card.pineapple-green{
+    --accent:#22C55E;
+}
+
+.market-card.pineapple-ripe{
+    --accent:#D97706;
+}
+
+/* ==========================================================
+   HOVER EFFECT
+========================================================== */
+
+.market-card:hover{
+
+    transform:translateY(-12px);
+
+    border-color:rgba(0,107,44,.12);
+
+    box-shadow:
+            0 30px 70px rgba(15,23,42,.12);
+
+}
+
+.market-card:hover::after{
+
+    transform:scale(1.2);
+
+    transition:.45s;
+
+}
+
+.market-card:hover .market-image{
+
+    transform:translateY(-4px);
+
+}
+
+.market-card:hover .market-image img{
+
+    transform:rotate(-8deg) scale(1.08);
+
+}
+
+.market-card:hover .market-card-top .material-symbols-outlined{
+
+    transform:translate(5px,-5px);
+
+}
+
+.market-card:hover .market-link{
+
+    gap:.9rem;
+
+}
+
+.market-card:hover .market-link .material-symbols-outlined{
+
+    transform:translateX(6px);
+
+}
+
+.market-card:hover .market-price{
+
+    color:var(--accent);
+
+}
+
+/* ==========================================================
+   IMAGE BACKGROUND
+========================================================== */
+
+.market-card.gold .market-image{
+
+    background:
+            linear-gradient(135deg,#FFF7E0,#FFE7A6);
+
+}
+
+.market-card.silver .market-image{
+
+    background:
+            linear-gradient(135deg,#F8FAFC,#E2E8F0);
+
+}
+
+.market-card.rubber .market-image{
+
+    background:
+            linear-gradient(135deg,#ECFDF3,#D1FAE5);
+
+}
+
+.market-card.currency .market-image{
+
+    background:
+            linear-gradient(135deg,#EFF6FF,#DBEAFE);
+
+}
+
+.market-card.pineapple-green .market-image{
+
+    background:
+            linear-gradient(135deg,#F0FDF4,#DCFCE7);
+
+}
+
+.market-card.pineapple-ripe .market-image{
+
+    background:
+            linear-gradient(135deg,#FFF7ED,#FED7AA);
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width:1200px){
+
+    .market-card{
+
+        padding:1.75rem;
+
+    }
+
+}
+
+@media (max-width:992px){
+
+    .market-section{
+
+        padding:4rem 0;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .market-section-heading{
+
+        margin-bottom:3rem;
+
+    }
+
+    .market-card{
+
+        padding:1.5rem;
+
+    }
+
+    .market-image{
+
+        width:95px;
+        height:95px;
+
+        margin-bottom:1.5rem;
+
+    }
+
+    .market-image img{
+
+        width:70px;
+
+    }
+
+    .market-content h3{
+
+        font-size:1.3rem;
+
+    }
+
+    .market-price{
+
+        font-size:2.1rem;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .market-section{
+
+        padding:3rem 0;
+
+    }
+
+    .market-section-heading h2{
+
+        font-size:2rem;
+
+    }
+
+    .market-section-heading p{
+
+        font-size:.95rem;
+
+    }
+
+    .market-card{
+
+        border-radius:20px;
+
+    }
+
+}
+
+@media (max-width:425px){
+
+    .market-card{
+
+        padding:1.35rem;
+
+    }
+
+    .market-image{
+
+        width:85px;
+        height:85px;
+
+    }
+
+    .market-image img{
+
+        width:62px;
+
+    }
+
+    .market-price{
+
+        font-size:1.8rem;
+
+    }
+
+    .market-content h3{
+
+        font-size:1.2rem;
+
+    }
+
+}
+
+@media (max-width:320px){
+
+    .market-card{
+
+        padding:1.1rem;
+
+    }
+
+    .market-section-heading h2{
+
+        font-size:1.75rem;
+
+    }
+
+    .market-link{
+
+        font-size:.9rem;
+
+    }
+
+}
+
+/* ==========================================================
+   SMOOTH ANIMATION
+========================================================== */
+
+.market-card,
+.market-image,
+.market-image img,
+.market-link,
+.market-price,
+.market-card-top .material-symbols-outlined,
+.market-card::after{
+
+    transition:all .35s ease;
+
+}
+
+/* ==========================================================
+   ACCESSIBILITY
+========================================================== */
+
+.market-link:focus-visible{
+
+    outline:3px solid var(--accent);
+
+    outline-offset:4px;
+
+}
+
+
+
+
+/* ==========================================================
+end of table
+========================================================== */
+
+.snapshot-section{
+    padding:6rem 0;
+    background:var(--surface-container-low);
+    position:relative;
+    overflow:hidden;
+}
+
+/* Decorative background */
+.snapshot-section::before{
+    content:"";
+    position:absolute;
+    width:420px;
+    height:420px;
+    border-radius:50%;
+    background:rgba(22,163,74,.04);
+    top:-180px;
+    right:-120px;
+    z-index:0;
+}
+
+.snapshot-section .container-max{
+    position:relative;
+    z-index:2;
+}
+
+/* ==========================================================
+   SNAPSHOT CARD
+========================================================== */
+
+.snapshot-card{
+
+    background:var(--surface);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    border:1px solid rgba(15,23,42,.06);
+
+    box-shadow:
+            0 12px 40px rgba(15,23,42,.06);
+
+}
+
+/* ==========================================================
+   ROW
+========================================================== */
+
+.snapshot-row{
+
+    display:grid;
+
+    grid-template-columns:
+        minmax(240px,2fr)
+        1fr
+        130px
+        40px;
+
+    align-items:center;
+
+    gap:2rem;
+
+    padding:1.35rem 2rem;
+
+    text-decoration:none;
+
+    color:inherit;
+
+    transition:.30s ease;
+
+    border-bottom:1px solid rgba(15,23,42,.06);
+
+    position:relative;
+
+}
+
+.snapshot-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.snapshot-row::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    top:0;
+
+    width:4px;
+
+    height:100%;
+
+    background:transparent;
+
+    transition:.30s;
+
+}
+
+/* ==========================================================
+   MARKET
+========================================================== */
+
+.snapshot-market{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:1rem;
+
+}
+
+.snapshot-icon{
+
+    width:60px;
+
+    height:60px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:#fff;
+
+    box-shadow:
+            0 8px 20px rgba(15,23,42,.08);
+
+}
+
+.snapshot-icon img{
+
+    width:42px;
+
+    height:auto;
+
+    transition:.30s;
+
+}
+
+.snapshot-market h4{
+
+    margin:0;
+
+    font-size:1.05rem;
+
+    font-weight:700;
+
+    color:var(--on-background);
+
+}
+
+.snapshot-market small{
+
+    display:block;
+
+    margin-top:.35rem;
+
+    color:var(--text-secondary);
+
+    font-size:.82rem;
+
+}
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+.snapshot-price{
+
+    font-size:1.55rem;
+
+    font-weight:800;
+
+    color:var(--on-background);
+
+    font-family:var(--font-headline);
+
+}
+
+.snapshot-price span{
+
+    font-size:.90rem;
+
+    color:var(--text-secondary);
+
+    margin-left:.35rem;
+
+}
+
+/* ==========================================================
+   CHANGE
+========================================================== */
+
+.snapshot-change{
+
+    font-weight:700;
+
+    text-align:right;
+
+    font-size:.95rem;
+
+}
+
+.snapshot-change.positive{
+
+    color:#16A34A;
+
+}
+
+.snapshot-change.negative{
+
+    color:#DC2626;
+
+}
+
+/* ==========================================================
+   ARROW
+========================================================== */
+
+.snapshot-row .material-symbols-outlined{
+
+    color:var(--text-secondary);
+
+    transition:.30s;
+
+}
+
+/* ==========================================================
+   MARKET COLORS
+========================================================== */
+
+.snapshot-row.gold{
+    --accent:#F59E0B;
+}
+
+.snapshot-row.silver{
+    --accent:#94A3B8;
+}
+
+.snapshot-row.currency{
+    --accent:#2563EB;
+}
+
+.snapshot-row.rubber{
+    --accent:#16A34A;
+}
+
+.snapshot-row.pineapple-green{
+    --accent:#22C55E;
+}
+
+.snapshot-row.pineapple-ripe{
+    --accent:#D97706;
+}
+
+/* ==========================================================
+   HOVER
+========================================================== */
+
+.snapshot-row:hover{
+
+    background:rgba(22,163,74,.03);
+
+}
+
+.snapshot-row:hover::before{
+
+    background:var(--accent);
+
+}
+
+.snapshot-row:hover .snapshot-price{
+
+    color:var(--accent);
+
+}
+
+.snapshot-row:hover .snapshot-icon{
+
+    transform:translateY(-2px);
+
+}
+
+.snapshot-row:hover img{
+
+    transform:scale(1.08);
+
+}
+
+.snapshot-row:hover .material-symbols-outlined{
+
+    color:var(--accent);
+
+    transform:translateX(6px);
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width:992px){
+
+    .snapshot-row{
+
+        grid-template-columns:
+            1fr
+            auto;
+
+        gap:1rem;
+
+    }
+
+    .snapshot-price{
+
+        grid-column:1;
+
+        margin-left:76px;
+
+    }
+
+    .snapshot-change{
+
+        text-align:left;
+
+        margin-left:76px;
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .snapshot-section{
+
+        padding:4rem 0;
+
+    }
+
+    .snapshot-card{
+
+        border-radius:22px;
+
+    }
+
+    .snapshot-row{
+
+        padding:1.25rem;
+
+        grid-template-columns:1fr;
+
+        gap:.85rem;
+
+    }
+
+    .snapshot-market{
+
+        width:100%;
+
+    }
+
+    .snapshot-price{
+
+        margin-left:76px;
+
+    }
+
+    .snapshot-change{
+
+        margin-left:76px;
+
+    }
+
+    .snapshot-row .material-symbols-outlined{
+
+        position:absolute;
+
+        right:1.25rem;
+
+        top:50%;
+
+        transform:translateY(-50%);
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .snapshot-section{
+
+        padding:3rem 0;
+
+    }
+
+    .snapshot-icon{
+
+        width:52px;
+        height:52px;
+
+    }
+
+    .snapshot-icon img{
+
+        width:36px;
+
+    }
+
+    .snapshot-price{
+
+        font-size:1.35rem;
+
+        margin-left:64px;
+
+    }
+
+    .snapshot-change{
+
+        margin-left:64px;
+
+    }
+
+}
+
+@media (max-width:425px){
+
+    .snapshot-market h4{
+
+        font-size:1rem;
+
+    }
+
+    .snapshot-market small{
+
+        font-size:.75rem;
+
+    }
+
+    .snapshot-price{
+
+        font-size:1.2rem;
+
+    }
+
+}
+
+@media (max-width:320px){
+
+    .snapshot-row{
+
+        padding:1rem;
+
+    }
+
+    .snapshot-icon{
+
+        width:46px;
+        height:46px;
+
+    }
+
+    .snapshot-icon img{
+
+        width:30px;
+
+    }
+
+    .snapshot-price{
+
+        margin-left:56px;
+
+        font-size:1.1rem;
+
+    }
+
+    .snapshot-change{
+
+        margin-left:56px;
+
+        font-size:.85rem;
+
+    }
+
+}
+
+/* ==========================================================
+   ACCESSIBILITY
+========================================================== */
+
+.snapshot-row:focus-visible{
+
+    outline:3px solid var(--primary);
+
+    outline-offset:-3px;
+
+}
+
+/* ==========================================================
+   ************end of table
+========================================================== */
+
+
+
+
+
+
+
+
+
+
+
+
+
+

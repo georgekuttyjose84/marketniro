@@ -23,7 +23,7 @@ class AboutUs
 
         return new HtmlResponse(
             $engine->render(
-                'pages/about-us-test',
+                'pages/about-us',
                 [
                     'page' => [
                         'title' => '',
