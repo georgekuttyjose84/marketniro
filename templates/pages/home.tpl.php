@@ -1,49 +1,228 @@
-<!-- HERO -->
-<div class="text-center mb-5">
-    <h2 class="fw-bold">Live Commodity Prices in Kerala</h2>
-    <p class="text-secondary">Track real-time market rates easily</p>
+<?php
 
-    <div class="d-flex flex-column flex-md-row justify-content-center mt-3 gap-2">
-        <input type="text" class="form-control w-100 w-md-50" placeholder="Search commodity...">
-        <button class="btn btn-green">Search</button>
+?>
+
+<div class="">
+    <div class="d-flex flex-column flex-lg-row gap-4">
+        <main class="flex-grow-1" style="min-width:0;">
+            <section class="hero-carousel">
+                <div id="marketHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6500" data-bs-pause="false">
+
+                    <div class="carousel-inner">
+
+                        <div class="carousel-item active" data-bs-interval="6500">
+                            <div class="hero-slide-media">
+                                <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=1600&q=80" alt="Market intelligence dashboard overview">
+                            </div>
+                            <div class="hero-content">
+                                <div class="container-max px-3 px-md-4" style="">
+                                    <div class="hero-box">
+                            <span class="hero-tag">
+                                <span class="hero-tag-dot"></span>
+                                Market Intelligence Platform
+                            </span>
+                                        <h1 class="hero-title">
+                                            Five Markets,<br>
+                                            One Page,<br>
+                                            <span class="hero-title-accent">Updated Every Morning.</span>
+                                        </h1>
+                                        <p class="hero-description">
+                                            Monitor Gold, Silver, Currency, Rubber and Pineapple markets from one premium dashboard with reliable pricing, historical insights and daily market intelligence.
+                                        </p>
+                                        <div class="hero-buttons">
+                                            <button class="btn-hero-primary">
+                                                Explore Markets
+                                                <span class="material-symbols-outlined">arrow_forward</span>
+                                            </button>
+                                            <button class="btn-hero-secondary">Latest News</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" data-bs-interval="6500">
+                            <div class="hero-slide-media">
+                                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80" alt="Agricultural plantation landscape">
+                            </div>
+                            <div class="hero-content">
+                                <div class="container-max px-3 px-md-4" style="">
+                                    <div class="hero-box">
+                            <span class="hero-tag">
+                                <span class="material-symbols-outlined">nutrition</span>
+                                Agriculture Intelligence
+                            </span>
+                                        <h2 class="hero-title">
+                                            Track Commodity<br>
+                                            Prices Across<br>
+                                            <span class="hero-title-accent">India</span>
+                                        </h2>
+                                        <p class="hero-description">
+                                            Daily pricing for Rubber and Pineapple markets with trusted agricultural insights and historical trends.
+                                        </p>
+                                        <div class="hero-buttons">
+                                            <button class="btn-hero-primary">
+                                                View Agriculture Data
+                                                <span class="material-symbols-outlined">arrow_forward</span>
+                                            </button>
+                                            <button class="btn-hero-secondary">Farmer Portal</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="carousel-item" data-bs-interval="6500">
+                            <div class="hero-slide-media">
+                                <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80" alt="Financial markets skyline">
+                            </div>
+                            <div class="hero-content">
+                                <div class="container-max px-3 px-md-4" style="">
+                                    <div class="hero-box">
+                            <span class="hero-tag">
+                                <span class="material-symbols-outlined">monitoring</span>
+                                Financial Intelligence
+                            </span>
+                                        <h2 class="hero-title">
+                                            Reliable Data.<br>
+                                            <span class="hero-title-accent">Better Decisions.</span>
+                                        </h2>
+                                        <p class="hero-description">
+                                            Financial markets and agricultural commodities presented together in one modern, real-time platform.
+                                        </p>
+                                        <div class="hero-buttons">
+                                            <button class="btn-hero-primary">
+                                                View Market Data
+                                                <span class="material-symbols-outlined">arrow_forward</span>
+                                            </button>
+                                            <button class="btn-hero-secondary">Terminal Beta</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="hero-arrow hero-arrow-prev" type="button" data-bs-target="#marketHeroCarousel" data-bs-slide="prev">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="hero-arrow hero-arrow-next" type="button" data-bs-target="#marketHeroCarousel" data-bs-slide="next">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+
+                    <div class="hero-indicators">
+                        <button class="hero-indicator active" type="button" data-bs-target="#marketHeroCarousel" data-bs-slide-to="0" aria-current="true" aria-label="Slide 1">
+                            <span class="hero-indicator-progress"></span>
+                        </button>
+                        <button class="hero-indicator" type="button" data-bs-target="#marketHeroCarousel" data-bs-slide-to="1" aria-label="Slide 2">
+                            <span class="hero-indicator-progress"></span>
+                        </button>
+                        <button class="hero-indicator" type="button" data-bs-target="#marketHeroCarousel" data-bs-slide-to="2" aria-label="Slide 3">
+                            <span class="hero-indicator-progress"></span>
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+        </main>
     </div>
 </div>
 
-<!-- TRENDING -->
-<h5 class="mb-3">🔥 Trending Commodities</h5>
 
-<div class="row g-3 mb-4">
 
-    <div class="col-6 col-md-3">
-        <div class="card p-3">
-            <h6>Coconut 🌴</h6>
-            <strong>₹32/kg</strong><br>
-            <span class="text-success">+2.3%</span>
+
+
+
+
+
+
+<section class="market-section">
+    <div class="container-max mx-auto px-3 px-md-4">
+        <div class="market-section-heading">
+            <span class="section-tag">MARKET OVERVIEW</span>
+            <h2>Five Markets.<span>One Platform.</span></h2>
+            <p>Track agricultural commodities and financial markets from one intelligent dashboard updated every morning.</p>
+        </div>
+
+
+        <div class="row g-4">
+            <?php foreach ([$cardList[0] , $cardList[1] , $cardList[2]] as $card): ?>
+                <div class="col-12 col-sm-6 col-xl-4">
+                    <a class="text-decoration-none" href="<?= $card['url'] ?>">
+                        <article class="market-card <?= $card['type'] ?> ">
+                            <div class="market-card-top">
+                                <span class="market-badge"><?=$card['heading']?></span>
+                                <span class="material-symbols-outlined">arrow_outward</span>
+                            </div>
+                            <div class="market-image">
+                                <img src="<?=$card['image']?>" alt="<?=$card['heading']?>">
+                            </div>
+                            <div class="market-content">
+                                <h3><?= $card['heading']?> </h3>
+                                <div class="market-price"><?=  $card['price'] ?><span>/<?= $card['quantity'] ?></span></div>
+                                <div class="market-change <?= $card['impressions'] ?>"><?= $card['icon'] ?> <?=$card['percentage']?>%
+                                    <small>Today</small>
+                                </div>
+                                <div class="market-update">Updated
+                                    <strong><?= $card['date'] ?></strong>
+                                </div>
+                            </div>
+
+                            <a href="<?= $card['url'] ?>" class="market-link">View Market
+                                <span class="material-symbols-outlined">east</span>
+                            </a>
+                        </article>
+                    </a>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
+</section>
 
-    <div class="col-6 col-md-3">
-        <div class="card p-3">
-            <h6>Rubber</h6>
-            <strong>₹180/kg</strong><br>
-            <span class="text-danger">-1.2%</span>
+
+
+
+
+
+<section class="snapshot-section">
+    <div class="container-max mx-auto px-3 px-md-4">
+        <div class="section-header">
+            <span class="section-tag">TODAY'S MARKET</span>
+            <h2>Market <span>Snapshot</span></h2>
+            <p>Monitor today's movements across agricultural commodities and financial markets from one place.</p>
+        </div>
+
+        <div class="snapshot-card">
+            <?php foreach ($cardList as $card): ?>
+
+            <a href="<?= $card['url'] ?>" class="snapshot-row <?= $card['type'] ?> ">
+                <div class="snapshot-market">
+                    <div class="snapshot-icon">
+                        <img src="<?= $card['image'] ?>" alt="<?= $card['heading'] ?>">
+                    </div>
+                    <div>
+                        <h4><?=$card['heading']?></h4>
+                        <small>Updated Today</small>
+                    </div>
+                </div>
+                <div class="snapshot-price"><?= $card['price'] ?><span>/<?= $card['quantity'] ?></span></div>
+
+                <div class="snapshot-change <?= $card['impressions'] ?>"><?= $card['icon'] ?><?=$card['percentage']?>%</div>
+                <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+            <?php endforeach; ?>
         </div>
     </div>
+</section>
 
-</div>
 
 
-<?= $view->render(
-        'pages/trending-currency',
-        [
-                'main_currency_list' => $main_currency_list
-        ],
-        null
-) ?>
 
-<!-- CTA -->
-<div class="text-center mt-4">
-    <a href="/finance/currency" class="btn btn-outline-dark">
-        Check Currency Rates →
-    </a>
-</div>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

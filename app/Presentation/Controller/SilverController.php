@@ -149,6 +149,11 @@ class SilverController
                         'breadcrumb' => 'Silver',
                         'scripts' => [
                             'https://cdn.jsdelivr.net/npm/apexcharts',
+                            '/assets/js/finance/gold.js',
+                        ],
+                        'styles' => [
+                            '/assets/css/finance/gold.css',
+                            '/assets/css/finance/currency.css',
                         ],
                     ], 'silver' => $silver,
                     'silverPrices' => $silverPrices,

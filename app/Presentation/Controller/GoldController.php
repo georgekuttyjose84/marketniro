@@ -159,8 +159,13 @@ class GoldController
                         'h1' => 'Live Gold Price Today',
                         'breadcrumb' => 'Gold',
                         'scripts' => [
-                            'https://cdn.jsdelivr.net/npm/apexcharts'
+                            'https://cdn.jsdelivr.net/npm/apexcharts',
+                            '/assets/js/finance/gold.js',
 
+                        ],
+                        'styles' => [
+                            '/assets/css/finance/gold.css',
+                            '/assets/css/finance/currency.css',
                         ],
                     ],
                     'gold' => $gold,

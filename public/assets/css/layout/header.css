@@ -1,0 +1,110 @@
+/* ==========================================================================
+   header.css — Site header / top nav styles
+   Requires style.css to be loaded first (uses its CSS variables)
+   ========================================================================== */
+
+.site-header{
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    width: 100%;
+    background-color: rgba(255,255,255,0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(189,202,186,0.3);
+}
+.site-header .top-row{
+    flex-wrap: nowrap;
+    gap: .5rem;
+}
+.site-header .brand-name{
+    font-size: 18px !important;
+    white-space: nowrap;
+}
+.site-header .brand-logo{
+    height: 26px !important;
+    flex-shrink: 0;
+}
+.site-header .btn-primary-custom{
+    padding: 8px 14px;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+.header-bottom{
+    display: block;
+    border-top: 1px solid rgba(189,202,186,0.3) !important;
+}
+.header-bottom nav{
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    justify-content: flex-start !important;
+    gap: 1.25rem !important;
+}
+.header-bottom nav::-webkit-scrollbar{ display:none; }
+
+@media (min-width: 400px){
+    .site-header .brand-name{ font-size: 20px !important; }
+    .site-header .btn-primary-custom{ padding: 8px 18px; font-size: 12px; }
+}
+@media (min-width: 576px){
+    .site-header .btn-primary-custom{ padding: 8px 20px; }
+}
+@media (min-width: 768px){
+    .site-header .brand-name{ font-size: 22px !important; }
+    .site-header .brand-logo{ height: 32px !important; }
+    .header-bottom nav{
+        overflow-x: visible;
+        justify-content: center !important;
+        gap: 3rem !important;
+    }
+}
+.brand-icon{
+    width:40px; height:40px;
+    background-color: var(--primary);
+    border-radius: var(--radius-lg);
+    display:flex; align-items:center; justify-content:center;
+}
+.brand-icon .material-symbols-outlined{ color:#fff; }
+.brand-name{
+    font-size:24px; font-weight:700; color:var(--primary); letter-spacing:-0.01em;
+}
+.nav-link-custom{
+    color: var(--on-surface-variant);
+    font-size:12px; font-weight:600; letter-spacing:0.05em;
+    text-decoration:none;
+    transition:color .2s ease;
+}
+.nav-link-custom:hover{ color: var(--primary); }
+.nav-link-active{
+    color: var(--primary);
+    border-bottom:2px solid var(--primary);
+    padding-bottom:4px;
+    font-size:12px; font-weight:600; letter-spacing:0.05em;
+    text-decoration:none;
+}
+.search-pill{
+    background-color: var(--surface-container-low);
+    border:1px solid rgba(189,202,186,0.5);
+    border-radius: var(--radius-full);
+    padding:8px 16px;
+    display:flex; align-items:center; gap:.5rem;
+}
+.search-pill input{
+    border:none; background:transparent; outline:none; box-shadow:none;
+    font-size:14px; width:160px;
+}
+.search-pill .material-symbols-outlined{ color: var(--outline); font-size:20px; }
+
+.btn-primary-custom{
+    background-color: var(--primary);
+    color: var(--on-primary);
+    border:none;
+    border-radius: var(--radius-lg);
+    padding:8px 20px;
+    font-size:12px; font-weight:600; letter-spacing:0.05em;
+    transition: all .15s ease;
+}
+.btn-primary-custom:hover{ background-color: var(--primary-container); color:#fff; }
+.btn-primary-custom:active{ transform: scale(0.95); }

@@ -296,4 +296,183 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         return $result;
     }
 
+    public function getGoldCard(): array
+    {
+        $sql = "
+        SELECT
+            DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
+            ROUND(((usd_inr.rate / usd_xau.rate) / 31.1034768), 2) AS price_1g
+        FROM
+        (
+            SELECT
+                rate,
+                created_at
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'INR'
+            ORDER BY created_at DESC
+            LIMIT 1
+        ) AS usd_inr
+
+        CROSS JOIN
+        (
+            SELECT
+                rate
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'XAU'
+            ORDER BY created_at DESC
+            LIMIT 1
+        ) AS usd_xau
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+//        ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 8), 2) AS price_8g,
+//            ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 10), 2) AS price_10g,
+//            ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 100), 2) AS price_100g
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getGoldCardIndicator(): array
+    {
+
+        $sql = "
+        WITH usd_inr AS
+            (
+                SELECT
+                    rate,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                        ORDER BY created_at DESC
+                    ) AS rn
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'INR'
+            ),
+            usd_xau AS
+            (
+                SELECT
+                    rate,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                        ORDER BY created_at DESC
+                    ) AS rn
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'XAU'
+            )
+            
+            SELECT
+                ROUND((usd_inr.rate / usd_xau.rate) / 31.1034768, 2) AS price_information,
+                usd_inr.price_date
+            FROM usd_inr
+            JOIN usd_xau
+                ON usd_inr.price_date = usd_xau.price_date
+            WHERE
+                usd_inr.rn = 1
+                AND usd_xau.rn = 1
+            ORDER BY usd_inr.price_date DESC
+            LIMIT 2;
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    }
+
+    public function getSilverCard(): array
+    {
+        $sql = "
+        SELECT
+            DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
+            ROUND(((usd_inr.rate / usd_xag.rate) / 31.1034768), 2) AS price_1g
+        FROM
+        (
+            SELECT
+                rate,
+                created_at
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'INR'
+            ORDER BY created_at DESC
+            LIMIT 1
+        ) AS usd_inr
+
+        CROSS JOIN
+        (
+            SELECT
+                rate
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'XAG'
+            ORDER BY created_at DESC
+            LIMIT 1
+        ) AS usd_xag
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getSilverCardIndicator(): array
+    {
+        $sql = "
+        WITH usd_inr AS
+        (
+            SELECT
+                rate,
+                DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                ROW_NUMBER() OVER (
+                    PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                    ORDER BY created_at DESC
+                ) AS rn
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'INR'
+        ),
+        usd_xag AS
+        (
+            SELECT
+                rate,
+                DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                ROW_NUMBER() OVER (
+                    PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                    ORDER BY created_at DESC
+                ) AS rn
+            FROM currency_rate
+            WHERE base_currency = 'USD'
+              AND target_currency = 'XAG'
+        )
+
+        SELECT
+            ROUND((usd_inr.rate / usd_xag.rate) / 31.1034768, 2) AS price_information,
+            usd_inr.price_date
+        FROM usd_inr
+        JOIN usd_xag
+            ON usd_inr.price_date = usd_xag.price_date
+        WHERE
+            usd_inr.rn = 1
+            AND usd_xag.rn = 1
+        ORDER BY usd_inr.price_date DESC
+        LIMIT 2;
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
 }

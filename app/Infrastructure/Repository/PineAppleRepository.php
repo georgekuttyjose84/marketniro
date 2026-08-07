@@ -237,4 +237,70 @@ class PineAppleRepository implements PineAppleRepositoryInterface
             $rows
         );
     }
+
+    public function getMonthlyData(): array
+    {
+        $sql = "SELECT
+                    d.price_date,
+                    DATE_FORMAT(d.price_date, '%M %d, %Y (%W)') AS market_date,
+                    CONCAT(
+                        '₹', FORMAT(d.green_min, 2),
+                        ' — ₹', FORMAT(d.green_max, 2)
+                    ) AS green_price,
+                    CONCAT(
+                        '₹', FORMAT(d.ripe_min, 2),
+                        ' — ₹', FORMAT(d.ripe_max, 2)
+                    ) AS ripe_price,
+                    CASE
+                        WHEN d.market_avg > LAG(d.market_avg) OVER (ORDER BY d.price_date)
+                            THEN 'trending_up'
+                        WHEN d.market_avg < LAG(d.market_avg) OVER (ORDER BY d.price_date)
+                            THEN 'trending_down'
+                        ELSE 'trending_flat'
+                    END AS trend
+                FROM
+                (
+                    SELECT
+                        price_date,
+                        MAX(CASE WHEN type = 'green' THEN min_price END) AS green_min,
+                        MAX(CASE WHEN type = 'green' THEN max_price END) AS green_max,
+                        MAX(CASE WHEN type = 'green' THEN avg_price END) AS green_avg,
+                        MAX(CASE WHEN type = 'ripe' THEN min_price END) AS ripe_min,
+                        MAX(CASE WHEN type = 'ripe' THEN max_price END) AS ripe_max,
+                        MAX(CASE WHEN type = 'ripe' THEN avg_price END) AS ripe_avg,
+                        (
+                            MAX(CASE WHEN type = 'green' THEN avg_price END) +
+                            MAX(CASE WHEN type = 'ripe' THEN avg_price END)
+                        ) / 2 AS market_avg
+                    FROM pineapple_price
+                    WHERE price_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                      AND price_date < DATE_ADD(DATE_FORMAT(CURDATE(), '%Y-%m-01'), INTERVAL 1 MONTH)
+                    GROUP BY price_date
+                ) AS d
+                ORDER BY d.price_date DESC;";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+    }
+    public function getLatestAveragePrices(string $type): array
+    {
+        $sql = "
+        SELECT avg_price as price_information
+        FROM pineapple_price
+        WHERE `type` = :type
+        ORDER BY price_date DESC
+        LIMIT 2
+    ";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'type' => $type
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }

@@ -1,2 +1,366 @@
-.agri-card { background: #fff; border-radius: 16px; padding: 20px; }
-body.dark-mode .agri-card { background: #0b1220; }
+/*
+|--------------------------------------------------------------------------
+| Market section
+|--------------------------------------------------------------------------
+*/
+
+.rubber-market-section {
+    margin-bottom: 32px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 12px;
+    background: var(--color-surface);
+    overflow: hidden;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Market header
+|--------------------------------------------------------------------------
+*/
+
+.rubber-market-header {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: self-start;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 20px 24px;
+    background: var(--color-surface-bright);
+    border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.rubber-market-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-family: var(--font-headline);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--color-text-main);
+}
+
+.material-symbols-outlined {
+    font-family: "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+}
+
+.rubber-market-header h2 .rubber-header-icon {
+    font-size: 22px;
+    color: var(--color-primary);
+}
+
+.rubber-price-date {
+    margin: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--color-surface-container);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.rubber-price-date strong {
+    color: var(--color-primary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tabs
+|--------------------------------------------------------------------------
+*/
+
+.rubber-tab-container {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: var(--color-surface-container-low);
+}
+
+.rubber-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    border-bottom: 0;
+    list-style: none;
+    border-bottom: none;
+}
+
+.rubber-tabs li {
+    margin: 0;
+}
+
+.rubber-tabs li a {
+    display: block;
+    padding: 8px 20px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 999px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-family: var(--font-headline);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+            background 0.2s ease,
+            color 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.rubber-tabs li a:hover {
+    background: var(--color-surface-container);
+    color: var(--color-text-main);
+    text-decoration: none;
+}
+
+.rubber-tabs li a.active {
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    font-weight: 700;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.08);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Tab content
+|--------------------------------------------------------------------------
+*/
+
+.rubber-tab-content {
+    padding: 0;
+}
+
+.rubber-tab-content > .tab-pane {
+    display: none;
+}
+
+.rubber-tab-content > .tab-pane.active {
+    display: block;
+}
+
+.rubber-tab-content .table-responsive {
+    overflow-x: hidden !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Table
+|--------------------------------------------------------------------------
+*/
+
+.rubber-table {
+    width: 100%;
+    margin: 0;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.rubber-table thead th {
+    padding: 12px 16px;
+    border-color: var(--color-border-subtle);
+    background: var(--color-surface-container-low);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.rubber-table tbody td {
+    padding: 16px;
+    border-color: var(--color-border-subtle);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    vertical-align: middle;
+    color: var(--color-text-main);
+    word-break: break-word;
+}
+
+.rubber-table tbody tr:hover {
+    background: var(--color-surface-bright);
+}
+
+.rubber-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rubber-grade {
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.rubber-price-value {
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Note
+|--------------------------------------------------------------------------
+*/
+
+.rubber-market-note {
+    margin: 0;
+    padding: 16px 24px;
+    border-top: 1px solid var(--color-border-subtle);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.rubber-empty {
+    margin: 0;
+    padding: 24px;
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: 15px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Mobile (320px+) — tables must NEVER scroll horizontally
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 767px) {
+
+    .rubber-market-section {
+        margin-bottom: 24px;
+        border-radius: 10px;
+    }
+
+    .rubber-market-header {
+        padding: 16px;
+    }
+
+    .rubber-market-header h2 {
+        font-size: 19px;
+    }
+
+    .rubber-market-header h2 .rubber-header-icon {
+        font-size: 19px;
+    }
+
+    .rubber-price-date {
+        font-size: 11px;
+    }
+
+    .rubber-tab-container {
+        padding: 12px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .rubber-tabs {
+        flex-wrap: nowrap;
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .rubber-tabs li a {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .rubber-table {
+        min-width: 0;
+        table-layout: fixed;
+    }
+
+    .rubber-table th:first-child,
+    .rubber-table td:first-child {
+        width: 40%;
+    }
+
+    .rubber-table th:not(:first-child),
+    .rubber-table td:not(:first-child) {
+        width: 30%;
+    }
+
+    .rubber-table thead th,
+    .rubber-table tbody td {
+        padding: 8px 6px !important;
+        font-size: 12px !important;
+    }
+
+    .rubber-grade {
+        font-size: 12px;
+    }
+
+    .rubber-market-note {
+        padding: 12px 16px;
+        font-size: 12px;
+    }
+
+    .rubber-empty {
+        padding: 18px 16px;
+    }
+}
+
+@media (max-width: 359px) {
+
+    .rubber-table thead th,
+    .rubber-table tbody td {
+        padding: 6px 4px !important;
+        font-size: 11px !important;
+    }
+}
+
+/* ===== Sidebar ===== */
+.sidebar{ width:100%; }
+@media (min-width:992px){ .sidebar{ width:340px; flex-shrink:0; } }
+
+.terminal-promo{
+    position:relative; border-radius: var(--radius-2xl); overflow:hidden;
+    aspect-ratio: 4/3; cursor:pointer;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    border:1px solid rgba(189,202,186,0.3);
+}
+.terminal-promo-bg{
+    position:absolute; inset:0; background-size:cover; background-position:center;
+    transition: transform .7s ease;
+}
+.terminal-promo:hover .terminal-promo-bg{ transform: scale(1.1); }
+.terminal-promo-overlay{
+    position:absolute; inset:0;
+    background: linear-gradient(to top, var(--primary), rgba(0,107,44,0.4), transparent);
+}
+.terminal-promo-content{
+    position:absolute; inset:0; padding:1.5rem;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    color:#fff;
+}
+.btn-upgrade{
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:#fff; color: var(--primary);
+    padding:8px 16px; border-radius: var(--radius-lg);
+    font-size:12px; font-weight:700; width:fit-content;
+    transition: background-color .15s ease;
+    text-decoration:none;
+}
+.btn-upgrade:hover{ background-color: var(--primary-fixed); color: var(--primary); }

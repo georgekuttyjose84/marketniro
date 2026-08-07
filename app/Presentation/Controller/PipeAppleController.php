@@ -17,8 +17,7 @@ class PipeAppleController
     public function index(Request $request): HtmlResponse
     {
         $engine = new PhpTemplate(__DIR__ . '/../../../templates');
-        $selectedDate = trim($request->getString('date'));
-
+        $selectedDate = trim($request->getString('date'),);
 
         $latestPrice = $this->pineAppleRepositoryInterface->getLatestPrice();
         $selectedPrice = [];
@@ -29,7 +28,7 @@ class PipeAppleController
 
         $lastThreeMonthsPriceSummary = $this->pineAppleRepositoryInterface->getLastThreeMonthsPriceSummary();
         $lastSevenDaysPrice = $this->pineAppleRepositoryInterface->getLastSevenDaysPrice();
-
+        $monthlyData = $this->pineAppleRepositoryInterface->getMonthlyData();
 
 
         return new HtmlResponse(
@@ -44,13 +43,19 @@ class PipeAppleController
                         'breadcrumb' => 'Pineapple',
                         'scripts' => [
                             'https://cdn.jsdelivr.net/npm/apexcharts',
+                            '/assets/js/agriculture/pineapple.js',
                         ],
+                        'styles' => [
+                            '/assets/css/agriculture/pineapple.css',
+                        ],
+
                     ],
                     'latestPrice' => $latestPrice,
                     'monthlyPriceSummary' => $lastThreeMonthsPriceSummary,
                     'lastSevenDaysPrice' => $lastSevenDaysPrice,
                     'selectedDate' => $selectedDate,
                     'selectedPrice' => $selectedPrice,
+                    'monthlyData' => $monthlyData
                 ]
             )
         );

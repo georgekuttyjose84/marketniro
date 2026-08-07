@@ -1,0 +1,166 @@
+/* ==========================================================================
+   style.css — Shared base styles & CSS variables
+   Include this on EVERY page (before header.css / footer.css / page CSS)
+   ========================================================================== */
+
+:root{
+    --on-primary-fixed:#002109;
+    --primary-fixed-dim:#62df7d;
+    --on-tertiary-container:#fefcff;
+    --surface-bright:#f7f9fb;
+    --on-tertiary-fixed:#00174b;
+    --on-primary-fixed-variant:#005320;
+    --surface-dim:#d8dadc;
+    --surface-variant:#e0e3e5;
+    --surface-container-high:#e6e8ea;
+    --outline-variant:#bdcaba;
+    --error:#ba1a1a;
+    --on-secondary-fixed:#00210a;
+    --on-surface:#191c1e;
+    --error-container:#ffdad6;
+    --secondary-container:#92f5a4;
+    --text-primary:#111827;
+    --surface-container:#eceef0;
+    --warning:#f59e0b;
+    --warning-700:#b45309;
+    --primary-fixed:#7ffc97;
+    --surface-container-highest:#e0e3e5;
+    --on-secondary:#ffffff;
+    --tertiary:#0051d5;
+    --on-primary:#ffffff;
+    --surface-container-lowest:#ffffff;
+    --background:#f7f9fb;
+    --on-secondary-fixed-variant:#005323;
+    --on-primary-container:#f7fff2;
+    --surface-container-low:#f2f4f6;
+    --inverse-on-surface:#eff1f3;
+    --surface-tint:#006e2d;
+    --inverse-surface:#2d3133;
+    --secondary-fixed:#95f8a7;
+    --on-surface-variant:#3e4a3d;
+    --on-error:#ffffff;
+    --secondary-fixed-dim:#79db8d;
+    --secondary:#006d30;
+    --on-error-container:#93000a;
+    --on-secondary-container:#007233;
+    --text-secondary:#6b7280;
+    --primary:#006b2c;
+    --tertiary-fixed:#dbe1ff;
+    --border-color:#e5e7eb;
+    --inverse-primary:#62df7d;
+    --on-tertiary:#ffffff;
+    --tertiary-container:#316bf3;
+    --tertiary-fixed-dim:#b4c5ff;
+    --on-background:#191c1e;
+    --on-tertiary-fixed-variant:#003ea8;
+    --danger:#dc2626;
+    --outline:#6e7b6c;
+    --primary-container:#00873a;
+    --surface:#ffffff;
+    --pineapple-accent:#E4D00A;
+    --info:#2563EB;
+    --success:#16A34A;
+
+    --radius-lg:0.5rem;
+    --radius-xl:0.75rem;
+    --radius-2xl:1rem;
+    --radius-full:9999px;
+
+    --color-primary: #00501f;
+    --color-primary-container: #006b2c;
+    --color-on-primary: #ffffff;
+    --color-on-primary-container: #8ee99b;
+    --color-secondary: #016d30;
+    --color-secondary-container: #98f4a7;
+    --color-on-secondary-container: #0c7234;
+    --color-tertiary: #7d233c;
+    --color-tertiary-container: #9b3b53;
+    --color-error: #ba1a1a;
+    --color-on-error-container: #93000a;
+    --color-error-container: #ffdad6;
+
+    --color-surface: #ffffff;
+    --color-surface-bright: #f7f9fb;
+    --color-surface-variant: #e0e3e5;
+    --color-surface-container: #eceef0;
+    --color-surface-container-low: #f2f4f6;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-high: #e6e8ea;
+    --color-surface-container-highest: #e0e3e5;
+
+    --color-on-surface: #191c1e;
+    --color-on-surface-variant: #3f493f;
+    --color-on-background: #191c1e;
+    --color-background: #f7f9fb;
+
+    --color-outline: #6f7a6e;
+    --color-outline-variant: #bfcabb;
+    --color-border-subtle: #e1e4e8;
+    --color-text-main: #1a1c1e;
+    --color-text-muted: #5c5f62;
+
+    /* Radii */
+    --radius-default: 0.25rem;
+
+    /* Spacing */
+    --gap-xs: 0.5rem;
+    --gap-sm: 0.75rem;
+    --gap-md: 1rem;
+    --gap-lg: 1.5rem;
+    --gutter: 1.5rem;
+    --margin-mobile: 1rem;
+    --sidebar-width: 340px;
+    --container-max: 1440px;
+
+    /* Fonts */
+    --font-headline: "Hanken Grotesk", sans-serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "JetBrains Mono", monospace;
+
+    --rubber-font-heading: "Hanken Grotesk", sans-serif;
+    --rubber-font-body: "Inter", sans-serif;
+    --rubber-font-mono: "JetBrains Mono", monospace;
+}
+
+* { box-sizing: border-box; }
+
+body{
+    background-color: var(--background);
+    color: var(--on-background);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 80px;
+}
+@media (min-width: 768px){
+    body{ padding-bottom: 0; }
+}
+
+.material-symbols-outlined{
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    line-height: 1;
+}
+
+.container-max{ max-width: 1440px; }
+
+::-webkit-scrollbar{ width:6px; }
+::-webkit-scrollbar-track{ background: transparent; }
+::-webkit-scrollbar-thumb{ background: var(--outline-variant); border-radius: 10px; }
+
+
+
+/* =======================================================
+   MAIN.CSS
+   Contains: Main column styles only —
+   Currency converter card, banner image, historical chart card,
+   hourly comparison table.
+   ======================================================= */
+
+
+/* =======================================================
+   HEADER.CSS
+   Contains: Global design tokens (CSS variables) + Header/Navbar styles
+   Global tokens live here because header.css is loaded first in <head>,
+   so every other stylesheet (main / side / footer) can reuse them.
+   ======================================================= */
+
+
