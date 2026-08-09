@@ -26,5 +26,5 @@ return [
     '/agriculture/rubber' => [RubberController::class, 'index'],
     '/about-us' => [AboutUs::class, 'index'],
     '/cron/{job}' => [CronController::class, 'run'],
-    '/cron/' => [CronController::class, 'index'],
+    '/cron' => [CronController::class, 'index'],
 ];
