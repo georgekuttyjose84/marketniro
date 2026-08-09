@@ -10,7 +10,7 @@ use App\Presentation\Controller\PipeAppleController;
 use App\Presentation\Controller\PipeAppleHistoryApiController;
 use App\Presentation\Controller\RubberController;
 use App\Presentation\Controller\SilverController;
-
+use App\Presentation\Controller\CronController;
 
 
 return [
@@ -24,6 +24,7 @@ return [
     '/agriculture/pineapple' => [PipeAppleController::class, 'index'],
     '/agriculture/pineapple/history' => [PipeAppleHistoryApiController::class, 'index'],
     '/agriculture/rubber' => [RubberController::class, 'index'],
-    '/about-us' => [AboutUs::class, 'index']
-
+    '/about-us' => [AboutUs::class, 'index'],
+    '/cron/{job}' => [CronController::class, 'run'],
+    '/cron/' => [CronController::class, 'index'],
 ];
