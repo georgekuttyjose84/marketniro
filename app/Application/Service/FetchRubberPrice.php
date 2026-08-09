@@ -11,7 +11,7 @@ use RuntimeException;
 
 class FetchRubberPrice
 {
-    private const URL = 'https://rubberboard.gov.in/public';
+    private const URL = 'https://rubberboard.gov.in/public?lang=E';
 
     public function run(): void
     {
