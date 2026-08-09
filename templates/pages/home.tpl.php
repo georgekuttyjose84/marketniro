@@ -15,12 +15,12 @@
                                 <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=1600&q=80" alt="Market intelligence dashboard overview">
                             </div>
                             <div class="hero-content">
-                                <div class="container-max px-3 px-md-4" style="">
+                                <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                            <span class="hero-tag">
-                                <span class="hero-tag-dot"></span>
-                                Market Intelligence Platform
-                            </span>
+                <span class="hero-tag">
+                    <span class="hero-tag-dot"></span>
+                    Market Intelligence Platform
+                </span>
                                         <h1 class="hero-title">
                                             Five Markets,<br>
                                             One Page,<br>
@@ -46,12 +46,12 @@
                                 <img src="/assets/images/home/pipeapple-car.jpg" alt="Agricultural plantation landscape">
                             </div>
                             <div class="hero-content">
-                                <div class="container-max px-3 px-md-4" style="">
+                                <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                            <span class="hero-tag">
-                                <span class="material-symbols-outlined">nutrition</span>
-                                Agriculture Intelligence
-                            </span>
+                <span class="hero-tag">
+                    <span class="material-symbols-outlined">nutrition</span>
+                    Agriculture Intelligence
+                </span>
                                         <h2 class="hero-title">
                                             Track Commodity<br>
                                             Prices Across<br>
@@ -61,8 +61,8 @@
                                             Daily pricing for Rubber and Pineapple markets with trusted agricultural insights and historical trends.
                                         </p>
                                         <div class="hero-buttons">
-                                            <a  href="/agriculture/pineapple" class="btn-hero-primary text-decoration-none">View Pineapple Data<span class="material-symbols-outlined">arrow_forward</span></a>
-                                            <a  href="/agriculture/news/"  class="btn-hero-secondary text-decoration-none">Latest News</a>
+                                            <a href="/agriculture/pineapple" class="btn-hero-primary text-decoration-none">View Pineapple Data<span class="material-symbols-outlined">arrow_forward</span></a>
+                                            <a href="/agriculture/news/" class="btn-hero-secondary text-decoration-none">Latest News</a>
                                         </div>
                                     </div>
                                 </div>
@@ -74,12 +74,12 @@
                                 <img src="/assets/images/home/rubber-car.jpg" alt="Financial markets skyline">
                             </div>
                             <div class="hero-content">
-                                <div class="container-max px-3 px-md-4" style="">
+                                <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                            <span class="hero-tag">
-                                <span class="material-symbols-outlined">monitoring</span>
-                                Financial Intelligence
-                            </span>
+                <span class="hero-tag">
+                    <span class="material-symbols-outlined">monitoring</span>
+                    Financial Intelligence
+                </span>
                                         <h2 class="hero-title">
                                             Reliable Data.<br>
                                             <span class="hero-title-accent">Better Decisions.</span>
