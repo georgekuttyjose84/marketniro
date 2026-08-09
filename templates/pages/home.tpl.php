@@ -30,11 +30,11 @@
                                             Monitor Gold, Silver, Currency, Rubber and Pineapple markets from one premium dashboard with reliable pricing, historical insights and daily market intelligence.
                                         </p>
                                         <div class="hero-buttons">
-                                            <button class="btn-hero-primary">
-                                                Explore Markets
+                                            <a href="/finance/gold" class="btn-hero-primary text-decoration-none">
+                                                View Gold Details
                                                 <span class="material-symbols-outlined">arrow_forward</span>
-                                            </button>
-                                            <button class="btn-hero-secondary">Latest News</button>
+                                            </a>
+                                            <a href="/finance/gold" class="btn-hero-secondary text-decoration-none">Latest News</a>
                                         </div>
                                     </div>
                                 </div>
@@ -43,7 +43,7 @@
 
                         <div class="carousel-item" data-bs-interval="6500">
                             <div class="hero-slide-media">
-                                <img src="https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1600&q=80" alt="Agricultural plantation landscape">
+                                <img src="/assets/images/home/pipeapple-car.jpg" alt="Agricultural plantation landscape">
                             </div>
                             <div class="hero-content">
                                 <div class="container-max px-3 px-md-4" style="">
@@ -61,11 +61,8 @@
                                             Daily pricing for Rubber and Pineapple markets with trusted agricultural insights and historical trends.
                                         </p>
                                         <div class="hero-buttons">
-                                            <button class="btn-hero-primary">
-                                                View Agriculture Data
-                                                <span class="material-symbols-outlined">arrow_forward</span>
-                                            </button>
-                                            <button class="btn-hero-secondary">Farmer Portal</button>
+                                            <a  href="/agriculture/pineapple" class="btn-hero-primary text-decoration-none">View Pineapple Data<span class="material-symbols-outlined">arrow_forward</span></a>
+                                            <a  href="/agriculture/news/"  class="btn-hero-secondary text-decoration-none">Latest News</a>
                                         </div>
                                     </div>
                                 </div>
@@ -74,7 +71,7 @@
 
                         <div class="carousel-item" data-bs-interval="6500">
                             <div class="hero-slide-media">
-                                <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1600&q=80" alt="Financial markets skyline">
+                                <img src="/assets/images/home/rubber-car.jpg" alt="Financial markets skyline">
                             </div>
                             <div class="hero-content">
                                 <div class="container-max px-3 px-md-4" style="">
@@ -91,11 +88,11 @@
                                             Financial markets and agricultural commodities presented together in one modern, real-time platform.
                                         </p>
                                         <div class="hero-buttons">
-                                            <button class="btn-hero-primary">
-                                                View Market Data
+                                            <a href="/agriculture/rubber" class="btn-hero-primary text-decoration-none">
+                                                View Rubber Price
                                                 <span class="material-symbols-outlined">arrow_forward</span>
-                                            </button>
-                                            <button class="btn-hero-secondary">Terminal Beta</button>
+                                            </a>
+                                            <a href="/agriculture/rubber" class="btn-hero-secondary text-decoration-none">Get Latest News</a>
                                         </div>
                                     </div>
                                 </div>
@@ -127,13 +124,6 @@
         </main>
     </div>
 </div>
-
-
-
-
-
-
-
 
 
 <section class="market-section">
