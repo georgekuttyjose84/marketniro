@@ -95,7 +95,7 @@ class HomeCardDetails
             'percentage' => $goldIndicatorDetails['percentage'],
             'impressions' => $goldIndicatorDetails['impressions'],
             'icon' => $goldIndicatorDetails['icon'],
-            'image' => '/assets/images/home/rubber.png',
+            'image' => '/assets/images/home/gold.png',
         ];
 
         $silver = $this->currencyRateRepositoryInterface->getSilverCard()[0];
@@ -112,7 +112,7 @@ class HomeCardDetails
             'percentage' => $silverIndicatorDetails['percentage'],
             'impressions' => $silverIndicatorDetails['impressions'],
             'icon' => $silverIndicatorDetails['icon'],
-            'image' => '/assets/images/home/rubber.png',
+            'image' => '/assets/images/home/silver.png',
         ];
 
 
