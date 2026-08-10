@@ -30,7 +30,7 @@ $startDate = new \DateTimeImmutable(
 );
 
 $endDate = new \DateTimeImmutable(
-    '2026-07-08',
+    '2026-08-10',
     $timezone
 );
 
