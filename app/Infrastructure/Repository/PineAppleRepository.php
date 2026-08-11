@@ -242,7 +242,8 @@ class PineAppleRepository implements PineAppleRepositoryInterface
     {
         $sql = "SELECT
                     d.price_date,
-                    DATE_FORMAT(d.price_date, '%M %d, %Y (%W)') AS market_date,
+                    DATE_FORMAT(d.price_date, '%M %d, %Y') AS market_date,
+                    DATE_FORMAT(d.price_date, '(%W)') AS market_day,
                     CONCAT(
                         '₹', FORMAT(d.green_min, 2),
                         ' — ₹', FORMAT(d.green_max, 2)
@@ -302,5 +303,20 @@ class PineAppleRepository implements PineAppleRepositoryInterface
         ]);
 
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+
+    public function prices($date)
+    {
+
+        $sql = "SELECT * FROM pineapple_price WHERE `price_date` = :date";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'date' => $date
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
     }
 }

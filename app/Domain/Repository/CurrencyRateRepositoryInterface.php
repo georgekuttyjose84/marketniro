@@ -13,4 +13,6 @@ interface CurrencyRateRepositoryInterface
 
     public function getMainCurrency(array $mainCurrencyList): array;
 
+    public function getHistory(string $target, int $limit): array;
+
 }

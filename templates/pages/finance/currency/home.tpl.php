@@ -259,6 +259,8 @@ $currencies = [
 
             <?= $view->render('/pages/finance/currency/hourly-comparison', [
                     'rows' => $rows,
+                    'base' => $base,
+                    'target' => $target,
             ], null) ?>
 
         <?= $view->render(

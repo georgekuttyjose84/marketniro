@@ -12,13 +12,13 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 
     public function all(): array
     {
-    	$results = $this->pdo
-        	->query("SELECT * FROM currency_rate  ORDER BY created_at DESC LIMIT 300")
-        	->fetchAll(PDO::FETCH_ASSOC);
+        $results = $this->pdo
+            ->query("SELECT * FROM currency_rate ORDER BY created_at DESC LIMIT 300")
+            ->fetchAll(PDO::FETCH_ASSOC);
 
         $objectsList = [];
 
-        foreach($results as $result){
+        foreach ($results as $result) {
             $objectsList[] = $this->map($result);
         }
 
@@ -62,12 +62,12 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
     {
         $stmt = $this->pdo->prepare(
             "
-        SELECT rate
-        FROM currency_rate
-        WHERE target_currency = :currency
-        ORDER BY created_at DESC, id DESC
-        LIMIT 1
-        "
+            SELECT rate
+            FROM currency_rate
+            WHERE target_currency = :currency
+            ORDER BY created_at DESC, id DESC
+            LIMIT 1
+            "
         );
 
         $stmt->execute([
@@ -83,64 +83,66 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         return (float) $rate;
     }
 
-
     public function getMainCurrency(array $mainCurrencyList): array
     {
-        $placeholders = implode(',', array_fill(0, count($mainCurrencyList), '?'));
+        $placeholders = implode(
+            ',',
+            array_fill(0, count($mainCurrencyList), '?')
+        );
 
         $sql = "
-        SELECT *
-        FROM (
-            SELECT
-                cr.*,
-                ROW_NUMBER() OVER (
-                    PARTITION BY target_currency
-                    ORDER BY id DESC
-                ) AS rn
-            FROM currency_rate cr
-            WHERE target_currency IN ($placeholders)
-        ) t
-        WHERE rn <= 2
-        ORDER BY target_currency, id DESC
-    ";
+            SELECT *
+            FROM (
+                SELECT
+                    cr.*,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY target_currency
+                        ORDER BY id DESC
+                    ) AS rn
+                FROM currency_rate cr
+                WHERE target_currency IN ($placeholders)
+            ) t
+            WHERE rn <= 2
+            ORDER BY target_currency, id DESC
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute($mainCurrencyList);
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function periodToSince(string $period): int
-    {
-        return match ($period) {
-            '1h' => time() - 3600,
-            '6h' => time() - 6 * 3600,
-            '12h' => time() - 12 * 3600,
-            '24h', '1d' => time() - 24 * 3600,
-            '7d' => time() - 7 * 24 * 3600,
-            '1m' => time() - 30 * 24 * 3600,
-            default => time() - 24 * 3600,
-        };
-    }
-
+    /**
+     * Get currency history from a given Unix timestamp.
+     *
+     * The old implementation used LIMIT, which meant:
+     *
+     * 6M -> latest 24/4320 rows
+     *
+     * This implementation uses an actual timestamp boundary.
+     */
     public function getHistory(
         string $target,
-        int $limit
-    ): array
-    {
+        int $since
+    ): array {
         $stmt = $this->pdo->prepare(
-            "SELECT created_at, rate 
-                   FROM currency_rate 
-                   WHERE target_currency = :target 
-                   ORDER BY created_at DESC LIMIT {$limit}");
+            "
+            SELECT
+                created_at,
+                rate
+            FROM currency_rate
+            WHERE target_currency = :target
+              AND created_at >= :since
+            ORDER BY created_at ASC
+            "
+        );
 
         $stmt->execute([
             'target' => $target,
+            'since'  => $since,
         ]);
 
-        return array_reverse(
-            $stmt->fetchAll(\PDO::FETCH_ASSOC)
-        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getHourlyComparison(
@@ -152,16 +154,16 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         if ($base === 'USD') {
 
             $stmt = $this->pdo->prepare("
-            SELECT
-                created_at,
-                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
-                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
-                rate
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-            AND target_currency = :target
-            ORDER BY created_at DESC
-        ");
+                SELECT
+                    created_at,
+                    HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                    rate
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = :target
+                ORDER BY created_at DESC
+            ");
 
             $stmt->execute([
                 'target' => $target
@@ -173,16 +175,16 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 
             // Get USD -> Base
             $stmtBase = $this->pdo->prepare("
-            SELECT
-                created_at,
-                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
-                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
-                rate
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-            AND target_currency = :base
-            ORDER BY created_at DESC
-        ");
+                SELECT
+                    created_at,
+                    HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                    rate
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = :base
+                ORDER BY created_at DESC
+            ");
 
             $stmtBase->execute([
                 'base' => $base
@@ -192,16 +194,16 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 
             // Get USD -> Target
             $stmtTarget = $this->pdo->prepare("
-            SELECT
-                created_at,
-                HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
-                DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
-                rate
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-            AND target_currency = :target
-            ORDER BY created_at DESC
-        ");
+                SELECT
+                    created_at,
+                    HOUR(FROM_UNIXTIME(created_at + 19800)) AS hour,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS day,
+                    rate
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = :target
+                ORDER BY created_at DESC
+            ");
 
             $stmtTarget->execute([
                 'target' => $target
@@ -223,7 +225,7 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
                     continue;
                 }
 
-                $usdBase = (float)$baseLookup[$row['created_at']]['rate'];
+                $usdBase = (float) $baseLookup[$row['created_at']]['rate'];
 
                 if ($usdBase == 0) {
                     continue;
@@ -233,7 +235,7 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
                     'created_at' => $row['created_at'],
                     'hour'       => $row['hour'],
                     'day'        => $row['day'],
-                    'rate'       => (float)$row['rate'] / $usdBase
+                    'rate'       => (float) $row['rate'] / $usdBase
                 ];
             }
         }
@@ -256,9 +258,8 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 
                 $currentHour = max(
                     $currentHour,
-                    (int)$row['hour']
+                    (int) $row['hour']
                 );
-
             }
         }
 
@@ -269,12 +270,18 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
 
             $hour = sprintf("%02d:00", $row['hour']);
 
-            if ($row['day'] === $today && !isset($todayRates[$hour])) {
-                $todayRates[$hour] = (float)$row['rate'];
+            if (
+                $row['day'] === $today
+                && !isset($todayRates[$hour])
+            ) {
+                $todayRates[$hour] = (float) $row['rate'];
             }
 
-            if ($row['day'] === $yesterday && !isset($yesterdayRates[$hour])) {
-                $yesterdayRates[$hour] = (float)$row['rate'];
+            if (
+                $row['day'] === $yesterday
+                && !isset($yesterdayRates[$hour])
+            ) {
+                $yesterdayRates[$hour] = (float) $row['rate'];
             }
         }
 
@@ -283,9 +290,11 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
         for ($i = 0; $i < 24; $i++) {
 
             $hour = sprintf("%02d:00", $i);
+            $hour12 =  date('h:i A', strtotime("$i:00"));
 
             $result[] = [
                 'time' => $hour,
+                'time_in_12' => $hour12,
                 'yesterday' => $yesterdayRates[$hour] ?? null,
                 'today' => $i <= $currentHour
                     ? ($todayRates[$hour] ?? null)
@@ -299,48 +308,46 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
     public function getGoldCard(): array
     {
         $sql = "
-        SELECT
-            DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
-            ROUND(((usd_inr.rate / usd_xau.rate) / 31.1034768), 2) AS price_1g
-        FROM
-        (
             SELECT
-                rate,
-                created_at
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'INR'
-            ORDER BY created_at DESC
-            LIMIT 1
-        ) AS usd_inr
+                DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
+                ROUND(
+                    ((usd_inr.rate / usd_xau.rate) / 31.1034768),
+                    2
+                ) AS price_1g
+            FROM
+            (
+                SELECT
+                    rate,
+                    created_at
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'INR'
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) AS usd_inr
 
-        CROSS JOIN
-        (
-            SELECT
-                rate
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'XAU'
-            ORDER BY created_at DESC
-            LIMIT 1
-        ) AS usd_xau
-    ";
+            CROSS JOIN
+            (
+                SELECT
+                    rate
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'XAU'
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) AS usd_xau
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-//        ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 8), 2) AS price_8g,
-//            ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 10), 2) AS price_10g,
-//            ROUND((((usd_inr.rate / usd_xau.rate) / 31.1034768) * 100), 2) AS price_100g
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getGoldCardIndicator(): array
     {
-
         $sql = "
-        WITH usd_inr AS
+            WITH usd_inr AS
             (
                 SELECT
                     rate,
@@ -366,9 +373,12 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
                 WHERE base_currency = 'USD'
                   AND target_currency = 'XAU'
             )
-            
+
             SELECT
-                ROUND((usd_inr.rate / usd_xau.rate) / 31.1034768, 2) AS price_information,
+                ROUND(
+                    (usd_inr.rate / usd_xau.rate) / 31.1034768,
+                    2
+                ) AS price_information,
                 usd_inr.price_date
             FROM usd_inr
             JOIN usd_xau
@@ -378,101 +388,102 @@ class CurrencyRateRepository implements CurrencyRateRepositoryInterface
                 AND usd_xau.rn = 1
             ORDER BY usd_inr.price_date DESC
             LIMIT 2;
-    ";
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-
-
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getSilverCard(): array
     {
         $sql = "
-        SELECT
-            DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
-            ROUND(((usd_inr.rate / usd_xag.rate) / 31.1034768), 2) AS price_1g
-        FROM
-        (
             SELECT
-                rate,
-                created_at
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'INR'
-            ORDER BY created_at DESC
-            LIMIT 1
-        ) AS usd_inr
+                DATE(FROM_UNIXTIME(usd_inr.created_at + 19800)) AS price_date,
+                ROUND(
+                    ((usd_inr.rate / usd_xag.rate) / 31.1034768),
+                    2
+                ) AS price_1g
+            FROM
+            (
+                SELECT
+                    rate,
+                    created_at
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'INR'
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) AS usd_inr
 
-        CROSS JOIN
-        (
-            SELECT
-                rate
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'XAG'
-            ORDER BY created_at DESC
-            LIMIT 1
-        ) AS usd_xag
-    ";
+            CROSS JOIN
+            (
+                SELECT
+                    rate
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'XAG'
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) AS usd_xag
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getSilverCardIndicator(): array
     {
         $sql = "
-        WITH usd_inr AS
-        (
-            SELECT
-                rate,
-                DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
-                ROW_NUMBER() OVER (
-                    PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
-                    ORDER BY created_at DESC
-                ) AS rn
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'INR'
-        ),
-        usd_xag AS
-        (
-            SELECT
-                rate,
-                DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
-                ROW_NUMBER() OVER (
-                    PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
-                    ORDER BY created_at DESC
-                ) AS rn
-            FROM currency_rate
-            WHERE base_currency = 'USD'
-              AND target_currency = 'XAG'
-        )
+            WITH usd_inr AS
+            (
+                SELECT
+                    rate,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                        ORDER BY created_at DESC
+                    ) AS rn
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'INR'
+            ),
+            usd_xag AS
+            (
+                SELECT
+                    rate,
+                    DATE(FROM_UNIXTIME(created_at + 19800)) AS price_date,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY DATE(FROM_UNIXTIME(created_at + 19800))
+                        ORDER BY created_at DESC
+                    ) AS rn
+                FROM currency_rate
+                WHERE base_currency = 'USD'
+                  AND target_currency = 'XAG'
+            )
 
-        SELECT
-            ROUND((usd_inr.rate / usd_xag.rate) / 31.1034768, 2) AS price_information,
-            usd_inr.price_date
-        FROM usd_inr
-        JOIN usd_xag
-            ON usd_inr.price_date = usd_xag.price_date
-        WHERE
-            usd_inr.rn = 1
-            AND usd_xag.rn = 1
-        ORDER BY usd_inr.price_date DESC
-        LIMIT 2;
-    ";
+            SELECT
+                ROUND(
+                    (usd_inr.rate / usd_xag.rate) / 31.1034768,
+                    2
+                ) AS price_information,
+                usd_inr.price_date
+            FROM usd_inr
+            JOIN usd_xag
+                ON usd_inr.price_date = usd_xag.price_date
+            WHERE
+                usd_inr.rn = 1
+                AND usd_xag.rn = 1
+            ORDER BY usd_inr.price_date DESC
+            LIMIT 2;
+        ";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
 
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
 }

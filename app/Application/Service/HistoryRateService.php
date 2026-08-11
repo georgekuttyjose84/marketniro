@@ -18,23 +18,46 @@ class HistoryRateService
         string $period = '24H'
     ): GraphData {
 
-        $limit = match ($period) {
+        /*
+         * Normalize the period.
+         *
+         * This allows:
+         *
+         * 6M
+         * 6m
+         *
+         * to be treated the same way.
+         */
+        $period = strtoupper($period);
 
-            '24H' => 24,
+        /*
+         * Calculate the actual start timestamp.
+         *
+         * IMPORTANT:
+         * We are no longer calculating a number of rows.
+         * We calculate the actual date range.
+         */
+        $since = match ($period) {
 
-            '7D' => 24 * 7,
+            '24H' => time() - (24 * 3600),
 
-            '30D' => 24 * 30,
+            '7D' => time() - (7 * 24 * 3600),
 
-            '90D' => 24 * 90,
+            '1M' => strtotime('-1 month'),
 
-            '1Y' => 24 * 365,
+            '3M' => strtotime('-3 months'),
 
-            default => 24,
+            '6M' => strtotime('-6 months'),
+
+            '1Y' => strtotime('-1 year'),
+
+            default => time() - (24 * 3600),
 
         };
 
-        // Same Currency
+        /*
+         * Same currency.
+         */
         if ($base === $target) {
 
             return new GraphData(
@@ -56,71 +79,164 @@ class HistoryRateService
                 points: []
 
             );
-
         }
 
-        // USD -> TARGET
-
+        /*
+         * USD -> TARGET
+         */
         if ($base === 'USD') {
 
             $rows = $this->repo->getHistory(
                 target: $target,
-                limit: $limit
+                since: $since
             );
-
         }
 
-        // BASE -> USD
-
+        /*
+         * BASE -> USD
+         *
+         * Database stores:
+         *
+         * USD -> BASE
+         *
+         * Therefore:
+         *
+         * BASE -> USD = 1 / (USD -> BASE)
+         */
         elseif ($target === 'USD') {
 
             $rows = $this->repo->getHistory(
                 target: $base,
-                limit: $limit
+                since: $since
             );
 
             foreach ($rows as &$row) {
 
-                if ($row['rate'] == 0) {
+                if ((float) $row['rate'] == 0) {
                     continue;
                 }
 
-                $row['rate'] = 1 / $row['rate'];
-
+                $row['rate'] = 1 / (float) $row['rate'];
             }
 
+            unset($row);
         }
+
+        /*
+         * BASE -> TARGET
+         *
+         * Example:
+         *
+         * EUR -> INR
+         *
+         * We have:
+         *
+         * USD -> EUR
+         * USD -> INR
+         *
+         * Therefore:
+         *
+         * EUR -> INR
+         *
+         * = (USD -> INR) / (USD -> EUR)
+         */
         else {
+
             $fromRows = $this->repo->getHistory(
                 target: $base,
-                limit: $limit
+                since: $since
             );
+
             $toRows = $this->repo->getHistory(
                 target: $target,
-                limit: $limit
+                since: $since
             );
-            $rows = [];
-            $count = min(
-                count($fromRows),
-                count($toRows)
-            );
-            for ($i = 0; $i < $count; $i++) {
 
-                if ($fromRows[$i]['rate'] == 0) {
+            /*
+             * Index BASE rates by timestamp.
+             *
+             * This is important.
+             *
+             * We must NOT match records using array position.
+             */
+            $fromLookup = [];
+
+            foreach ($fromRows as $row) {
+
+                $createdAt = (int) $row['created_at'];
+
+                $fromLookup[$createdAt] = (float) $row['rate'];
+            }
+
+            $rows = [];
+
+            foreach ($toRows as $row) {
+
+                $createdAt = (int) $row['created_at'];
+
+                /*
+                 * No matching timestamp.
+                 */
+                if (!isset($fromLookup[$createdAt])) {
+                    continue;
+                }
+
+                $fromRate = $fromLookup[$createdAt];
+
+                if ($fromRate == 0) {
                     continue;
                 }
 
                 $rows[] = [
 
-                    'created_at' => $toRows[$i]['created_at'],
+                    'created_at' => $createdAt,
 
-                    'rate' => $toRows[$i]['rate'] / $fromRows[$i]['rate']
+                    'rate' => (float) $row['rate'] / $fromRate
 
                 ];
-
             }
-
         }
+
+        /*
+         * No data.
+         */
+        if (empty($rows)) {
+
+            return new GraphData(
+
+                base: $base,
+
+                target: $target,
+
+                period: $period,
+
+                current: 0,
+
+                high: 0,
+
+                low: 0,
+
+                lastUpdated: time(),
+
+                points: []
+
+            );
+        }
+
+        /*
+         * Rows should already be ASC because
+         * repository returns ASC.
+         *
+         * Still sort here because cross-currency
+         * calculations can change ordering.
+         */
+        usort(
+            $rows,
+            function ($a, $b) {
+                return (int) $a['created_at']
+                    <=> (int) $b['created_at'];
+            }
+        );
 
         $points = [];
 
@@ -128,21 +244,29 @@ class HistoryRateService
 
         $low = PHP_FLOAT_MAX;
 
+        /*
+         * Create graph points.
+         */
         foreach ($rows as $row) {
 
             $rate = (float) $row['rate'];
 
             $createdAt = (int) $row['created_at'];
 
+            /*
+             * Label based on selected period.
+             */
             $label = match ($period) {
 
                 '24H' => date('H:i', $createdAt),
 
-                '7D' => date('d M H:i', $createdAt),
+                '7D' => date('d M', $createdAt),
 
                 '1M' => date('d M', $createdAt),
 
-                '90D' => date('d M', $createdAt),
+                '3M' => date('d M', $createdAt),
+
+                '6M' => date('d M', $createdAt),
 
                 '1Y' => date('M Y', $createdAt),
 
@@ -160,26 +284,39 @@ class HistoryRateService
 
             );
 
+            /*
+             * High.
+             */
             $high = max(
                 $high,
                 $rate
             );
 
+            /*
+             * Low.
+             */
             $low = min(
                 $low,
                 $rate
             );
-
         }
 
-        $current = count($points)
-            ? end($points)->rate
+        /*
+         * Latest point.
+         */
+        $lastPoint = end($points);
+
+        $current = $lastPoint
+            ? $lastPoint->rate
             : 0;
 
-        $lastUpdated = count($points)
-            ? end($points)->createdAt
+        $lastUpdated = $lastPoint
+            ? $lastPoint->createdAt
             : time();
 
+        /*
+         * Final response.
+         */
         return new GraphData(
 
             base: $base,
@@ -199,7 +336,5 @@ class HistoryRateService
             points: $points
 
         );
-
     }
-
 }

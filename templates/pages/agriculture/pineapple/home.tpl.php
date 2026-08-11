@@ -41,6 +41,10 @@ if($selectedPrice) {
 }
 
 
+$date = $selectedDate === ''
+        ? (new DateTimeImmutable('now'))->format('Y-m-d')
+        : $selectedDate;
+
 ?>
 
 <div class="container-max mx-auto px-3 px-md-4 py-4 py-md-5" style="margin:0 auto;">
@@ -51,7 +55,17 @@ if($selectedPrice) {
                     <form class="d-flex flex-column flex-sm-row align-items-sm-end gap-3" method="GET">
                         <div class="flex-grow-1 w-100">
                             <label class="form-label-custom" for="pineapple-price-date">Select price date</label>
-                            <input class="form-control-custom" id="pineapple-price-date" min="<?= $minimumDate ?>" max="<?= $maximumDate ?>" name="date" required type="date" value="<?= htmlspecialchars($selectedDate) ?>">
+
+                            <input
+                                    class="form-control-custom"
+                                    id="pineapple-price-date"
+                                    name="date"
+                                    type="date"
+                                    min="<?= htmlspecialchars($minimumDate) ?>"
+                                    max="<?= htmlspecialchars($maximumDate) ?>"
+                                    value="<?= htmlspecialchars($date) ?>"
+                                    required
+                            >
                         </div>
                         <button class="btn-view-price" type="submit">View Price</button>
                     </form>
@@ -59,15 +73,38 @@ if($selectedPrice) {
             </section>
 
 
-            <?php if($selectedPrice): ?>
-            <section>
-                <?= $view->render('/pages/agriculture/pineapple/price-card', [
-                        'ripePrice' => $ripePriceSelected,
-                        'greenPrice' => $greenPriceSelected,
-                ], null) ?>
-            </section>
+            <?php if ($selectedDate): ?>
+
+                <?php if (empty($ripePriceSelected) && empty($greenPriceSelected)): ?>
+
+                    <div class="price-unavailable-message">
+                        <div class="price-unavailable-icon">
+                            <i class="bi bi-calendar-x"></i>
+                        </div>
+
+                        <div>
+                            <h5>Price Not Available</h5>
+                            <p>
+                                Price is not available for this date since the market was
+                                closed due to a holiday.
+                            </p>
+                        </div>
+                    </div>
+
+                <?php else: ?>
+
+                    <section>
+                        <?= $view->render('/pages/agriculture/pineapple/price-card', [
+                                'ripePrice'  => $ripePriceSelected,
+                                'greenPrice' => $greenPriceSelected,
+                        ], null) ?>
+                    </section>
+
+                <?php endif; ?>
 
             <?php endif; ?>
+
+
 
             <section class="mb-4">
                 <div class="hero">
@@ -178,7 +215,11 @@ if($selectedPrice) {
                             $design = ['trending_flat'=> 'trend', 'trending_up' => 'trend-flat', 'trending_down' => 'trend-down'];
                         ?>
                         <tr>
-                            <td class="fw-bold" style="color:var(--on-surface);"><?=$data['market_date']?></td>
+                            <td class="fw-bold" style="color:var(--on-surface);">
+                                <?=$data['market_date']?>
+                                <br>
+                                <?=$data['market_day']?>
+                            </td>
                             <td><?=$data['green_price']?></td>
                             <td><?=$data['ripe_price']?></td>
                             <td class="text-center"><span class="trend-icon <?= $design[$data['trend']]?>"><span class="material-symbols-outlined" style="font-size:20px;"><?=$data['trend']?></span></span></td>

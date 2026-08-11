@@ -8,7 +8,7 @@
 <section class="filter-card mb-4">
 
     <div class="chart-card-header">
-        <h3>USD to INR Historical Exchange Rates</h3>
+        <h3><?= $base ?> to <?= $target ?> Historical Exchange Rates</h3>
         <div class="chart-range-toggle">
             <button class="range-btn active" data-period="24H" aria-pressed="true">
                 24 Hours

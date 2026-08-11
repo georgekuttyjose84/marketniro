@@ -1,6 +1,8 @@
 <section class="card-block table-card filter-card mb-4">
     <h2>Hourly Forex Price Comparison – Today vs Yesterday</h2>
-    <p>Compare today's hourly USD to INR exchange rates against yesterday's prices to identify intraday currency market movements and trends.</p>
+    <p>Compare today's hourly <?= $base ?> to <?= $target ?> exchange rates against yesterday's prices to identify intraday currency market movements and trends.</p>
+
+
 
     <div class="table-scroll">
         <table class="hourly-table">
@@ -14,9 +16,14 @@
             </thead>
             <tbody>
 
-            <?php foreach ($rows as $row): ?>
+            <?php  foreach ($rows as $row): ?>
                 <tr>
-                    <td class="fw-bold"><?= htmlspecialchars($row['time']) ?></td>
+                    <td class="fw-bold">
+                        <?= htmlspecialchars($row['time']) ?>
+                        <br>
+                        <small class="no-bold fw-light">(<?= htmlspecialchars($row['time_in_12']) ?>)</small>
+
+                    </td>
                     <td><?= $row['yesterday'] !== null ? htmlspecialchars($row['yesterday']) . ' ' . htmlspecialchars($target) : '—' ?></td>
                     <td><?= $row['today'] !== null ? htmlspecialchars($row['today']) . ' ' . htmlspecialchars($target) : '—' ?></td>
 

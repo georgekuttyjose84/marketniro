@@ -145,7 +145,7 @@
     display:inline-flex; align-items:center; justify-content:center;
 }
 .trend-up{ background-color: rgba(22,163,74,0.1); color: var(--success); }
-.trend-flat{ background-color: rgba(62,74,61,0.1); color: var(--on-surface-variant); }
+.trend-flat{  color: var(--on-surface-variant); }
 .trend-down{ background-color: rgba(186,26,26,0.1); color: var(--error); }
 
 /* ===== Sidebar ===== */
