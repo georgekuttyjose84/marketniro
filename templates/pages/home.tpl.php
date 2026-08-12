@@ -7,9 +7,7 @@
         <main class="flex-grow-1" style="min-width:0;">
             <section class="hero-carousel">
                 <div id="marketHeroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="6500" data-bs-pause="false">
-
                     <div class="carousel-inner">
-
                         <div class="carousel-item active" data-bs-interval="6500">
                             <div class="hero-slide-media">
                                 <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&w=1600&q=80" alt="Market intelligence dashboard overview">
@@ -17,13 +15,11 @@
                             <div class="hero-content">
                                 <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                <span class="hero-tag">
-                    <span class="hero-tag-dot"></span>
-                    Market Intelligence Platform
-                </span>
-                                        <h1 class="hero-title">
-                                            Five Markets,<br>
-                                            One Page,<br>
+                                        <span class="hero-tag">
+                                            <span class="hero-tag-dot"></span>
+                                            Market Intelligence Platform
+                                        </span>
+                                        <h1 class="hero-title">Five Markets,<br>One Page,<br>
                                             <span class="hero-title-accent">Updated Every Morning.</span>
                                         </h1>
                                         <p class="hero-description">
@@ -48,13 +44,11 @@
                             <div class="hero-content">
                                 <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                <span class="hero-tag">
-                    <span class="material-symbols-outlined">nutrition</span>
-                    Agriculture Intelligence
-                </span>
-                                        <h2 class="hero-title">
-                                            Track Commodity<br>
-                                            Prices Across<br>
+                                        <span class="hero-tag">
+                                            <span class="material-symbols-outlined">nutrition</span>
+                                            Agriculture Intelligence
+                                        </span>
+                                        <h2 class="hero-title"> Track Commodity<br> Prices Across<br>
                                             <span class="hero-title-accent">India</span>
                                         </h2>
                                         <p class="hero-description">
@@ -76,12 +70,11 @@
                             <div class="hero-content">
                                 <div class="container-max w-100 mx-auto px-3 px-md-4">
                                     <div class="hero-box">
-                <span class="hero-tag">
-                    <span class="material-symbols-outlined">monitoring</span>
-                    Financial Intelligence
-                </span>
-                                        <h2 class="hero-title">
-                                            Reliable Data.<br>
+                                        <span class="hero-tag">
+                                            <span class="material-symbols-outlined">monitoring</span>
+                                            Financial Intelligence
+                                        </span>
+                                        <h2 class="hero-title">Reliable Data.<br>
                                             <span class="hero-title-accent">Better Decisions.</span>
                                         </h2>
                                         <p class="hero-description">
@@ -118,7 +111,6 @@
                             <span class="hero-indicator-progress"></span>
                         </button>
                     </div>
-
                 </div>
             </section>
         </main>
