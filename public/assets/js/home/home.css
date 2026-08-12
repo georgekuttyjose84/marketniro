@@ -25,7 +25,7 @@
 
 .hero-carousel .carousel-item{
     position: relative;
-    height: 640px; /* base / smallest screens */
+    height: 520px; /* base / smallest screens */
 }
 
 .hero-slide-media{
