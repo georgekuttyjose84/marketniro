@@ -23,7 +23,7 @@ class AboutUs
 
         return new HtmlResponse(
             $engine->render(
-                'pages/pipe-apple-static-data-edit656',
+                'pages/test',
                 [
                     'page' => [
                         'title' => 'Pineapple Price Today | Green & Ripe Pineapple Rates | MarketNiro',
