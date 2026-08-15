@@ -152,27 +152,26 @@ $date = $selectedDate === ''
             </p>
 
 
-            <h2>Today's Price: <?=$today?></h2>
+            <h2 class="fw-bold py-3">Today's Price: <?=$today?></h2>
 
             <?= $view->render('/pages/agriculture/pineapple/price-card', [
                     'ripePrice' => $ripePriceToday,
                     'greenPrice' => $greenPriceToday,
             ], null) ?>
 
-            <section class="mb-4">
-                    <h2 class="fw-bold mb-3" style="">Green vs. Ripe Pineapple: What's the Price Difference?</h2>
+            <section class="">
                     <div class="row g-4">
                         <div class="col-12 col-md-6">
-                            <h3 class="fw-bold" style="font-size:15px; color:var(--primary);">Green Pineapple</h3>
-                            <p style="font-size:14px; color:var(--on-surface-variant); line-height:1.6;">
+                            <h3 class="fw-bold" style="color:var(--primary);">Green Pineapple</h3>
+                            <p>
                                 Harvested while still firm and unripe, green pineapples are primarily sold for
                                 industrial processing and export. Because they're shipped in bulk and travel longer
                                 distances, their prices tend to be more stable and less volatile than ripe fruit.
                             </p>
                         </div>
                         <div class="col-12 col-md-6">
-                            <h3 class="fw-bold" style="font-size:15px; color:var(--warning-700);">Ripe Pineapple</h3>
-                            <p style="font-size:14px; color:var(--on-surface-variant); line-height:1.6;">
+                            <h3 class="fw-bold" style="color:var(--warning-700);">Ripe Pineapple</h3>
+                            <p>
                                 Sold ready-to-eat in local and retail markets, ripe pineapple prices swing more
                                 sharply since the fruit has a short shelf life. Prices often spike when supply is
                                 delayed by weather or logistics, since retailers can't hold ripe stock for long.
@@ -181,126 +180,14 @@ $date = $selectedDate === ''
                     </div>
             </section>
 
-            <section>
-                <?= $view->render('/pages/agriculture/pineapple/graph', [
-                        'lastSevenDaysPrice' => $lastSevenDaysPrice,
-                ], null) ?>
-            </section>
-
-
-            <section class="section-card mb-4" style="overflow:hidden;">
-                <div class="p-4 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3" style="border-bottom:1px solid rgba(189,202,186,0.3);">
-                    <div>
-                        <h2 class="fw-bold mb-0" style="font-size:20px;">Detailed Price History</h2>
-                        <p class="mb-0" style="font-size:11px; color:var(--on-surface-variant);">Standardized pricing for MD2 variety</p>
-                    </div>
-                    <button class="d-flex align-items-center gap-2 fw-bold border-0" style="font-size:11px; color:var(--primary); padding:8px 16px; background-color:rgba(0,107,44,0.05); border-radius:var(--radius-lg);">
-                        <span class="material-symbols-outlined" style="font-size:18px;">download</span>
-                        Export Dataset
-                    </button>
-                </div>
-                <div class="table-responsive">
-                    <table class="table-custom" style="min-width:600px;">
-                        <thead>
-                        <tr>
-                            <th>Market Date</th>
-                            <th>Green ($/kg)</th>
-                            <th>Ripe ($/kg)</th>
-                            <th class="text-center">Trend</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-
-                        <?php foreach ($monthlyData as $data) :
-                            $design = ['trending_flat'=> 'trend', 'trending_up' => 'trend-flat', 'trending_down' => 'trend-down'];
-                        ?>
-                        <tr>
-                            <td class="fw-bold" style="color:var(--on-surface);">
-                                <?=$data['market_date']?>
-                                <br>
-                                <?=$data['market_day']?>
-                            </td>
-                            <td><?=$data['green_price']?></td>
-                            <td><?=$data['ripe_price']?></td>
-                            <td class="text-center"><span class="trend-icon <?= $design[$data['trend']]?>"><span class="material-symbols-outlined" style="font-size:20px;"><?=$data['trend']?></span></span></td>
-                        </tr>
-                        <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="table-footer">
-                    <span style="font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:rgba(62,74,61,0.7);"> <?= $monthlyData[count($monthlyData)-1]['market_date'] ?> - <?= $monthlyData[0]['market_date'] ?> • <?=count($monthlyData)?> Market Days</span>
-                    <div class="d-flex gap-1">
-<!--                        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:20px;">chevron_left</span></button>-->
-<!--                        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:20px;">chevron_right</span></button>-->
-                    </div>
-                </div>
-            </section>
-
-
-            <section class="mb-4">
-                    <h2 class="fw-bold mb-3" style="">What Drives Pineapple Prices?</h2>
-                    <div class="row g-4">
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">wb_sunny</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Seasonal Weather</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Heavy rain or drought in growing regions like Mindanao directly affects fruit
-                                        size, sweetness, and available volume.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">local_shipping</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Logistics &amp; Port Delays</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Container shortages and port congestion can delay shipments, tightening supply
-                                        and pushing short-term prices up.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">public</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Export Demand</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Rising demand from major importers increases competition for export-grade
-                                        (green) fruit, lifting industrial prices.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">currency_exchange</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Currency Fluctuation</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Since pineapple is a globally traded commodity, exchange rate shifts against
-                                        major currencies affect landed cost and local pricing.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-            </section>
-
-
-            <section class="mt-4">
+            <section class="my-4">
                 <div class="mb-3">
-                    <h2 class="fw-bold mb-0" style="font-size:20px;">
+                    <h3 class="fw-bold">
                         Pineapple Price Summary
-                    </h2>
+                    </h3>
 
-                    <p class="mb-0" style="font-size:11px; color:var(--on-surface-variant);">
-                        Monthly performance breakdown for <?= date('Y') ?>
+                    <p>
+                        Pineapple prices in <?= date('Y') ?> have shown clear seasonal variation, driven by changing harvest volumes, regional supply conditions, and market demand. As different growing areas move into and out of peak season, the availability of both green and ripe pineapples fluctuates, leading to shifts in minimum, maximum, and average prices across months. Periods of abundant supply tend to ease prices, while tighter availability or stronger retail and festive demand can push averages higher, resulting in the month-to-month price patterns reflected in this 2026 performance breakdown.
                     </p>
                 </div>
 
@@ -428,54 +315,126 @@ $date = $selectedDate === ''
             </section>
 
 
-            <section class="mb-4 mt-4">
-                    <h2 class="fw-bold mb-3" style="font-size:20px;">Frequently Asked Questions</h2>
-                    <div class="mb-3">
-                        <h3 class="fw-bold" style="font-size:14px; margin-bottom:4px;">What is today's pineapple price?</h3>
-                        <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                            Today's average green pineapple price is around ₹29/kg, while ripe pineapple averages
-                            around ₹38/kg. Prices are updated daily and shown in the table above.
-                        </p>
-                    </div>
 
-                    <div class="mb-3">
-                        <h3 class="fw-bold" style="font-size:14px; margin-bottom:4px;">Why is ripe pineapple more expensive than green pineapple?</h3>
-                        <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                            Ripe pineapple is sold retail-ready with a short shelf life, so supply constraints hit
-                            its price faster. Green pineapple is bought in bulk for processing, which keeps its
-                            pricing steadier.
-                        </p>
-                    </div>
+            <p>
+                The graphical data below illustrates the monthly price trends for green and ripe pineapples across mid-<?= date('Y') ?>, highlighting how prices fluctuate with seasonal supply and demand. Each month’s minimum, maximum, and average rates capture short-term volatility and broader market movements, showing periods of price softening during peak harvests and firmer levels when availability tightens or demand rises. Together, these trends provide a clear visual snapshot of pineapple price performance and market dynamics over the displayed months in <?= date('Y') ?>.
+            </p>
 
-                    <div class="mb-3">
-                        <h3 class="fw-bold" style="font-size:14px; margin-bottom:4px;">How often are pineapple prices updated?</h3>
-                        <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                            Prices are updated daily based on market activity, with historical data available for
-                            7D, 1M, 3M, and 1Y timeframes above.
-                        </p>
-                    </div>
+            <section>
+                <?= $view->render('/pages/agriculture/pineapple/graph', [
+                        'lastSevenDaysPrice' => $lastSevenDaysPrice,
+                ], null) ?>
+            </section>
 
+
+            <section class="section-card mb-4" style="overflow:hidden;">
+                <div class="p-4 d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-3" style="border-bottom:1px solid rgba(189,202,186,0.3);">
                     <div>
-                        <h3 class="fw-bold" style="font-size:14px; margin-bottom:4px;">What variety of pineapple does this data track?</h3>
-                        <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                            This page tracks standardized pricing for the MD2 (Golden) variety, the most widely
-                            traded pineapple cultivar globally.
-                        </p>
+                        <h2 class="fw-bold mb-0" style="font-size:20px;">Detailed Price History</h2>
+                        <p class="mb-0" style="font-size:11px; color:var(--on-surface-variant);">Standardized pricing for MD2 variety</p>
                     </div>
+                    <button class="d-flex align-items-center gap-2 fw-bold border-0" style="font-size:11px; color:var(--primary); padding:8px 16px; background-color:rgba(0,107,44,0.05); border-radius:var(--radius-lg);">
+                        <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+                        Export Dataset
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table-custom" style="min-width:600px;">
+                        <thead>
+                        <tr>
+                            <th>Market Date</th>
+                            <th>Green ($/kg)</th>
+                            <th>Ripe ($/kg)</th>
+                            <th class="text-center">Trend</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
+                        <?php foreach ($monthlyData as $data) :
+                            $design = ['trending_flat'=> 'trend', 'trending_up' => 'trend-flat', 'trending_down' => 'trend-down'];
+                        ?>
+                        <tr>
+                            <td class="fw-bold" style="color:var(--on-surface);">
+                                <?=$data['market_date']?>
+                                <br>
+                                <?=$data['market_day']?>
+                            </td>
+                            <td><?=$data['green_price']?></td>
+                            <td><?=$data['ripe_price']?></td>
+                            <td class="text-center"><span class="trend-icon <?= $design[$data['trend']]?>"><span class="material-symbols-outlined" style="font-size:20px;"><?=$data['trend']?></span></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <span style="font-size:11px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:rgba(62,74,61,0.7);"> <?= $monthlyData[count($monthlyData)-1]['market_date'] ?> - <?= $monthlyData[0]['market_date'] ?> • <?=count($monthlyData)?> Market Days</span>
+                    <div class="d-flex gap-1">
+<!--                        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:20px;">chevron_left</span></button>-->
+<!--                        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:20px;">chevron_right</span></button>-->
+                    </div>
+                </div>
+            </section>
+
+
+            <section class="mb-4">
+                    <h2 class="fw-bold mb-3" style="">What Drives Pineapple Prices?</h2>
+                    <div class="row g-4">
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex gap-3">
+                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">wb_sunny</span>
+                                <div>
+                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Seasonal Weather</h4>
+                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
+                                        Heavy rain or drought in growing regions like Mindanao directly affects fruit
+                                        size, sweetness, and available volume.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex gap-3">
+                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">local_shipping</span>
+                                <div>
+                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Logistics &amp; Port Delays</h4>
+                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
+                                        Container shortages and port congestion can delay shipments, tightening supply
+                                        and pushing short-term prices up.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex gap-3">
+                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">public</span>
+                                <div>
+                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Export Demand</h4>
+                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
+                                        Rising demand from major importers increases competition for export-grade
+                                        (green) fruit, lifting industrial prices.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="d-flex gap-3">
+                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">currency_exchange</span>
+                                <div>
+                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Currency Fluctuation</h4>
+                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
+                                        Since pineapple is a globally traded commodity, exchange rate shifts against
+                                        major currencies affect landed cost and local pricing.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </section>
         </main>
         <script src="/css/home.js"></script>
 
         <!-- ============ SIDEBAR ============ -->
         <aside class="sidebar d-flex flex-column gap-4" style="">
-
-
-
-<!--                --><?php //= $view->render('/pages/agriculture/pineapple/side-content', [], null) ?>
-
-
-
             <!-- Monthly Summary Widget -->
             <div class="monthly-summary-card">
                 <div class="monthly-summary-bg-icon">
