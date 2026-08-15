@@ -1235,3 +1235,493 @@ PINE FILTER CARD
         height: 280px !important;
     }
 }
+
+
+/* ============================================================
+   MARKETNIRO PINEAPPLE - SAFARI / IOS FINAL LAYOUT OVERRIDES
+   Added after the existing rules intentionally.
+   ============================================================ */
+
+/* Global page-width safety for this page */
+.pine-page-header,
+.pine-filter-card,
+.pine-notice,
+.section-card,
+.price-card,
+.chart-wrap,
+#pineapple-history-chart {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+/* Keep Bootstrap/flex children from using intrinsic widths */
+.pine-page-header *,
+.pine-filter-card *,
+.pine-notice *,
+.section-card *,
+.chart-wrap *,
+#pineapple-history-chart * {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* Header: never extend the viewport on small iPhones */
+.pine-page-header {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Date filter card */
+.pine-filter-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.pine-filter-info {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.pine-filter-text {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.pine-date-form {
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+}
+
+.pine-date-form input[type="date"],
+.pine-date-form input[type="text"],
+.pine-date-form input {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    flex: 1 1 auto;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Restore the native date control affordance without allowing
+   the Safari date field to determine the element width */
+.pine-date-form input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    min-inline-size: 0;
+}
+
+.pine-date-form input[type="date"]::-webkit-date-and-time-value {
+    text-align: left;
+    min-width: 0;
+}
+
+.pine-date-form input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    margin: 0 0 0 6px;
+    flex: 0 0 auto;
+}
+
+/* Button cannot create a second intrinsic-width problem */
+.pine-date-form button {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* Chart card and chart wrapper */
+.section-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.chart-wrap {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 320px !important;
+    max-height: 320px !important;
+    min-height: 320px !important;
+    padding: 12px 0 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+#pineapple-history-chart {
+    position: relative;
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 308px !important;
+    min-height: 0 !important;
+    max-height: 308px !important;
+    margin: 0;
+    padding: 0;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+#pineapple-history-chart .apexcharts-canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 auto;
+}
+
+#pineapple-history-chart .apexcharts-svg {
+    max-width: 100% !important;
+}
+
+/* Loading layer stays inside the chart */
+.chart-wrap > .phi-loading {
+    position: absolute;
+    top: 12px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Error message also stays inside its parent */
+.phi-error {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+
+/* Prevent tables/content from making the page wider */
+.table-custom {
+    max-width: 100%;
+}
+
+.table-custom th,
+.table-custom td {
+    max-width: 0;
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+
+    .pine-page-header {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .pine-header-row,
+    .pine-header-copy,
+    .pine-header-status {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+    }
+
+    .pine-filter-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding-left: 13px;
+        padding-right: 13px;
+    }
+
+    .pine-filter-info,
+    .pine-date-form {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        flex: none !important;
+    }
+
+    .pine-date-form {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .pine-date-form input,
+    .pine-date-form input[type="date"],
+    .pine-date-form button {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+    }
+
+    .chart-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 300px !important;
+        min-height: 300px !important;
+        max-height: 300px !important;
+    }
+
+    #pineapple-history-chart {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 288px !important;
+        min-height: 288px !important;
+        max-height: 288px !important;
+    }
+}
+
+/* ============================================================
+   SMALL IPHONES
+   ============================================================ */
+
+@media (max-width: 575.98px) {
+
+    .pine-page-header {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .pine-filter-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 13px !important;
+    }
+
+    .pine-date-form {
+        width: 100% !important;
+        max-width: 100% !important;
+        gap: 10px;
+    }
+
+    .pine-date-form input[type="date"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 46px;
+        min-height: 46px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .pine-date-form button {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 46px;
+        min-height: 46px;
+    }
+
+    .chart-wrap {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 280px !important;
+        min-height: 280px !important;
+        max-height: 280px !important;
+        padding-top: 8px !important;
+    }
+
+    #pineapple-history-chart {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 272px !important;
+        min-height: 272px !important;
+        max-height: 272px !important;
+    }
+}
+
+/* ============================================================
+   EXTRA SMALL IPHONES
+   ============================================================ */
+
+@media (max-width: 359.98px) {
+
+    .pine-page-header {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .pine-filter-card {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .pine-date-form input[type="date"],
+    .pine-date-form button {
+        min-height: 44px;
+        height: 44px;
+        font-size: 13px;
+    }
+
+    .chart-wrap {
+        height: 260px !important;
+        min-height: 260px !important;
+        max-height: 260px !important;
+    }
+
+    #pineapple-history-chart {
+        height: 252px !important;
+        min-height: 252px !important;
+        max-height: 252px !important;
+    }
+}
+
+
+/* ============================================================
+   PINEAPPLE CHART - VISIBILITY FIX
+   Keep the chart inside the page width, but DO NOT clip the
+   ApexCharts plot vertically.
+   ============================================================ */
+
+.section-card {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    overflow: visible !important;
+}
+
+.chart-wrap {
+    position: relative !important;
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    height: 360px !important;
+    min-height: 360px !important;
+    max-height: none !important;
+
+    padding: 12px 0 24px !important;
+    box-sizing: border-box !important;
+
+    /* Important: ApexCharts must not be vertically clipped */
+    overflow: visible !important;
+}
+
+#pineapple-history-chart {
+    position: relative !important;
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+
+    height: 324px !important;
+    min-height: 324px !important;
+    max-height: none !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    box-sizing: border-box !important;
+
+    /* Allow the ApexCharts SVG/labels to remain visible */
+    overflow: visible !important;
+}
+
+#pineapple-history-chart .apexcharts-canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+}
+
+#pineapple-history-chart .apexcharts-svg {
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Never let the chart create horizontal page overflow */
+#pineapple-history-chart .apexcharts-inner,
+#pineapple-history-chart .apexcharts-grid,
+#pineapple-history-chart .apexcharts-xaxis,
+#pineapple-history-chart .apexcharts-yaxis {
+    max-width: 100%;
+}
+
+/* Keep loading overlay contained without clipping the chart */
+.chart-wrap > .phi-loading {
+    position: absolute;
+    top: 12px;
+    right: 0;
+    bottom: 24px;
+    left: 0;
+
+    width: 100%;
+    max-width: 100%;
+
+    box-sizing: border-box;
+}
+
+/* Mobile chart */
+@media (max-width: 767.98px) {
+
+    .chart-wrap {
+        height: 340px !important;
+        min-height: 340px !important;
+        max-height: none !important;
+        padding: 8px 0 24px !important;
+        overflow: visible !important;
+    }
+
+    #pineapple-history-chart {
+        height: 308px !important;
+        min-height: 308px !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+/* Small iPhones */
+@media (max-width: 575.98px) {
+
+    .chart-wrap {
+        height: 330px !important;
+        min-height: 330px !important;
+        max-height: none !important;
+        padding: 8px 0 24px !important;
+        overflow: visible !important;
+    }
+
+    #pineapple-history-chart {
+        height: 298px !important;
+        min-height: 298px !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+/* Extra-small phones */
+@media (max-width: 359.98px) {
+
+    .chart-wrap {
+        height: 310px !important;
+        min-height: 310px !important;
+    }
+
+    #pineapple-history-chart {
+        height: 278px !important;
+        min-height: 278px !important;
+    }
+}
