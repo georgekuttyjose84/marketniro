@@ -16,6 +16,10 @@
 .site-header .top-row{
     flex-wrap: nowrap;
     gap: .5rem;
+    min-width: 0;
+}
+.site-header .top-row > *{
+    min-width: 0;
 }
 .site-header .brand-name{
     font-size: 18px !important;
@@ -34,6 +38,12 @@
     display: block;
     border-top: 1px solid rgba(189,202,186,0.3) !important;
 }
+.header-bottom{
+    min-width: 0;
+}
+.header-bottom .container-max{
+    min-width: 0;
+}
 .header-bottom nav{
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -41,6 +51,8 @@
     white-space: nowrap;
     justify-content: flex-start !important;
     gap: 1.25rem !important;
+    min-width: 0;
+    max-width: 100%;
 }
 .header-bottom nav::-webkit-scrollbar{ display:none; }
 
