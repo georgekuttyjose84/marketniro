@@ -41,10 +41,11 @@ class HomeController
                         'h1' => '',
                         'breadcrumb' => '',
                         'scripts' => [
-                            '/assets/css/home/home.js'
+                            '/assets/js/home/home.js'
                         ],
                         'styles' => [
-                            '/assets/css/common/trending-currency-home.css','/assets/js/home/home.css'
+                            '/assets/css/common/trending-currency-home.css',
+                            '/assets/css/home/home.css'
                         ],
                     ],
                     'main_currency_list' => $mainCurrencyList,

@@ -161,17 +161,12 @@
     </div>
 </section>
 
-
-
-
-
-
 <section class="snapshot-section">
     <div class="container-max mx-auto px-3 px-md-4">
-        <div class="section-header">
+        <div class="section-header text-center mb-5">
             <span class="section-tag">TODAY'S MARKET</span>
             <h2>Market <span>Snapshot</span></h2>
-            <p>Monitor today's movements across agricultural commodities and financial markets from one place.</p>
+            <p style="margin: 1.5rem auto 0; max-width: 620px; color: var(--text-secondary); font-size: 1.05rem;line-height: 1.8;">Monitor today's movements across agricultural commodities and financial markets from one place.</p>
         </div>
 
         <div class="snapshot-card">
@@ -198,13 +193,3 @@
 </section>
 
 
-
-
-
-
-
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
