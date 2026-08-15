@@ -431,8 +431,6 @@ $date = $selectedDate === ''
                     </div>
             </section>
         </main>
-        <script src="/css/home.js"></script>
-
         <!-- ============ SIDEBAR ============ -->
         <aside class="sidebar d-flex flex-column gap-4" style="">
             <!-- Monthly Summary Widget -->
