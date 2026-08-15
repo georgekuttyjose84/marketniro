@@ -49,7 +49,22 @@ $scripts = $page['scripts'] ?? [];
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
 
     <?php foreach ($styles as $style): ?>
-        <link rel="stylesheet" href="<?= htmlspecialchars($style) ?>">
+        <?php
+            $version = '';
+
+            if (str_starts_with($style, '/')) {
+                $filePath = $_SERVER['DOCUMENT_ROOT'] . $style;
+
+                if (is_file($filePath)) {
+                    $version = '?v=' . filemtime($filePath);
+                }
+            }
+        ?>
+
+        <link
+            rel="stylesheet"
+            href="<?= htmlspecialchars($style . $version) ?>"
+        >
     <?php endforeach; ?>
 
     <!-- Site CSS (shared vars first, then header/footer, then any page-specific CSS) -->
