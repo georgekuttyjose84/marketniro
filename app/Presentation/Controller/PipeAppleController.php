@@ -33,7 +33,7 @@ class PipeAppleController
 
         return new HtmlResponse(
             $engine->render(
-                'pages/agriculture/pineapple/home',
+                'pages/agriculture/pineapple/pineapple-home',
                 [
                     'page' => [
                         'title' => 'Pineapple Price Today | Green & Ripe Pineapple Rates | MarketNiro',
