@@ -35,13 +35,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*
-     * 7-day data comes directly from the controller — this is the
-     * default active range, so no fetch is needed on initial load.
-     */
-
     let currentData = sevenDaysData;
     let chart = null;
+    let lastRenderedWidth = 0;
 
     const chartContainer = document.getElementById("pineapple-history-chart");
     const loading = document.getElementById("phi-loading");
@@ -135,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const containerWidth = chartContainer.offsetWidth || window.innerWidth;
+        lastRenderedWidth = containerWidth;
         const yBounds = getYAxisBounds(data);
 
         const options = {
@@ -144,7 +141,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 toolbar: { show: false },
                 zoom: { enabled: false },
                 parentHeightOffset: 0,
-                redrawOnWindowResize: true
+                /*
+                 * IMPORTANT: this was previously left unset, which defaults
+                 * to true. That made ApexCharts install its OWN internal
+                 * window "resize" listener that redraws the chart in place,
+                 * running at the same time as the manual resize listener
+                 * below (which destroys + fully rebuilds the chart).
+                 *
+                 * iOS Safari fires "resize" events when the address bar /
+                 * toolbar collapses or expands (on load, on scroll), which
+                 * Android Chrome and desktop browsers largely don't do.
+                 * That made this race condition trigger almost only on
+                 * iPhone Safari: the manual handler could call
+                 * chart.destroy() while ApexCharts' own internal redraw was
+                 * still in progress, leaving the SVG empty.
+                 *
+                 * We already handle resizing manually below, so ApexCharts'
+                 * own resize handling is turned off to remove the race.
+                 */
+                redrawOnWindowResize: false
             },
 
             series: [
@@ -297,6 +312,21 @@ document.addEventListener("DOMContentLoaded", function () {
     window.addEventListener("resize", function () {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function () {
+            /*
+             * iOS Safari fires "resize" when the address bar collapses/
+             * expands (e.g. on scroll right after page load). That only
+             * changes the viewport HEIGHT, not the WIDTH — but our chart
+             * only cares about width (chart height is derived from width
+             * via getChartHeight). Re-rendering on a height-only resize
+             * was destroying/rebuilding a chart that had just finished
+             * (or was still) rendering, leaving it blank.
+             *
+             * Only rebuild the chart if the width actually changed.
+             */
+            const newWidth = chartContainer.offsetWidth || window.innerWidth;
+            if (newWidth === lastRenderedWidth) {
+                return;
+            }
             renderChart(currentData);
         }, 250);
     });
