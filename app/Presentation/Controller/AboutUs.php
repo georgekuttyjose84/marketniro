@@ -23,14 +23,22 @@ class AboutUs
 
         return new HtmlResponse(
             $engine->render(
-                'pages/about-us',
+                'pages/pipe-apple-static-data-edit656',
                 [
                     'page' => [
-                        'title' => '',
-                        'description' => '',
-                        'canonical' => '',
-                        'h1' => '',
-                        'breadcrumb' => '',
+                        'title' => 'Pineapple Price Today | Green & Ripe Pineapple Rates | MarketNiro',
+                        'description' => 'Check the latest pineapple prices today, including green and ripe pineapple rates, minimum and maximum prices, and daily market price updates.',
+                        'canonical' => '/agriculture/pineapple',
+                        'h1' => 'Pineapple Price Today',
+                        'breadcrumb' => 'Pineapple',
+                        'scripts' => [
+                            'https://cdn.jsdelivr.net/npm/apexcharts',
+                            '/assets/js/agriculture/pineapple.js',
+                        ],
+                        'styles' => [
+                            '/assets/css/agriculture/pineapple.css',
+                        ],
+
                     ],
                 ]
             )
