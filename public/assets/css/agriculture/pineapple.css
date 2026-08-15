@@ -1461,7 +1461,7 @@ PINE FILTER CARD
         display: flex;
         flex-direction: column;
         align-items: stretch;
-        gap: 10px;
+        gap: 25px;
     }
 
     .pine-date-form input,
@@ -1512,7 +1512,7 @@ PINE FILTER CARD
     .pine-date-form {
         width: 100% !important;
         max-width: 100% !important;
-        gap: 10px;
+        gap: 25px;
     }
 
     .pine-date-form input[type="date"] {
