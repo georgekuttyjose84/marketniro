@@ -126,58 +126,330 @@ $currencies = [
 
 ?>
 
+
+
+<style>
+    .cc-wrap *,
+    .cc-wrap *::before,
+    .cc-wrap *::after {
+        box-sizing: border-box;
+    }
+
+    .cc-wrap {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Card */
+    .cc-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 28px 24px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    /* Header */
+    .cc-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 4px;
+    }
+
+    .cc-header h2 {
+        font-size: clamp(16px, 3.5vw, 20px);
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .cc-subtitle {
+        font-size: 13px;
+        color: #64748b;
+        margin: 0 0 24px;
+    }
+
+    /* Amount field */
+    .cc-amount-wrap {
+        margin-bottom: 16px;
+    }
+
+    .cc-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 6px;
+    }
+
+    .cc-amount-inner {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .amount-prefix {
+        position: absolute;
+        left: 14px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #64748b;
+        pointer-events: none;
+        z-index: 5;
+        white-space: nowrap;
+    }
+
+    #amount {
+        width: 100%;
+        padding-left: 10px;
+        padding-right: 12px;
+        height: 44px;
+        font-size: clamp(1rem, 3.5vw, 1.2rem);
+        font-weight: 500;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        outline: none;
+        transition: border-color 0.2s;
+        appearance: none;
+        -moz-appearance: textfield;
+    }
+
+    #amount:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    #amount::-webkit-inner-spin-button,
+    #amount::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* silver row */
+    .cc-silver-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        margin-bottom: 16px;
+        min-width: 0;
+    }
+
+    .cc-select-group {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    .cc-select-group select {
+        width: 100%;
+        height: 44px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 0 10px;
+        font-size: clamp(13px, 2.5vw, 15px);
+        color: #0f172a;
+        background: #fff;
+        cursor: pointer;
+        outline: none;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .cc-select-group select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+
+    .cc-swap-wrap {
+        flex: 0 0 44px;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 0;
+    }
+
+    .swap-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: transform 0.3s, background 0.2s;
+        flex-shrink: 0;
+    }
+
+    .swap-btn:hover { background: #e2e8f0; }
+    .swap-btn.spin { transform: rotate(180deg); }
+
+    /* Convert button */
+    .cc-btn {
+        width: 100%;
+        padding: 14px;
+        background: #2563eb;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        transition: background 0.2s;
+        letter-spacing: 0.01em;
+    }
+
+    .cc-btn:hover { background: #1d4ed8; }
+    .cc-btn:active { background: #1e40af; }
+
+    /* Divider */
+    .cc-divider {
+        border: none;
+        border-top: 1px solid #e2e8f0;
+        margin: 0 0 16px;
+    }
+
+    /* Result box — THE KEY FIX */
+    .result-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 16px;
+
+        /* Changed: stack vertically on small screens, row on larger */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    @media (min-width: 420px) {
+        .result-box {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+    }
+
+    .result-left {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .result-from {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .result-value {
+        font-size: clamp(1.1rem, 4vw, 1.4rem);
+        font-weight: 700;
+        color: #16a34a;
+        word-break: break-word;
+        line-height: 1.2;
+    }
+
+    .result-right {
+        font-size: 12px;
+        color: #64748b;
+        line-height: 1.7;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    @media (max-width: 419px) {
+        .result-right {
+            white-space: normal;
+            font-size: 12px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+        }
+    }
+
+    /* Disclaimer */
+    .cc-disclaimer {
+        font-size: 11px;
+        color: #94a3b8;
+        margin: 12px 0 0;
+        line-height: 1.5;
+    }
+
+    /* Mobile tightening */
+    @media (max-width: 360px) {
+        .cc-card { padding: 20px 14px; }
+        .cc-silver-row { gap: 6px; }
+        .cc-swap-wrap { flex: 0 0 36px; }
+        .swap-btn { width: 34px; height: 34px; font-size: 1rem; }
+    }
+
+    @media (max-width: 320px) {
+        .cc-card { padding: 16px 10px; border-radius: 12px; }
+        #amount { font-size: 0.95rem; height: 46px; }
+        .cc-btn { font-size: 14px; padding: 12px; }
+    }
+
+</style>
+
 <div class="container-max mx-auto px-3 px-md-4 py-4 py-md-5" style="margin:0 auto;">
     <div class="d-flex flex-column flex-lg-row gap-4">
         <main class="flex-grow-1" style="min-width:0;">
             <section class="mb-4">
-                <form action="/finance/gold" method="get" role="search" aria-label="Convert gold">
+                <form action="/finance/silver" method="get" role="search" aria-label="Convert silver">
                     <div class="gold-converter-card">
                         <div class="mb-4">
-                            <h2 class="fw-bold d-flex align-items-center gap-2 m-0"
-                                style="font-size:24px; color:var(--on-surface);"><span class="material-symbols-outlined"
-                                                                                       style="color:var(--primary);">currency_exchange</span>Gold
-                                converter</h2>
-                            <p class="mt-1 mb-0" style="font-size:14px; color:var(--text-secondary);">Live exchange
-                                rates for major world Gold Rate</p>
+                            <h2 class="fw-bold d-flex align-items-center gap-2 m-0" style="font-size:24px; color:var(--on-surface);">
+                                <span class="material-symbols-outlined" style="color:var(--primary);">currency_exchange</span>Silver converter
+                            </h2>
+                            <p class="mt-1 mb-0" style="font-size:14px; color:var(--text-secondary);">
+                                Live exchange rates for major world Silver Rate
+                            </p>
                         </div>
 
                         <div class="alert-info-custom d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
                             <div>
-                                <span class="form-label-custom mb-1 text-muted" style="text-transform:none;">Today's Gold Price in <strong><?= htmlspecialchars($currencies[$currency][1]) ?></strong></span>
+                                <span class="form-label-custom mb-1 text-muted" style="text-transform:none;">Today's Silver Price in <strong><?= htmlspecialchars($currencies[$currency][1]) ?></strong></span>
                                 <div class="d-flex align-items-baseline gap-2">
-                                    <span class="fw-bold"
-                                          style="font-size:32px; color:var(--primary);">
-                                        <?= number_format($goldPricePerGram, 2) ?>
+                                    <span class="fw-bold" style="font-size:32px; color:var(--primary);">
+                                        <?= number_format($silverPricePerGram, 2) ?>
                                     </span>
                                     <span style="font-size:16px; color:var(--on-surface);"><?= htmlspecialchars($currency) ?>/ 1 Gram<sup>*</sup>
                                     </span>
                                 </div>
                             </div>
 
-                            <div class="d-flex align-items-center gap-2"
-                                 style="font-size:14px; color:var(--text-secondary);">
-                    <span class="material-symbols-outlined"
-                          style="color:var(--success); font-size:18px;">
-                        trending_up
-                    </span>
-                                <span style="color:var(--success);">
-                        +1.24%
-                    </span>
-                                (24h)
+                            <div class="d-flex align-items-center gap-2" style="font-size:14px; color:var(--text-secondary);">
+                                <?php if ($icon): ?>
+                                    <span class="material-symbols-outlined"
+                                          style="color:<?= $trendColor ?>; font-size:18px;">
+                                        <?= $icon ?>
+                                    </span>
+                                <?php endif; ?>
+                                <span style="color:<?= $trendColor ?>;"><?= $percentage > 0 ? '+' : '' ?><?= $percentage ?>%
+                                </span>
+
+                                <span>(01h)</span>
                             </div>
                         </div>
 
-                        <!-- Converter -->
                         <div class="row g-3 align-items-end mb-4">
-
-                            <!-- From -->
                             <div class="col-md-4">
                                 <label for="metal" class="form-label-custom">
                                     Metal
                                 </label>
                                 <select id="metal" class="form-select-custom" aria-label="Choose metal">
-                                    <option value="gold">Gold</option>
                                     <option value="silver">Silver</option>
+                                    <option value="gold">Gold</option>
                                 </select>
                             </div>
 
@@ -260,38 +532,21 @@ $currencies = [
                         </div>
 
                         <!-- Results -->
-                        <?php if ($goldPrices !== null): ?>
-                            <div class="row g-3 border-top pt-4"
-                                 style="border-color:rgba(189,202,186,0.3)!important;">
-
-                                <!-- 22K -->
+                        <?php if ($silverPrices !== null): ?>
+                            <div class="row g-3 border-top pt-4" style="border-color:rgba(189,202,186,0.3)!important;">
                                 <div class="col-md-6">
-                                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3"
-                                         style="background:var(--surface); border-color:rgba(189,202,186,0.3)!important;">
+                                    <div class="d-flex justify-content-between align-items-center p-3 border rounded-3" style="background:var(--surface); border-color:rgba(189,202,186,0.3)!important;"><div>
+                                            <span class="d-block fw-bold" style="font-size:14px; color:var(--on-surface);">
+                                                925 Silver
+                                            </span>
 
-                                        <div>
-                                <span class="d-block fw-bold"
-                                      style="font-size:14px; color:var(--on-surface);">
-                                    22K Gold Value
-                                </span>
-
-                                            <span
-                                                    id="perGram22k"
-                                                    style="font-size:12px; color:var(--text-secondary);"
-                                            >
-                                    @ <?= number_format($goldPrices['22K']['perGram'], 2) ?>
-                                    per gram
-                                </span>
-                                        </div>
-
-                                        <span
-                                                id="rate22k"
-                                                class="font-data-mono fw-bold"
-                                                style="font-size:18px; color:var(--on-surface);"
-                                        >
-                                <?= number_format($goldPrices['22K']['total'], 2) ?>
-                                <?= htmlspecialchars($currency) ?>
-                            </span>
+                                            <span id="perGram22k" style="font-size:12px; color:var(--text-secondary);">
+                                                @ <?= number_format($silverPrices['925']['perGram'], 2) ?>per gram
+                                            </span>
+                                    </div>
+                                        <span id="rate22k" class="font-data-mono fw-bold" style="font-size:18px; color:var(--on-surface);">
+                                            <?= number_format($silverPrices['925']['total'], 2) ?> <?= htmlspecialchars($currency) ?>
+                                        </span>
 
                                     </div>
                                 </div>
@@ -304,14 +559,14 @@ $currencies = [
                                         <div>
                                 <span class="d-block fw-bold"
                                       style="font-size:14px; color:var(--on-surface);">
-                                    24K Gold Value
+                                    999 Silver
                                 </span>
 
                                             <span
                                                     id="perGram24k"
                                                     style="font-size:12px; color:var(--text-secondary);"
                                             >
-                                    @ <?= number_format($goldPrices['24K']['perGram'], 2) ?>
+                                    @ <?= number_format($silverPrices['999']['perGram'], 2) ?>
                                     per gram
                                 </span>
                                         </div>
@@ -321,8 +576,7 @@ $currencies = [
                                                 class="font-data-mono fw-bold"
                                                 style="font-size:18px; color:var(--primary);"
                                         >
-                                <?= number_format($goldPrices['24K']['total'], 2) ?>
-                                <?= htmlspecialchars($currency) ?>
+                                <?= number_format($silverPrices['999']['total'], 2) ?> <?= htmlspecialchars($currency) ?>
                             </span>
 
                                     </div>
@@ -335,24 +589,28 @@ $currencies = [
                 </form>
             </section>
 
+
             <?= $view->render('/pages/finance/currency/standard-metal-table', [
-                     'table' => $goldTable,
-                     'metalType' => 'gold',
-                     'currency' => $currency
+                    'table' => $silverTable,
+                    'metalType' => 'silver',
+                    'currency' => $currency,
+                    'footer' => "Compare 925 sterling silver and 999 fine silver prices across different weights using the latest available". htmlspecialchars($currency). ' silver rate.'
             ], null) ?>
 
+
             <?= $view->render('/pages/finance/currency/graph', [
-                    'base' => 'XAU',
-                    'target' => $currency,
-                    'period' => '24H',
-                    'graph' => $graph,
+                'base' => 'XAG',
+                'target' => $currency,
+                'period' => '24H',
+                'graph' => $graph,
             ], null) ?>
 
             <?= $view->render('/pages/finance/currency/hourly-comparison', [
-                    'rows' => $rows,
+                'rows' => $rows,
                     'base' => $base,
                     'target' => $target,
             ], null) ?>
+
         </main>
 
         <aside class="sidebar d-flex flex-column gap-4" style="">
@@ -369,7 +627,3 @@ $currencies = [
         </aside>
     </div>
 </div>
-
-
-
-
