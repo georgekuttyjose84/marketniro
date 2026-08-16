@@ -14,7 +14,7 @@ class GoldController
 {
 
     public function __construct(
-        private CurrencyRateRepositoryInterface $repo
+        private CurrencyRateRepositoryInterface $currencyRateRepositoryInterface
     ) {}
     public function index(Request $request): HtmlResponse
     {
@@ -24,7 +24,7 @@ class GoldController
 
         $currency = $request->getString('currency', 'INR');
 
-        $gold = $this->repo->find(
+        $gold = $this->currencyRateRepositoryInterface->find(
             'XAU',
             $currency
         );
@@ -108,7 +108,7 @@ class GoldController
         }
 
         $comparisonService = new HourlyComparisonService(
-            $this->repo
+            $this->currencyRateRepositoryInterface
         );
 
         $rows = $comparisonService->getComparison(
@@ -130,7 +130,7 @@ class GoldController
 
 
         $historyRateService = new HistoryRateService(
-            $this->repo
+            $this->currencyRateRepositoryInterface
         );
 
         $graph = $historyRateService->getHistory(
@@ -148,9 +148,35 @@ class GoldController
         }
 
 
+        $gold = $this->currencyRateRepositoryInterface->getGoldCard()[0];
+        $goldIndicatorDetails =  $this->currencyRateRepositoryInterface->getGoldCardIndicator();
+        $current = (float)$goldIndicatorDetails[0]['price_information'];
+        $previous = (float)$goldIndicatorDetails[1]['price_information'];
+        $percentage = 0;
+        if ($previous > 0) {
+            $percentage = (($current - $previous) / $previous) * 100;
+        }
+        $percentage = round($percentage, 2);
+
+        if ($percentage > 0) {
+            $icon = 'trending_up';
+            $impressions = 'positive';
+            $trendColor = 'var(--success)';
+        } elseif ($percentage < 0) {
+            $icon = 'trending_down';
+            $impressions = 'negative';
+            $trendColor = 'var(--danger)';
+        } else {
+            $icon = '';
+            $impressions = 'neutral';
+            $trendColor = 'var(--text-secondary)';
+        }
+
+
+
         return new HtmlResponse(
             $engine->render(
-                'pages/finance/gold/home',
+                'pages/finance/gold/gold-home',
                 [
                     'page' => [
                         'title' => 'Live Gold Price Today | Gold Rates & Market Trends | MarketNiro',
@@ -176,6 +202,10 @@ class GoldController
                     'goldTable' => $goldTable,
                     'rows' => $rows,
                     'graph' => $graph,
+                    'percentage' => $percentage,
+                    'icon'=> $icon,
+                    'impressions'=> $impressions,
+                    'trendColor'=> $trendColor,
                 ]
             )
         );

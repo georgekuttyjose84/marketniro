@@ -12,7 +12,7 @@ use App\Infrastructure\View\PhpTemplate;
 class SilverController
 {
     public function __construct(
-        private CurrencyRateRepositoryInterface $repo
+        private CurrencyRateRepositoryInterface $currencyRateRepositoryInterface
     ) {}
 
     public function index(Request $request): HtmlResponse
@@ -29,7 +29,7 @@ class SilverController
             'INR'
         );
         $troyOunceInGrams = 31.1034768;
-        $silver = $this->repo->find(
+        $silver = $this->currencyRateRepositoryInterface->find(
             'XAG',
             $currency
         );
@@ -105,7 +105,7 @@ class SilverController
                 ];
             }
         }
-        $comparisonService = new HourlyComparisonService($this->repo);
+        $comparisonService = new HourlyComparisonService($this->currencyRateRepositoryInterface);
 
         $rows = $comparisonService->getComparison(
             base: 'XAG',
@@ -127,7 +127,7 @@ class SilverController
                     : null;
         }
 
-        $historyRateService = new HistoryRateService($this->repo);
+        $historyRateService = new HistoryRateService($this->currencyRateRepositoryInterface);
         $graph = $historyRateService->getHistory('XAG', $currency);
         $graph->current = $graph->current / $troyOunceInGrams;
         $graph->high = $graph->high / $troyOunceInGrams;
@@ -137,9 +137,32 @@ class SilverController
             $graph->points[$index]->rate = $point->rate / $troyOunceInGrams;
         }
 
+        $silverIndicatorDetails =  $this->currencyRateRepositoryInterface->getSilverCardIndicator();
+        $current = (float)$silverIndicatorDetails[0]['price_information'];
+        $previous = (float)$silverIndicatorDetails[1]['price_information'];
+        $percentage = 0;
+        if ($previous > 0) {
+            $percentage = (($current - $previous) / $previous) * 100;
+        }
+        $percentage = round($percentage, 2);
+
+        if ($percentage > 0) {
+            $icon = 'trending_up';
+            $impressions = 'positive';
+            $trendColor = 'var(--success)';
+        } elseif ($percentage < 0) {
+            $icon = 'trending_down';
+            $impressions = 'negative';
+            $trendColor = 'var(--danger)';
+        } else {
+            $icon = '';
+            $impressions = 'neutral';
+            $trendColor = 'var(--text-secondary)';
+        }
+
         return new HtmlResponse(
             $engine->render(
-                'pages/finance/silver/home',
+                'pages/finance/silver/silver-home',
                 [
                     'page' => [
                         'title' => 'Live Silver Price Today | Silver Rates & Market Trends | MarketNiro',
@@ -163,6 +186,10 @@ class SilverController
                     'silverTable' => $silverTable,
                     'rows' => $rows,
                     'graph' => $graph,
+                    'percentage' => $percentage,
+                    'icon'=> $icon,
+                    'impressions'=> $impressions,
+                    'trendColor'=> $trendColor,
 
                 ]
             )
