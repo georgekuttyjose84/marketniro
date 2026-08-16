@@ -50,6 +50,471 @@ $date = $selectedDate === ''
 
 ?>
 
+
+<style>
+    :root{
+        --modal-ink: var(--on-surface);
+        --modal-ink-soft: var(--text-secondary);
+        --modal-line: var(--border-color);
+        --modal-line-soft: var(--surface-container-low);
+        --modal-surface: var(--surface);
+
+        --modal-green: var(--secondary);
+        --modal-green-bg: var(--secondary-container);
+        --modal-green-edge: var(--secondary);
+
+        --modal-gold: var(--warning-700);
+        --modal-gold-bg: color-mix(in srgb, var(--pineapple-accent) 22%, white);
+        --modal-gold-edge: var(--pineapple-accent);
+
+        --modal-action: var(--primary);
+        --modal-action-hover: var(--on-primary-fixed-variant);
+        --focus-ring: var(--pineapple-accent);
+
+        --shadow-lg: 0 24px 60px -12px rgba(25,28,30,0.24), 0 2px 8px rgba(25,28,30,0.06);
+    }
+
+    #btn-export-dataset{
+        font-family: var(--font-body);
+        font-weight:600;
+        font-size:14.5px;
+        letter-spacing:-0.01em;
+        color: var(--on-primary);
+        background: var(--modal-action);
+        border:none;
+        padding:13px 22px;
+        border-radius: var(--radius-lg);
+        display:inline-flex;
+        align-items:center;
+        gap:9px;
+        cursor:pointer;
+        box-shadow: 0 8px 20px -6px rgba(31,46,26,0.45);
+        transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+    }
+    #btn-export-dataset:hover{ background:var(--modal-action-hover); transform: translateY(-1px); box-shadow: 0 12px 26px -8px rgba(31,46,26,0.5);}
+    #btn-export-dataset:active{ transform: translateY(0); }
+
+    /* =========================================================
+       MODAL
+    ========================================================= */
+    #dialog-download-successful{
+        border: 0;
+        padding: 0;
+        border-radius: var(--radius-2xl);
+        max-width: 480px;
+        width: calc(100% - 30px);
+        box-shadow: var(--shadow-lg);
+        background: var(--surface);
+        color: var(--modal-ink);
+        overflow: hidden;
+        animation: modal-in .28s cubic-bezier(.2,.8,.2,1);
+    }
+
+    #dialog-download-successful::backdrop{
+        background: rgba(17,20,15,0.55);
+        backdrop-filter: blur(3px);
+        animation: backdrop-in .28s ease;
+    }
+
+    @keyframes modal-in{
+        from{ opacity:0; transform: translateY(10px) scale(.98); }
+        to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+    @keyframes backdrop-in{
+        from{ opacity:0; }
+        to{ opacity:1; }
+    }
+
+    .modal-dialog{ margin:0; }
+    .modal-content{ display:flex; flex-direction:column; }
+
+    /* ---- Header: close button only ---- */
+    .modal-header{
+        display:flex;
+        justify-content:flex-end;
+        align-items:center;
+        padding: 16px 16px 0;
+        border:0;
+        background: transparent;
+        position: relative;
+        z-index: 2;
+    }
+
+    .close-button{
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color: var(--modal-ink-soft);
+        background: var(--modal-line-soft);
+        cursor:pointer;
+        transition: background .15s ease, color .15s ease, transform .15s ease;
+        flex-shrink:0;
+    }
+    .close-button:hover{ background:var(--surface-container); color:var(--modal-ink); }
+    .close-button:active{ transform: scale(.92); }
+    .close-button:focus-visible{ outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+    .icon-close{ position:relative; width:14px; height:14px; display:inline-block; }
+    .icon-close::before,
+    .icon-close::after{
+        content:"";
+        position:absolute;
+        top:50%; left:50%;
+        width: 15px; height: 2px;
+        background: currentColor;
+        border-radius: 2px;
+    }
+    .icon-close::before{ transform: translate(-50%,-50%) rotate(45deg); }
+    .icon-close::after{ transform: translate(-50%,-50%) rotate(-45deg); }
+
+    /* ---- Body ---- */
+    .modal-body{
+        padding: 6px 32px 32px;
+    }
+
+    .modal-eyebrow{
+        font-family: var(--font-mono);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--modal-gold);
+        margin: 0 0 10px;
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+    .modal-eyebrow::before{
+        content:"";
+        width:6px; height:6px;
+        border-radius:50%;
+        background: var(--modal-gold-edge);
+    }
+
+    .modal-title{
+        font-family: var(--font-headline);
+        font-weight: 600;
+        font-size: 27px;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+        margin: 0 0 8px;
+        color: var(--modal-ink);
+    }
+
+    .text-muted{
+        color: var(--modal-ink-soft);
+        font-size: 14.5px;
+        line-height: 1.55;
+        margin: 0 0 26px;
+        max-width: 38ch;
+    }
+
+    /* ---- Price type ticket cards ---- */
+    .price-type-options{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+        margin-bottom: 26px;
+    }
+
+    .price-type-option{
+        display:block;
+        cursor:pointer;
+        margin:0;
+    }
+    .price-type-option > input{
+        position:absolute;
+        opacity:0;
+        pointer-events:none;
+    }
+
+    .price-type-card{
+        position: relative;
+        display:flex;
+        align-items:center;
+        gap:14px;
+        padding: 14px 16px 14px 20px;
+        border: 1px solid var(--modal-line);
+        border-radius: var(--radius-xl);
+        background: var(--surface);
+        transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .12s ease;
+        overflow:hidden;
+    }
+
+    /* ripeness-edge tab — the signature element */
+    .price-type-card::before{
+        content:"";
+        position:absolute;
+        left:0; top:0; bottom:0;
+        width: 5px;
+        background: var(--modal-line);
+        transition: background .18s ease, width .18s ease;
+    }
+
+    .price-type-option:hover .price-type-card{
+        border-color: var(--outline-variant);
+        transform: translateY(-1px);
+    }
+
+    .price-type-option > input:checked + .price-type-card{
+        border-color: transparent;
+        box-shadow: 0 0 0 1.5px var(--focus-ring), 0 6px 16px -8px rgba(25,28,30,0.18);
+        background: var(--surface-container-lowest);
+    }
+
+    input[value="green"]:checked + .price-type-card::before{ background: var(--modal-green-edge); }
+    input[value="ripe"]:checked + .price-type-card::before{ background: var(--modal-gold-edge); }
+    input[value="both"]:checked + .price-type-card::before{
+        background: linear-gradient(180deg, var(--modal-green-edge) 0%, var(--modal-green-edge) 48%, var(--modal-gold-edge) 52%, var(--modal-gold-edge) 100%);
+    }
+
+    .price-type-icon{
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: var(--radius-lg);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size: 17px;
+        position: relative;
+    }
+    .price-type-icon.green{ background: var(--modal-green-bg); color: var(--modal-green); }
+    .price-type-icon.ripe{ background: var(--modal-gold-bg); color: var(--modal-gold); }
+    .price-type-icon.both{
+        background: linear-gradient(135deg, var(--modal-green-bg) 0%, var(--modal-green-bg) 50%, var(--modal-gold-bg) 50%, var(--modal-gold-bg) 100%);
+        color: var(--modal-ink);
+    }
+
+    .icon-leaf, .icon-layers{
+        width:16px; height:16px;
+        display:inline-block;
+        position:relative;
+    }
+    .icon-leaf::before{
+        content:"";
+        position:absolute; inset:0;
+        background: currentColor;
+        -webkit-mask: radial-gradient(circle at 0 100%, transparent 8px, black 8.5px) 0 0/100% 100%;
+        mask: radial-gradient(circle at 0 100%, transparent 8px, black 8.5px) 0 0/100% 100%;
+        border-radius: 0 60% 0 0;
+        transform: rotate(45deg);
+    }
+    .icon-layers{ }
+    .icon-layers::before, .icon-layers::after{
+        content:"";
+        position:absolute;
+        left:50%; top:50%;
+        width:14px; height:6px;
+        border: 2px solid currentColor;
+        border-radius:2px;
+        transform: translate(-50%,-50%) rotate(0deg);
+        background: transparent;
+    }
+    .icon-layers::before{ transform: translate(-50%,-70%); }
+    .icon-layers::after{ transform: translate(-50%,-30%); }
+
+    .price-type-content{ flex:1; min-width:0; }
+    .price-type-content h6{
+        margin: 0 0 2px;
+        font-weight: 600;
+        font-size: 15px;
+        font-family: var(--font-body);
+        color: var(--modal-ink);
+    }
+    .price-type-content small{
+        color: var(--modal-ink-soft);
+        font-size: 13px;
+    }
+
+    .price-type-check{
+        width: 20px;
+        height: 20px;
+        min-width:20px;
+        border: 1.5px solid var(--outline-variant);
+        border-radius: 50%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color: transparent;
+        font-size: 10px;
+        transition: all .15s ease;
+    }
+    .icon-check{
+        width:9px; height:6px;
+        display:inline-block;
+        position:relative;
+    }
+    .icon-check::before{
+        content:"";
+        position:absolute;
+        left:1px; top:0px;
+        width:9px; height:5px;
+        border-left:2px solid currentColor;
+        border-bottom:2px solid currentColor;
+        transform: rotate(-45deg);
+    }
+
+    .price-type-option > input:checked + .price-type-card .price-type-check{
+        border-color: var(--modal-action);
+        background: var(--modal-action);
+        color: var(--on-primary);
+    }
+
+    /* ---- Meta row: quiet data-product detail ---- */
+    .modal-meta{
+        display:flex;
+        align-items:center;
+        gap:14px;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--modal-ink-soft);
+        padding-top: 4px;
+        margin-bottom: 20px;
+        border-top: 1px solid var(--modal-line-soft);
+        padding-top: 16px;
+    }
+    .modal-meta span{ display:flex; align-items:center; gap:6px; }
+    .modal-meta span::before{
+        content:"";
+        width:4px; height:4px;
+        border-radius:50%;
+        background: var(--modal-ink-soft);
+        opacity:.6;
+    }
+    .modal-meta span:first-child::before{ display:none; }
+
+    /* ---- Primary action ---- */
+    #btn-download-csv{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:10px;
+        background: var(--modal-action);
+        color: var(--on-primary);
+        border:none;
+        font-family: var(--font-body);
+        font-weight:600;
+        font-size: 15px;
+        letter-spacing:-0.01em;
+        padding: 15px 20px;
+        border-radius: var(--radius-lg);
+        cursor:pointer;
+        transition: background .15s ease, transform .12s ease, box-shadow .15s ease;
+        box-shadow: 0 10px 24px -8px rgba(31,46,26,0.45);
+    }
+    #btn-download-csv:hover{ background: var(--modal-action-hover); }
+    #btn-download-csv:active{ transform: scale(.99); }
+    #btn-download-csv:focus-visible{ outline: 2px solid var(--focus-ring); outline-offset: 2px; }
+
+    .icon-download{
+        width:15px; height:15px;
+        position:relative;
+        display:inline-block;
+    }
+    .icon-download::before{
+        content:"";
+        position:absolute;
+        left:50%; top:0;
+        width:2px; height:9px;
+        background:currentColor;
+        transform: translateX(-50%);
+        border-radius:2px;
+    }
+    .icon-download::after{
+        content:"";
+        position:absolute;
+        left:50%; bottom:0;
+        width:12px; height:2px;
+        background:currentColor;
+        transform: translateX(-50%);
+        border-radius:2px;
+        box-shadow: 0 -4px 0 -1.3px transparent;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+        #dialog-download-successful, #dialog-download-successful::backdrop{ animation:none; }
+        .price-type-card, .close-button, #btn-download-csv{ transition:none; }
+    }
+
+    /* =========================================================
+       MOBILE
+
+       IMPORTANT: a <dialog> is hidden by the browser's built-in
+       `dialog:not([open]) { display:none }` rule until .showModal()
+       is called. Author CSS always wins over that built-in rule, so
+       any bare `#dialog-download-successful { display:flex }` here
+       — with no [open] condition — makes the modal visible on every
+       mobile page load, whether or not it was opened. Every rule
+       below is scoped to #dialog-download-successful[open] so it only
+       takes effect once the dialog is actually showing.
+    ========================================================= */
+    @media (max-width: 480px){
+        #dialog-download-successful:not([open]){
+            display: none;
+        }
+
+        #dialog-download-successful[open]{
+            height: 100%;
+            left: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            max-width: 100%;
+            border-radius: 0;
+            display:flex;
+            flex-direction:column;
+            animation: modal-in-mobile .26s ease;
+        }
+
+        @keyframes modal-in-mobile{
+            from{ opacity:0; transform: translateY(18px); }
+            to{ opacity:1; transform: translateY(0); }
+        }
+
+        #dialog-download-successful .modal-dialog{
+            height: 100%;
+            margin: 0;
+            display:flex;
+            flex-direction:column;
+        }
+
+        .modal-content{
+            height:100%;
+        }
+
+        .modal-header{
+            padding: 14px 14px 0;
+            flex-shrink:0;
+        }
+
+        .modal-body{
+            padding: 8px 22px 22px;
+            overflow-y:auto;
+            flex:1;
+            display:flex;
+            flex-direction:column;
+        }
+
+        .modal-title{ font-size:24px; }
+
+        .price-type-options{ margin-bottom:20px; }
+
+        /* push primary action to the bottom, thumb-reachable */
+        .modal-body::after{ content:""; flex:1 1 auto; min-height:8px; }
+
+        #btn-download-csv{
+            padding: 16px 20px;
+        }
+    }
+    </style>
+
+
 <div class="container-max mx-auto px-3 px-md-4 py-4 py-md-5" style="margin:0 auto;">
     <div class="d-flex flex-column flex-lg-row gap-4">
         <main class="flex-grow-1" style="min-width:0;">
@@ -320,11 +785,15 @@ $date = $selectedDate === ''
                 The graphical data below illustrates the monthly price trends for green and ripe pineapples across mid-<?= date('Y') ?>, highlighting how prices fluctuate with seasonal supply and demand. Each month’s minimum, maximum, and average rates capture short-term volatility and broader market movements, showing periods of price softening during peak harvests and firmer levels when availability tightens or demand rises. Together, these trends provide a clear visual snapshot of pineapple price performance and market dynamics over the displayed months in <?= date('Y') ?>.
             </p>
 
-            <section>
+            <section class="my-4">
                 <?= $view->render('/pages/agriculture/pineapple/graph', [
                         'lastSevenDaysPrice' => $lastSevenDaysPrice,
                 ], null) ?>
             </section>
+
+            <p class="pt-4">
+                The detailed pineapple price history provides a clear overview of market prices across different trading dates. It shows the price range for green and ripe pineapple, along with the overall market trend for each day, helping users understand recent price movements, compare prices over time, and identify changes in market conditions.
+            </p>
 
 
             <section class="section-card mb-4" style="overflow:hidden;">
@@ -333,8 +802,16 @@ $date = $selectedDate === ''
                         <h2 class="fw-bold mb-0" style="font-size:20px;">Detailed Price History</h2>
                         <p class="mb-0" style="font-size:11px; color:var(--on-surface-variant);">Standardized pricing for MD2 variety</p>
                     </div>
-                    <button class="d-flex align-items-center gap-2 fw-bold border-0" style="font-size:11px; color:var(--primary); padding:8px 16px; background-color:rgba(0,107,44,0.05); border-radius:var(--radius-lg);">
-                        <span class="material-symbols-outlined" style="font-size:18px;">download</span>
+
+                    <button
+                            type="button"
+                            id="btn-export-dataset"
+                            class="d-flex align-items-center gap-2 fw-bold border-0"
+                            style="font-size:11px; color:var(--primary); padding:8px 16px; background-color:rgba(0,107,44,0.05); border-radius:var(--radius-lg);"
+                    >
+    <span class="material-symbols-outlined" style="font-size:18px;">
+        download
+    </span>
                         Export Dataset
                     </button>
                 </div>
@@ -374,62 +851,181 @@ $date = $selectedDate === ''
 <!--                        <button class="page-btn"><span class="material-symbols-outlined" style="font-size:20px;">chevron_right</span></button>-->
                     </div>
                 </div>
-            </section>
 
 
-            <section class="mb-4">
-                    <h2 class="fw-bold mb-3" style="">What Drives Pineapple Prices?</h2>
-                    <div class="row g-4">
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">wb_sunny</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Seasonal Weather</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Heavy rain or drought in growing regions like Mindanao directly affects fruit
-                                        size, sweetness, and available volume.
-                                    </p>
+                <dialog id="dialog-download-successful">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <div class="close-button close-btn" data-dismiss="modal">
+                                    <i class="icon icon-close"></i>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">local_shipping</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Logistics &amp; Port Delays</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Container shortages and port congestion can delay shipments, tightening supply
-                                        and pushing short-term prices up.
-                                    </p>
+
+                            <div class="modal-body">
+
+                                <p class="modal-eyebrow">Export data</p>
+                                <h5 class="modal-title">Download price data</h5>
+                                <p class="text-muted">
+                                    Choose which pineapple price series to include in your CSV export.
+                                </p>
+
+                                <div class="price-type-options">
+
+                                    <!-- Green -->
+                                    <label class="price-type-option">
+                                        <input type="radio" name="price_type" value="green">
+                                        <div class="price-type-card">
+                                            <div class="price-type-icon green">
+                                                <i class="icon icon-leaf"></i>
+                                            </div>
+                                            <div class="price-type-content">
+                                                <h6>Green</h6>
+                                                <small>Unripe pineapple prices</small>
+                                            </div>
+                                            <div class="price-type-check">
+                                                <i class="icon icon-check"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Ripe -->
+                                    <label class="price-type-option">
+                                        <input type="radio" name="price_type" value="ripe">
+                                        <div class="price-type-card">
+                                            <div class="price-type-icon ripe">
+                                                <i class="icon icon-leaf"></i>
+                                            </div>
+                                            <div class="price-type-content">
+                                                <h6>Ripe</h6>
+                                                <small>Ripe pineapple prices</small>
+                                            </div>
+                                            <div class="price-type-check">
+                                                <i class="icon icon-check"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+
+                                    <!-- Both -->
+                                    <label class="price-type-option">
+                                        <input type="radio" name="price_type" value="both" checked>
+                                        <div class="price-type-card">
+                                            <div class="price-type-icon both">
+                                                <i class="icon icon-layers"></i>
+                                            </div>
+                                            <div class="price-type-content">
+                                                <h6>Both</h6>
+                                                <small>Green and ripe prices combined</small>
+                                            </div>
+                                            <div class="price-type-check">
+                                                <i class="icon icon-check"></i>
+                                            </div>
+                                        </div>
+                                    </label>
+
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">public</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Export Demand</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Rising demand from major importers increases competition for export-grade
-                                        (green) fruit, lifting industrial prices.
-                                    </p>
+
+                                <div class="modal-meta">
+                                    <span>CSV format</span>
+                                    <span>Updated today</span>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="d-flex gap-3">
-                                <span class="material-symbols-outlined" style="color:var(--primary); font-size:22px;">currency_exchange</span>
-                                <div>
-                                    <h4 class="fw-bold mb-1" style="font-size:14px;">Currency Fluctuation</h4>
-                                    <p style="font-size:13px; color:var(--on-surface-variant); line-height:1.6; margin-bottom:0;">
-                                        Since pineapple is a globally traded commodity, exchange rate shifts against
-                                        major currencies affect landed cost and local pricing.
-                                    </p>
-                                </div>
+
+                                <button type="button" id="btn-download-csv">
+                                    <i class="icon icon-download"></i>
+                                    Download CSV
+                                </button>
+
                             </div>
                         </div>
                     </div>
+                </dialog>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+
+                        const exportButton = document.getElementById('btn-export-dataset');
+                        const modal = document.getElementById('dialog-download-successful');
+                        const closeButton = modal?.querySelector('.close-btn');
+                        const downloadButton = document.getElementById('btn-download-csv');
+
+                        if (exportButton && modal) {
+                            exportButton.addEventListener('click', function () {
+                                modal.showModal();
+                            });
+                        }
+
+                        if (closeButton && modal) {
+                            closeButton.addEventListener('click', function () {
+                                modal.close();
+                            });
+                        }
+
+                        // click on backdrop closes the dialog
+                        if (modal) {
+                            modal.addEventListener('click', function (e) {
+                                const rect = modal.getBoundingClientRect();
+                                const inDialog =
+                                    rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+                                    rect.left <= e.clientX && e.clientX <= rect.left + rect.width;
+                                if (!inDialog) modal.close();
+                            });
+                        }
+                        if (downloadButton) {
+                            downloadButton.addEventListener('click', async function () {
+                                const selectedType = document.querySelector(
+                                    'input[name="price_type"]:checked'
+                                )?.value;
+
+                                if (!selectedType) {
+                                    console.error('No price type selected');
+                                    return;
+                                }
+
+                                try {
+                                    const response = await fetch('/agriculture/pineapple/download', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({
+                                            type: selectedType
+                                        })
+                                    });
+
+                                    if (!response.ok) {
+                                        throw new Error(`Response status: ${response.status}`);
+                                    }
+
+                                    const blob = await response.blob();
+
+                                    const downloadUrl = window.URL.createObjectURL(blob);
+                                    const link = document.createElement('a');
+
+                                    link.href = downloadUrl;
+                                    link.download = 'pineapple-price.csv';
+
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    link.remove();
+
+                                    window.URL.revokeObjectURL(downloadUrl);
+
+                                    modal.close();
+
+                                } catch (error) {
+                                    console.error(error.message);
+                                }
+                            });
+                        }
+
+                    });
+                </script>
+
+
             </section>
+
+
         </main>
         <!-- ============ SIDEBAR ============ -->
         <aside class="sidebar d-flex flex-column gap-4" style="">

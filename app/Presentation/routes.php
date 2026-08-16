@@ -23,6 +23,7 @@ return [
     '/finance/silver' => [SilverController::class, 'index'],
     '/agriculture/pineapple' => [PipeAppleController::class, 'index'],
     '/agriculture/pineapple/history' => [PipeAppleHistoryApiController::class, 'index'],
+    '/agriculture/pineapple/download' => [PipeAppleController::class, 'download'],
     '/agriculture/rubber' => [RubberController::class, 'index'],
     '/about-us' => [AboutUs::class, 'index'],
     '/cron/{job}' => [CronController::class, 'run'],

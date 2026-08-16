@@ -319,4 +319,29 @@ class PineAppleRepository implements PineAppleRepositoryInterface
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
     }
+
+
+    public function pricesByDownload(?string $type, string $startDate , string $endDate)
+    {
+        $sql = "SELECT
+            price_date AS `Date`,
+            type AS `Type`,
+            min_price AS `Minimum Price`,
+            max_price AS `Maximum Price`,
+            avg_price AS `Average Price`
+        FROM pineapple_price
+        WHERE price_date BETWEEN :startDate AND :endDate
+        AND type = COALESCE(:type, type)
+        ORDER BY price_date ASC, type ASC";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            'type'      => $type,
+            'startDate' => $startDate,
+            'endDate'   => $endDate,
+        ]);
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
