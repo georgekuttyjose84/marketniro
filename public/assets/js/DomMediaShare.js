@@ -226,6 +226,10 @@ export class DomMediaShare {
 
         this.imageData = null;
 
+        this.imageFile = null;
+
+        this.canShareFiles = false;
+
     }
 
 
@@ -239,6 +243,37 @@ export class DomMediaShare {
 
             this.imageData =
                 await this.convertDivToImage();
+
+
+            /*
+             * Build the File object up front,
+             * synchronously (no fetch/await),
+             * so that later, when the user taps
+             * "Share Image" / "Share on WhatsApp",
+             * navigator.share() can be called
+             * with ZERO awaits before it.
+             *
+             * iOS Safari revokes "user activation"
+             * as soon as an await/microtask happens
+             * before navigator.share() is invoked,
+             * which is why files silently get dropped
+             * and only the text/url get shared.
+             */
+
+            this.imageFile =
+                this.dataURItoFile(
+                    this.imageData,
+                    this.options.imageName
+                );
+
+
+            this.canShareFiles = !!(
+                navigator.canShare &&
+                navigator.share &&
+                navigator.canShare({
+                    files: [this.imageFile]
+                })
+            );
 
 
             this.openShareDialog(
@@ -582,54 +617,62 @@ export class DomMediaShare {
         }
 
 
-        try {
+        /*
+         * CRITICAL: everything below this point,
+         * up to and including navigator.share(),
+         * must run synchronously with no "await"
+         * beforehand. this.imageFile was already
+         * built (synchronously, via atob) back in
+         * share(), so we can use it here directly
+         * without ever calling fetch().
+         *
+         * Any await/microtask inserted before
+         * navigator.share() will make iOS Safari
+         * drop the "files" payload silently and
+         * fall back to sharing text/url only.
+         */
 
-            const file =
-                await this.dataURIToFile(
-                    this.imageData,
-                    this.options.imageName
-                );
+        const file =
+            this.imageFile ||
+            this.dataURItoFile(
+                this.imageData,
+                this.options.imageName
+            );
 
 
-            if (
+        const shareData = {
+
+            title:
+            this.options.title,
+
+            text:
+            this.options.message,
+
+            url:
+            this.options.url
+
+        };
+
+
+        const canShareWithFile =
+            !!(
                 navigator.canShare &&
-                !navigator.canShare({
+                navigator.canShare({
                     files: [file]
                 })
-            ) {
-
-                await navigator.share({
-
-                    title:
-                    this.options.title,
-
-                    text:
-                    this.options.message,
-
-                    url:
-                    this.options.url
-
-                });
-
-                return;
-
-            }
+            );
 
 
-            await navigator.share({
+        if (canShareWithFile) {
+            shareData.files = [file];
+        }
 
-                title:
-                this.options.title,
 
-                text:
-                this.options.message,
+        try {
 
-                url:
-                this.options.url,
-
-                files: [file]
-
-            });
+            await navigator.share(
+                shareData
+            );
 
         } catch (error) {
 
@@ -646,6 +689,48 @@ export class DomMediaShare {
                 error
             );
 
+
+            /*
+             * Some browsers reject the whole
+             * share() call when files+url+text
+             * are combined together. Retry with
+             * files only as a fallback so the
+             * image still goes through.
+             */
+
+            if (
+                canShareWithFile &&
+                shareData.url
+            ) {
+
+                try {
+
+                    await navigator.share({
+                        files: [file]
+                    });
+
+                } catch (retryError) {
+
+                    if (
+                        retryError.name !==
+                        'AbortError'
+                    ) {
+
+                        console.error(
+                            'Native share retry failed:',
+                            retryError
+                        );
+
+                        alert(
+                            'Unable to share the image.'
+                        );
+
+                    }
+
+                }
+
+            }
+
         }
 
     }
@@ -655,7 +740,45 @@ export class DomMediaShare {
      * WhatsApp
      */
 
-    shareWhatsApp() {
+    async shareWhatsApp() {
+
+        /*
+         * IMPORTANT PLATFORM LIMITATION:
+         *
+         * WhatsApp's "wa.me" / "api.whatsapp.com/send"
+         * links only ever accept a text string. There is
+         * no URL parameter that can attach an image - this
+         * is a WhatsApp restriction, not something fixable
+         * from the browser side.
+         *
+         * The ONLY way to hand WhatsApp an image from a
+         * web page is through the OS native share sheet
+         * (navigator.share with a "files" payload), which
+         * lets the user pick WhatsApp as the target app and
+         * WhatsApp receives the actual image file.
+         *
+         * So: if the device supports sharing files, we open
+         * the native share sheet (user picks WhatsApp there).
+         * Otherwise (desktop, unsupported browsers) we fall
+         * back to downloading the image and opening WhatsApp
+         * with the text, and tell the user to attach the
+         * image manually.
+         */
+
+        if (
+            navigator.share &&
+            this.canShareFiles
+        ) {
+
+            await this.nativeShare();
+
+            return;
+
+        }
+
+
+        this.downloadImage();
+
 
         const text =
             `${this.options.message}\n\n${this.options.url}`;
@@ -670,6 +793,13 @@ export class DomMediaShare {
             url,
             '_blank',
             'noopener,noreferrer'
+        );
+
+
+        alert(
+            'The image has been downloaded. ' +
+            'Attach it in WhatsApp before sending, since ' +
+            'WhatsApp links can only carry text, not images.'
         );
 
     }
@@ -792,27 +922,66 @@ export class DomMediaShare {
 
     /*
      * Convert Data URI to File
+     *
+     * Deliberately SYNCHRONOUS (uses atob, not
+     * fetch/Response.blob()). Calling fetch() on a
+     * data: URI still yields a Promise, and awaiting
+     * it before navigator.share() is enough for iOS
+     * Safari to revoke user-activation and silently
+     * drop the "files" payload. Doing the base64
+     * decode ourselves avoids that async gap entirely.
      */
 
-    async dataURIToFile(
+    dataURItoFile(
         dataURI,
         filename
     ) {
 
-        const response =
-            await fetch(dataURI);
+        const [
+            header,
+            base64
+        ] = dataURI.split(',');
 
 
-        const blob =
-            await response.blob();
+        const mimeMatch =
+            header.match(
+                /data:(.*?);base64/
+            );
+
+
+        const mime =
+            mimeMatch ?
+                mimeMatch[1] :
+                'image/png';
+
+
+        const binary =
+            atob(base64);
+
+
+        const bytes =
+            new Uint8Array(
+                binary.length
+            );
+
+
+        for (
+            let i = 0;
+            i < binary.length;
+            i++
+        ) {
+
+            bytes[i] =
+                binary.charCodeAt(i);
+
+        }
 
 
         return new File(
-            [blob],
+            [bytes],
             filename,
             {
-                type:
-                    blob.type || 'image/png'
+                type: mime
             }
         );
 
@@ -1100,11 +1269,28 @@ export class DomMediaShare {
                     );
 
 
-                    resolve(
-                        canvas.toDataURL(
-                            'image/png'
-                        )
-                    );
+                    try {
+
+                        resolve(
+                            canvas.toDataURL(
+                                'image/png'
+                            )
+                        );
+
+                    } catch (taintError) {
+
+                        reject(
+                            new Error(
+                                'The share card contains an image ' +
+                                'from another domain that does not ' +
+                                'allow cross-origin access (CORS), ' +
+                                'so the canvas could not be exported. ' +
+                                'Serve the image with proper CORS ' +
+                                'headers or host it on the same domain.'
+                            )
+                        );
+
+                    }
 
                 } catch (error) {
 
@@ -1166,12 +1352,51 @@ export class DomMediaShare {
                     new Image();
 
 
+                /*
+                 * Cross-origin images (e.g. a logo
+                 * served from a CDN) will "taint" the
+                 * canvas and make canvas.toDataURL()
+                 * throw a SecurityError unless the
+                 * server sends CORS headers and we
+                 * request the image anonymously.
+                 */
+
+                image.crossOrigin =
+                    'anonymous';
+
+
                 image.onload =
                     () => draw(image);
 
 
                 image.onerror =
-                    () => resolve();
+                    () => {
+
+                        /*
+                         * Retry once without CORS mode.
+                         * The image will still draw for
+                         * same-origin sources; for a truly
+                         * cross-origin, non-CORS image this
+                         * will taint the canvas, but at
+                         * least the layout won't be blank.
+                         */
+
+                        const fallback =
+                            new Image();
+
+
+                        fallback.onload =
+                            () => draw(fallback);
+
+
+                        fallback.onerror =
+                            () => resolve();
+
+
+                        fallback.src =
+                            imgElement.src;
+
+                    };
 
 
                 image.src =
