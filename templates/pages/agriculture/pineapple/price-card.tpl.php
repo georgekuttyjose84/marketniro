@@ -675,7 +675,7 @@ $ripeTime = new DateTimeImmutable($ripePrice->getPriceDate());
         <div class="share-divider"></div>
 
         <strong>
-            MarketNiro.com
+            www.marketniro.com
         </strong>
 
         <span>
