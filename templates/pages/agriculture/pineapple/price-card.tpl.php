@@ -79,7 +79,7 @@ $ripeTime = new DateTimeImmutable($ripePrice->getPriceDate());
         <span class="date-text"><span class="date-relative"><?= format_price_date($greenTime) ?></span><span class="date-dot"> · </span><span class="date-exact"><?=$greenTime->format('d M')?></span></span>
       </div>
 
-    <div class="d-flex justify-content-center my-5">
+    <div class="d-flex justify-content-center mt-4">
         <button  type="button"  id="share-green-pineapple"  class="share-image btn btn-success">
             Share Green Pineapple
         </button>
@@ -121,7 +121,7 @@ $ripeTime = new DateTimeImmutable($ripePrice->getPriceDate());
         <span class="material-symbols-outlined" style="font-size:16px;">schedule</span>
         <span class="date-text"><span class="date-relative"><?= format_price_date($ripeTime) ?></span><span class="date-dot"> · </span><span class="date-exact"><?=$ripeTime->format('d M')?></span></span>
       </div>
-        <div class="d-flex justify-content-center my-5">
+        <div class="d-flex justify-content-center mt-4">
             <button type="button" id="share-ripe-pineapple" class="share-image btn btn-warning">Share Ripe Pineapple</button>
         </div>
     </div>  
