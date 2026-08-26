@@ -811,9 +811,7 @@ $date = $selectedDate === ''
                     >
     <span class="material-symbols-outlined" style="font-size:18px;">
         download
-    </span>
-                        Export Dataset
-                    </button>
+    </span>Download Excel</button>
                 </div>
                 <div class="table-responsive">
                     <table class="table-custom" style="min-width:600px;">

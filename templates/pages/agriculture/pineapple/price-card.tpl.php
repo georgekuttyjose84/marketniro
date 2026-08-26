@@ -114,7 +114,7 @@ $ripeTime = new DateTimeImmutable($ripePrice->getPriceDate());
           <span class="material-symbols-outlined">show_chart</span>
           Average price
         </span>
-        <span class="avg-strip-value avg-value-warning">₹<?= number_format($greenPrice?->getAvgPrice() ?? 0, 0) ?></span>
+        <span class="avg-strip-value avg-value-warning">₹<?= number_format($ripePrice?->getAvgPrice() ?? 0, 0) ?></span>
       </div>
 
       <div class="info-pill info-pill-warning" data-date="2026-08-13">
@@ -479,20 +479,10 @@ $ripeTime = new DateTimeImmutable($ripePrice->getPriceDate());
 
     <!-- Header -->
     <div class="share-header">
-
-        <a
-                class="share-logo"
-                href="/"
-        >
-            <img
-                    src="/assets/market-niro-logo.png"
-                    alt="MarketNiro Logo"
-            >
-
-            <span>
-            MarketNiro
-        </span>
-        </a>
+        <div class="share-logo">
+        <img src="/assets/market-niro-logo.png" height="60px" alt="MarketNiro Logo" >
+        <span>MarketNiro</span>
+        </div>
 
     </div>
 
