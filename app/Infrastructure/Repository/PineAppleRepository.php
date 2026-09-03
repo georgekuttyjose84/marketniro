@@ -50,8 +50,8 @@ class PineAppleRepository implements PineAppleRepositoryInterface
             YEAR(price_date) AS year,
             MONTH(price_date) AS month,
             DATE_FORMAT(price_date, '%M %Y') AS month_name,
-            MIN(avg_price) AS min_price,
-            MAX(avg_price) AS max_price,
+            MIN(min_price) AS min_price,
+            MAX(max_price) AS max_price,
             AVG(avg_price) AS avg_price
         FROM pineapple_price
         WHERE price_date >= DATE_FORMAT(
