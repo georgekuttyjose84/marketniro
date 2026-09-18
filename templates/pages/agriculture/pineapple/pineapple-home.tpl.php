@@ -818,8 +818,8 @@ $date = $selectedDate === ''
                         <thead>
                         <tr>
                             <th>Market Date</th>
-                            <th>Green ($/kg)</th>
-                            <th>Ripe ($/kg)</th>
+                            <th>Green (₹/kg)</th>
+                            <th>Ripe (₹/kg)</th>
                             <th class="text-center">Trend</th>
                         </tr>
                         </thead>
