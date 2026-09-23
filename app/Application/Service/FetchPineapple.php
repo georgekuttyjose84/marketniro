@@ -14,6 +14,13 @@ class FetchPineapple
 
     public function run(): void
     {
+
+        $currentDate = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $currentDateTime = $currentDate->format('c');
+        $resultTime = "Starting Time: " . $currentDateTime;
+
+        echo $resultTime . " : Starting cron\n";
+
         $html = $this->fetchWebsite();
 
         $result = $this->extractPrices(
@@ -67,7 +74,7 @@ class FetchPineapple
 
         }
 
-        echo "Pineapple prices updated\n";
+        echo $resultTime . " : Pineapple prices updated\n";
     }
 
 
