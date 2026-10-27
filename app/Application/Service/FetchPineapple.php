@@ -63,7 +63,7 @@ class FetchPineapple
 
         if($result === []) {
             echo $resultTime . " : Sorry No List is Found RESULT IS EMPTY TRY AGAIN\n";
-            return null
+            return;
         }
 
         foreach ($result as $row) {
