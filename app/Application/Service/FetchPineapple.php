@@ -15,7 +15,7 @@ class FetchPineapple
     public function run(): void
     {
 
-        $currentDate = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $currentDate = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Kolkata'));
         $currentDateTime = $currentDate->format('c');
         $resultTime = "Starting Time: " . $currentDateTime;
 
@@ -59,6 +59,12 @@ class FetchPineapple
             created_at = VALUES(created_at)
         "
         );
+
+
+        if($result === []) {
+            echo $resultTime . " : Sorry No List is Found RESULT IS EMPTY TRY AGAIN\n";
+            return null
+        }
 
         foreach ($result as $row) {
 
