@@ -16,7 +16,7 @@ class FetchPineapple
     {
 
         $currentDate = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Kolkata'));
-        $currentDateTime = $currentDate->format('c');
+        $currentDateTime = $currentDate->format('Y - m - d h:i:s A');
         $resultTime = "Starting Time: " . $currentDateTime;
 
         echo $resultTime . " : Starting cron\n";
